@@ -16,7 +16,7 @@
 #define DISPLAY_WIDTH 1248
 #define DISPLAY_HEIGHT 702
 #define NOIR al_map_rgb(0, 0, 0)
-#define BLANC al_map_rgb(255, 255, 255)
+#define BLANC al_map_rgba(255, 255, 255, 0)
 #define NOIR_TRANSPARENT al_map_rgba(0, 0, 0, 150)
 #define GRIS_CLAIR_TRANSPARENT al_map_rgba(150, 150, 150, 50)
 #define GRIS_CLAIR al_map_rgb(150, 150, 150)

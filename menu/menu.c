@@ -31,7 +31,7 @@ void menuOptions(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FO
     ALLEGRO_EVENT_QUEUE *queue6 = NULL;
     bool done = false;
     Bouton boutons[] = {
-            {80, 612, 130, 70, "<"},
+            {-10, 612, 130, 70, "<"},
     };
     int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
 
@@ -46,7 +46,7 @@ void menuOptions(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FO
     for (int i = 0; i < nbBoutons; ++i) {
         dessinerBouton1(boutons[i], police, NOIR, GRIS_CLAIR_TRANSPARENT);
     }
-    al_draw_filled_triangle(80, 612, 20, 647, 80, 682, NOIR);
+
     al_flip_display();
 
     while (!done) {
@@ -88,7 +88,7 @@ void menuScores(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FON
     ALLEGRO_EVENT_QUEUE *queue5 = NULL;
     bool done = false;
     Bouton boutons[] = {
-            {80, 612, 130, 70, "<"}
+            {-10, 612, 130, 70, "<"}
     };
     int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
 
@@ -103,7 +103,6 @@ void menuScores(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FON
     for (int i = 0; i < nbBoutons; ++i) {
         dessinerBouton1(boutons[i], police, NOIR, GRIS_CLAIR);
     }
-    al_draw_filled_triangle(80, 612, 20, 647, 80, 682, NOIR);
     al_flip_display();
 
     while (!done) {
@@ -164,7 +163,7 @@ void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *pol
     al_clear_to_color(BLANC);
     al_draw_bitmap(ImageMenu, 0, 0, 0);
     for (int i = 0; i < nbBoutons; ++i) {
-        dessinerBouton1(boutons[i], police, NOIR, GRIS_CLAIR);
+        dessinerBouton1(boutons[i], police, NOIR, BLANC);
     }
     al_flip_display();
 
@@ -183,7 +182,7 @@ void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *pol
                     if (EstDansLeBouton(boutons[i], event2.mouse.x, event2.mouse.y)) {
                         dessinerBouton2(boutons[i], police, NOIR_TRANSPARENT, GRIS_CLAIR_TRANSPARENT);
                     } else {
-                        dessinerBouton1(boutons[i], police, NOIR, GRIS_CLAIR);
+                        dessinerBouton1(boutons[i], police, NOIR, BLANC);
                     }
                 }
                 al_flip_display();

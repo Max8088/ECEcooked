@@ -15,8 +15,8 @@ ChoisirPseudo(Joueur *joueur1, Joueur *joueur2, ALLEGRO_DISPLAY *display, ALLEGR
     bool joueur2_saisi = false;
     bool done = false;
     Bouton boutons[] = {
-            {25, 612, 130, 70, "<"},
-            {1093, 612, 130, 70, ">"}
+            {-10, 612, 140, 70, "<"},
+            {1118, 612, 140, 70, ">"}
     };
     Bouton boutonPseudo1 = {300, 255, 650, 70, "Pseudo player 1:"};
     Bouton boutonPseudo2 = {300, 405, 650, 70, "Pseudo player 2:"};
@@ -34,7 +34,7 @@ ChoisirPseudo(Joueur *joueur1, Joueur *joueur2, ALLEGRO_DISPLAY *display, ALLEGR
         al_wait_for_event(queue3, &event3);
         al_clear_to_color(NOIR);
         al_draw_bitmap(ImageMenu, 0, 0, 0);
-        al_draw_text(police, NOIR, 624, 550, ALLEGRO_ALIGN_CENTER,
+        al_draw_text(police, BLANC, 624, 550, ALLEGRO_ALIGN_CENTER,
                      "(Press ENTER to confirm pseudos)");
         al_draw_text(police, NOIR, 345, 325, ALLEGRO_ALIGN_CENTER,
                      "-");
@@ -51,7 +51,7 @@ ChoisirPseudo(Joueur *joueur1, Joueur *joueur2, ALLEGRO_DISPLAY *display, ALLEGR
         al_draw_text(police, NOIR, 360, 475, ALLEGRO_ALIGN_LEFT,
                      pseudoJoueur2);
         if (!joueur1_saisi) {
-            dessinerBouton2(boutonPseudo1, police, NOIR, GRIS_CLAIR);
+            dessinerBouton2(boutonPseudo1, police, NOIR, BLANC);
             dessinerBouton1(boutonPseudo2, police, NOIR_TRANSPARENT, GRIS_CLAIR_TRANSPARENT);
             al_draw_filled_triangle(220, 270, 220, 300, 260, 285, NOIR);
             al_draw_filled_triangle(1010, 632, 1010, 662, 1050, 647, ROUGE);
