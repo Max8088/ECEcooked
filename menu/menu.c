@@ -5,8 +5,9 @@
 #include "menu.h."
 #include "../joueur/joueur.h"
 #include "../jouer/jouer.h"
+
 void dessinerBouton1(Bouton bouton, ALLEGRO_FONT *police, ALLEGRO_COLOR couleurRectangle, ALLEGRO_COLOR couleurTexte) {
-    al_draw_filled_rectangle(bouton.x, bouton.y, bouton.x + bouton.width, bouton.y + bouton.height, couleurRectangle);
+    al_draw_filled_rounded_rectangle(bouton.x, bouton.y, bouton.x + bouton.width, bouton.y + bouton.height, 10, 10, couleurRectangle);
     float text_x = bouton.x + (bouton.width - al_get_text_width(police, bouton.texte)) / 2;
     float text_y = bouton.y + (bouton.height - al_get_font_ascent(police)) / 2;
     text_y -= 5;
@@ -14,7 +15,7 @@ void dessinerBouton1(Bouton bouton, ALLEGRO_FONT *police, ALLEGRO_COLOR couleurR
 }
 
 void dessinerBouton2(Bouton bouton, ALLEGRO_FONT *police, ALLEGRO_COLOR couleurRectangle, ALLEGRO_COLOR couleurTexte) {
-    al_draw_filled_rectangle(bouton.x, bouton.y, bouton.x + bouton.width, bouton.y + bouton.height, couleurRectangle);
+    al_draw_filled_rounded_rectangle(bouton.x, bouton.y, bouton.x + bouton.width, bouton.y + bouton.height, 10, 10, couleurRectangle);
     float text_x = bouton.x + (bouton.width - al_get_text_width(police, bouton.texte)) / 2;
     float text_y = bouton.y + (bouton.height - al_get_font_ascent(police)) / 2;
     text_y -= 9;

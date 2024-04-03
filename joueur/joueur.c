@@ -15,8 +15,8 @@ ChoisirPseudo(Joueur *joueur1, Joueur *joueur2, ALLEGRO_DISPLAY *display, ALLEGR
     bool joueur2_saisi = false;
     bool done = false;
     Bouton boutons[] = {
-            {80,   612, 130, 70, "<"},
-            {1038, 612, 130, 70, ">"}
+            {25, 612, 130, 70, "<"},
+            {1093, 612, 130, 70, ">"}
     };
     Bouton boutonPseudo1 = {300, 255, 650, 70, "Pseudo player 1:"};
     Bouton boutonPseudo2 = {300, 405, 650, 70, "Pseudo player 2:"};
@@ -50,24 +50,22 @@ ChoisirPseudo(Joueur *joueur1, Joueur *joueur2, ALLEGRO_DISPLAY *display, ALLEGR
                      pseudoJoueur1);
         al_draw_text(police, NOIR, 360, 475, ALLEGRO_ALIGN_LEFT,
                      pseudoJoueur2);
-        al_draw_filled_triangle(80, 612, 20, 647, 80, 682, NOIR);
-        al_draw_filled_triangle(1168, 612, 1168, 682, 1228, 647, NOIR);
         if (!joueur1_saisi) {
             dessinerBouton2(boutonPseudo1, police, NOIR, GRIS_CLAIR);
             dessinerBouton1(boutonPseudo2, police, NOIR_TRANSPARENT, GRIS_CLAIR_TRANSPARENT);
             al_draw_filled_triangle(220, 270, 220, 300, 260, 285, NOIR);
-            al_draw_filled_triangle(968, 632, 968, 662, 1008, 647, ROUGE);
+            al_draw_filled_triangle(1010, 632, 1010, 662, 1050, 647, ROUGE);
         }
         if (!joueur2_saisi && joueur1_saisi) {
             dessinerBouton1(boutonPseudo1, police, NOIR, VERT_CLAIR);
             dessinerBouton2(boutonPseudo2, police, NOIR, GRIS_CLAIR);
             al_draw_filled_triangle(220, 420, 220, 450, 260, 435, NOIR);
-            al_draw_filled_triangle(968, 632, 968, 662, 1008, 647, ROUGE);
+            al_draw_filled_triangle(1010, 632, 1010, 662, 1050, 647, ROUGE);
         }
         if (joueur1_saisi && joueur2_saisi) {
             dessinerBouton1(boutonPseudo1, police, NOIR, VERT_CLAIR);
             dessinerBouton1(boutonPseudo2, police, NOIR, VERT_CLAIR);
-            al_draw_filled_triangle(968, 632, 968, 662, 1008, 647, VERT_CLAIR);
+            al_draw_filled_triangle(1010, 632, 1010, 662, 1050, 647, VERT_CLAIR);
         }
         for (int i = 0; i < nbBoutons; ++i) {
             if (EstDansLeBouton(boutons[i], event3.mouse.x, event3.mouse.y)) {
