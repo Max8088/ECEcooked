@@ -1,3 +1,125 @@
 //
 // Created by pierr on 03/04/2024.
 //
+#include "../constantes.h"
+#include "joueur.h"
+#include "../menu/menu.h"
+
+void
+ChoisirPseudo(Joueur *joueur1, Joueur *joueur2, ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu,
+              ALLEGRO_FONT *police, int *LancerJeu) {
+    ALLEGRO_EVENT_QUEUE *queue3 = NULL;
+    char pseudoJoueur1[13] = "";
+    char pseudoJoueur2[13] = "";
+    bool joueur1_saisi = false;
+    bool joueur2_saisi = false;
+    bool done = false;
+    Bouton boutons[] = {
+            {80,   612, 130, 70, "<"},
+            {1038, 612, 130, 70, ">"}
+    };
+    Bouton boutonPseudo1 = {330, 255, 650, 70, "Pseudo player 1:"};
+    Bouton boutonPseudo2 = {330, 405, 650, 70, "Pseudo player 2:"};
+    int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
+
+    queue3 = al_create_event_queue();
+    assert(queue3);
+
+    al_register_event_source(queue3, al_get_display_event_source(display));
+    al_register_event_source(queue3, al_get_keyboard_event_source());
+    al_register_event_source(queue3, al_get_mouse_event_source());
+
+    while (!done) {
+        ALLEGRO_EVENT event3;
+        al_wait_for_event(queue3, &event3);
+        al_clear_to_color(NOIR);
+        al_draw_bitmap(ImageMenu, 0, 0, 0);
+        al_draw_text(police, NOIR, 624, 550, ALLEGRO_ALIGN_CENTER,
+                     "(Press ENTER to confirm pseudos)");
+        al_draw_text(police, NOIR, 375, 325, ALLEGRO_ALIGN_CENTER,
+                     "-");
+        al_draw_text(police, NOIR, 375, 475, ALLEGRO_ALIGN_CENTER,
+                     "-");
+        al_draw_text(police, NOIR, 910, 325, ALLEGRO_ALIGN_CENTER,
+                     "-");
+        al_draw_text(police, NOIR, 910, 475, ALLEGRO_ALIGN_CENTER,
+                     "-");
+        al_draw_text(police, NOIR, 390, 325, ALLEGRO_ALIGN_LEFT,
+                     pseudoJoueur1);
+        al_draw_text(police, NOIR, 390, 475, ALLEGRO_ALIGN_LEFT,
+                     pseudoJoueur2);
+        al_draw_filled_triangle(80, 612, 20, 647, 80, 682, NOIR);
+        al_draw_filled_triangle(1168, 612, 1168, 682, 1228, 647, NOIR);
+        if (!joueur1_saisi) {
+            dessinerBouton2(boutonPseudo1, police, NOIR_TRANSPARENT, GRIS_CLAIR_TRANSPARENT);
+            dessinerBouton1(boutonPseudo2, police, NOIR, GRIS_CLAIR);
+            al_draw_filled_triangle(220, 270, 220, 300, 260, 285, NOIR);
+            al_draw_filled_triangle(968, 632, 968, 662, 1008, 647, ROUGE);
+        }
+        if (!joueur2_saisi && joueur1_saisi) {
+            dessinerBouton1(boutonPseudo1, police, NOIR, VERT_CLAIR);
+            dessinerBouton2(boutonPseudo2, police, NOIR_TRANSPARENT, GRIS_CLAIR_TRANSPARENT);
+            al_draw_filled_triangle(220, 420, 220, 450, 260, 435, NOIR);
+            al_draw_filled_triangle(968, 632, 968, 662, 1008, 647, ROUGE);
+        }
+        if (joueur1_saisi && joueur2_saisi) {
+            dessinerBouton1(boutonPseudo1, police, NOIR, VERT_CLAIR);
+            dessinerBouton1(boutonPseudo2, police, NOIR, VERT_CLAIR);
+            al_draw_filled_triangle(968, 632, 968, 662, 1008, 647, VERT_CLAIR);
+        }
+        for (int i = 0; i < nbBoutons; ++i) {
+            if (EstDansLeBouton(boutons[i], event3.mouse.x, event3.mouse.y)) {
+                dessinerBouton2(boutons[i], police, NOIR, BLANC);
+            } else {
+                dessinerBouton1(boutons[i], police, NOIR, GRIS_CLAIR_TRANSPARENT);
+            }
+        }
+        al_flip_display();
+        switch (event3.type) {
+            case ALLEGRO_EVENT_DISPLAY_CLOSE:
+                done = true;
+                break;
+            case ALLEGRO_EVENT_KEY_CHAR:
+                if (!joueur1_saisi) {
+                    if (event3.keyboard.unichar >= 32 && event3.keyboard.unichar <= 126) {
+                        char str[2] = {event3.keyboard.unichar, '\0'};
+                        strcat(pseudoJoueur1, str);
+                    } else if (event3.keyboard.keycode == ALLEGRO_KEY_BACKSPACE && strlen(pseudoJoueur1) > 0) {
+                        pseudoJoueur1[strlen(pseudoJoueur1) - 1] = '\0';
+                    } else if (event3.keyboard.keycode == ALLEGRO_KEY_ENTER && strlen(pseudoJoueur1) > 0 &&
+                               strlen(pseudoJoueur1) < 13) {
+                        joueur1_saisi = true;
+                    }
+                } else if (!joueur2_saisi && strlen(pseudoJoueur1) < 13) {
+                    if (event3.keyboard.unichar >= 32 && event3.keyboard.unichar <= 126) {
+                        char str[2] = {event3.keyboard.unichar, '\0'};
+                        strcat(pseudoJoueur2, str);
+                    } else if (event3.keyboard.keycode == ALLEGRO_KEY_BACKSPACE && strlen(pseudoJoueur2) > 0) {
+                        pseudoJoueur2[strlen(pseudoJoueur2) - 1] = '\0';
+                    } else if (event3.keyboard.keycode == ALLEGRO_KEY_ENTER && strlen(pseudoJoueur2) > 0 &&
+                               strlen(pseudoJoueur2) < 13) {
+                        joueur2_saisi = true;
+                    }
+                }
+                break;
+            case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
+                for (int i = 0; i < nbBoutons; ++i) {
+                    if (EstDansLeBouton(boutons[i], event3.mouse.x, event3.mouse.y)) {
+                        if (!(strcmp(boutons[i].texte, "<"))) {
+                            done = true;
+                        }
+                        if (!(strcmp(boutons[i].texte, ">")) && joueur1_saisi && joueur2_saisi) {
+                            *LancerJeu = 1;
+                            strcpy(joueur1->pseudo, pseudoJoueur1);
+                            strcpy(joueur2->pseudo, pseudoJoueur2);
+                            done = true;
+                        }
+                    }
+
+                }
+                break;
+        }
+    }
+    al_destroy_event_queue(queue3);
+    queue3 = NULL;
+}
