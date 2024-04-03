@@ -7,6 +7,7 @@ int main(void) {
     ALLEGRO_BITMAP *ImageMenu = NULL;
     ALLEGRO_EVENT_QUEUE *queue1 = NULL;
     ALLEGRO_FONT *police = NULL;
+    ALLEGRO_FONT *policeTitre = NULL;
     bool fini = false;
 
     assert(al_init());
@@ -25,6 +26,8 @@ int main(void) {
     assert(queue1);
     police = al_load_ttf_font("../police/RubikDoodleShadow-Regular.ttf", 50, 0);
     assert(police);
+    policeTitre = al_load_ttf_font("../police/BungeeShade-Regular.ttf", 90, 0);
+    assert(policeTitre);
 
     al_register_event_source(queue1, al_get_display_event_source(display));
     al_register_event_source(queue1, al_get_keyboard_event_source());
@@ -33,7 +36,8 @@ int main(void) {
     al_set_window_position(display, 130, 30);
     al_clear_to_color(BLANC);
     al_draw_bitmap(ImageMenu, 0, 0, 0);
-    al_draw_text(police, BLANC, 640, 415, ALLEGRO_ALIGN_CENTRE, "PRESS ENTER");
+    al_draw_text(policeTitre, NOIR, 624, 308, ALLEGRO_ALIGN_CENTRE, "-ESCOOKED-");
+    al_draw_text(police, NOIR, 624, 500, ALLEGRO_ALIGN_CENTRE, "PRESS ENTER");
     al_flip_display();
 
     while (!fini) {
@@ -61,6 +65,8 @@ int main(void) {
     al_destroy_bitmap(ImageMenu);
     al_destroy_event_queue(queue1);
     al_destroy_font(police);
+    al_destroy_font(policeTitre);
+    policeTitre = NULL;
     display = NULL;
     ImageMenu = NULL;
     queue1 = NULL;
