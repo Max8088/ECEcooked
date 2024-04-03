@@ -19,7 +19,7 @@ int main(void) {
 
     display = al_create_display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
     assert(display);
-    ImageMenu = al_load_bitmap("../images/fondmenu.jpg");
+    ImageMenu = al_load_bitmap("../images/imagemenucuisine2.jpg");
     assert(ImageMenu);
     queue1 = al_create_event_queue();
     assert(queue1);
@@ -33,7 +33,7 @@ int main(void) {
     al_set_window_position(display, 130, 30);
     al_clear_to_color(BLANC);
     al_draw_bitmap(ImageMenu, 0, 0, 0);
-    al_draw_text(police, al_map_rgba(0, 0, 0, 200), 640, 351, ALLEGRO_ALIGN_CENTRE, "PRESS ENTER");
+    al_draw_text(police, al_map_rgba(0, 0, 0, 200), 640, 400, ALLEGRO_ALIGN_CENTRE, "PRESS ENTER");
     al_flip_display();
 
     while (!fini) {

@@ -146,10 +146,10 @@ void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *pol
     Joueur joueur2;
     int LancerJeu = 0;
     Bouton boutons[] = {
-            {425, 250, 400, 70, "Play"},
-            {425, 350, 400, 70, "Options"},
-            {425, 450, 400, 70, "Scores"},
-            {425, 550, 400, 70, "Exit"}
+            {425, 235, 400, 70, "Play"},
+            {425, 335, 400, 70, "Options"},
+            {425, 435, 400, 70, "Scores"},
+            {425, 535, 400, 70, "Exit"}
     };
     int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
     bool QuitterMenu = false;
