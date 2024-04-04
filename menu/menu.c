@@ -33,7 +33,7 @@ void Credits(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *
     ALLEGRO_EVENT_QUEUE *queue8 = NULL;
     bool done = false;
     Bouton boutons[] = {
-            {-10, 612, 130, 70, "<"}
+            {-10, 612, 130, 70, "<-"}
     };
     int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
 
@@ -68,7 +68,6 @@ void Credits(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *
                 al_draw_text(police, NOIR, 624, 325, ALLEGRO_ALIGN_CENTRE, "-MAXIME-");
                 al_draw_text(police, NOIR, 624, 425, ALLEGRO_ALIGN_CENTRE, "-NIKITA-");
                 al_draw_text(police, NOIR, 624, 525, ALLEGRO_ALIGN_CENTRE, "-FANIRY-");
-
                 for (int i = 0; i < nbBoutons; ++i) {
                     if (EstDansLeBouton(boutons[i], event7.mouse.x, event7.mouse.y)) {
                         dessinerBouton2(boutons[i], police, NOIR, BLANC);
@@ -78,10 +77,10 @@ void Credits(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *
                 }
                 al_flip_display();
                 break;
-            case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
+            case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
                 for (int i = 0; i < nbBoutons; ++i) {
                     if (EstDansLeBouton(boutons[i], event7.mouse.x, event7.mouse.y)) {
-                        if (!(strcmp(boutons[i].texte, "<"))) {
+                        if (!(strcmp(boutons[i].texte, "<-"))) {
                             done = true;
                         }
                     }
@@ -97,12 +96,15 @@ void menuOptions(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FO
     ALLEGRO_EVENT_QUEUE *queue6 = NULL;
     bool done = false;
     Bouton boutons[] = {
-            {-10, 612, 130, 70, "<"},
+            {-10, 612, 130, 70, "<-"}
+    };
+    Bouton boutonsSousMenu[] = {
             {425, 235, 400, 70, "Controls"},
             {425, 335, 400, 70, "Credits"},
             {425, 435, 400, 70, "Volume"}
     };
     int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
+    int nbBoutonsSousMenu = sizeof(boutonsSousMenu) / sizeof(boutonsSousMenu[0]);
 
     queue6 = al_create_event_queue();
     assert(queue6);
@@ -115,7 +117,9 @@ void menuOptions(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FO
     for (int i = 0; i < nbBoutons; ++i) {
         dessinerBouton1(boutons[i], police, NOIR, GRIS_CLAIR);
     }
-
+    for (int i = 0; i < nbBoutonsSousMenu; ++i) {
+        dessinerBouton1(boutonsSousMenu[i], police, NOIR, BLANC);
+    }
     al_flip_display();
 
     while (!done) {
@@ -128,23 +132,33 @@ void menuOptions(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FO
             case ALLEGRO_EVENT_MOUSE_AXES:
                 al_clear_to_color(BLANC);
                 al_draw_bitmap(ImageMenu, 0, 0, 0);
-                al_draw_filled_triangle(80, 612, 20, 647, 80, 682, NOIR);
                 for (int i = 0; i < nbBoutons; ++i) {
                     if (EstDansLeBouton(boutons[i], event6.mouse.x, event6.mouse.y)) {
                         dessinerBouton2(boutons[i], police, NOIR, BLANC);
                     } else {
-                        dessinerBouton1(boutons[i], police, NOIR, GRIS_CLAIR_TRANSPARENT);
+                        dessinerBouton1(boutons[i], police, NOIR, GRIS_CLAIR);
+                    }
+                }
+                for (int i = 0; i < nbBoutonsSousMenu; ++i) {
+                    if (EstDansLeBouton(boutonsSousMenu[i], event6.mouse.x, event6.mouse.y)) {
+                        dessinerBouton2(boutonsSousMenu[i], police, NOIR_TRANSPARENT, GRIS_CLAIR);
+                    } else {
+                        dessinerBouton1(boutonsSousMenu[i], police, NOIR, BLANC);
                     }
                 }
                 al_flip_display();
                 break;
-            case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
+            case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
                 for (int i = 0; i < nbBoutons; ++i) {
                     if (EstDansLeBouton(boutons[i], event6.mouse.x, event6.mouse.y)) {
-                        if (!(strcmp(boutons[i].texte, "<"))) {
+                        if (!(strcmp(boutons[i].texte, "<-"))) {
                             done = true;
                         }
-                        if (!(strcmp(boutons[i].texte, "Credits"))) {
+                    }
+                }
+                for (int i = 0; i < nbBoutonsSousMenu; ++i) {
+                    if (EstDansLeBouton(boutonsSousMenu[i], event6.mouse.x, event6.mouse.y)) {
+                        if (!(strcmp(boutonsSousMenu[i].texte, "Credits"))) {
                             Credits(display, ImageMenu, police);
                         }
                     }
@@ -160,7 +174,7 @@ void menuScores(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FON
     ALLEGRO_EVENT_QUEUE *queue5 = NULL;
     bool done = false;
     Bouton boutons[] = {
-            {-10, 612, 130, 70, "<"}
+            {-10, 612, 130, 70, "<-"}
     };
     int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
 
@@ -182,7 +196,6 @@ void menuScores(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FON
         al_wait_for_event(queue5, &event5);
         al_clear_to_color(BLANC);
         al_draw_bitmap(ImageMenu, 0, 0, 0);
-        al_draw_filled_triangle(80, 612, 20, 647, 80, 682, NOIR);
         switch (event5.type) {
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
                 done = true;
@@ -197,10 +210,10 @@ void menuScores(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FON
                 }
                 al_flip_display();
                 break;
-            case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
+            case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
                 for (int i = 0; i < nbBoutons; ++i) {
                     if (EstDansLeBouton(boutons[i], event5.mouse.x, event5.mouse.y)) {
-                        if (!(strcmp(boutons[i].texte, "<"))) {
+                        if (!(strcmp(boutons[i].texte, "<-"))) {
                             done = true;
                         }
                     }
@@ -259,7 +272,7 @@ void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *pol
                 }
                 al_flip_display();
                 break;
-            case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
+            case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
                 for (int i = 0; i < nbBoutons; ++i) {
                     if (EstDansLeBouton(boutons[i], event2.mouse.x, event2.mouse.y)) {
                         if (!(strcmp(boutons[i].texte, "Play"))) {

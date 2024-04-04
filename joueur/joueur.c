@@ -15,8 +15,8 @@ ChoisirPseudo(Joueur *joueur1, Joueur *joueur2, ALLEGRO_DISPLAY *display, ALLEGR
     bool joueur2_saisi = false;
     bool done = false;
     Bouton boutons[] = {
-            {-10, 612, 140, 70, "<"},
-            {1118, 612, 140, 70, ">"}
+            {-10, 612, 140, 70, "<-"},
+            {1118, 612, 140, 70, "->"}
     };
     Bouton boutonPseudo1 = {300, 255, 650, 70, "Pseudo player 1:"};
     Bouton boutonPseudo2 = {300, 405, 650, 70, "Pseudo player 2:"};
@@ -29,6 +29,23 @@ ChoisirPseudo(Joueur *joueur1, Joueur *joueur2, ALLEGRO_DISPLAY *display, ALLEGR
     al_register_event_source(queue3, al_get_keyboard_event_source());
     al_register_event_source(queue3, al_get_mouse_event_source());
 
+    al_clear_to_color(NOIR);
+    al_draw_bitmap(ImageMenu, 0, 0, 0);
+    al_draw_text(police, BLANC, 624, 550, ALLEGRO_ALIGN_CENTER,
+                 "(Press ENTER to confirm pseudos)");
+    al_draw_text(police, NOIR, 345, 325, ALLEGRO_ALIGN_CENTER,
+                 "-");
+    al_draw_text(police, NOIR, 345, 475, ALLEGRO_ALIGN_CENTER,
+                 "-");
+    dessinerBouton2(boutonPseudo1, police, NOIR, BLANC);
+    dessinerBouton1(boutonPseudo2, police, NOIR_TRANSPARENT, GRIS_CLAIR_TRANSPARENT);
+    for (int i = 0; i < nbBoutons; ++i) {
+        dessinerBouton1(boutons[i], police, NOIR, GRIS_CLAIR_TRANSPARENT);
+    }
+    al_draw_filled_triangle(220, 270, 220, 300, 260, 285, NOIR);
+    al_draw_filled_triangle(1010, 632, 1010, 662, 1050, 647, ROUGE);
+    al_flip_display();
+
     while (!done) {
         ALLEGRO_EVENT event3;
         al_wait_for_event(queue3, &event3);
@@ -40,12 +57,6 @@ ChoisirPseudo(Joueur *joueur1, Joueur *joueur2, ALLEGRO_DISPLAY *display, ALLEGR
                      "-");
         al_draw_text(police, NOIR, 345, 475, ALLEGRO_ALIGN_CENTER,
                      "-");
-        /*
-        al_draw_text(police, NOIR, 880, 325, ALLEGRO_ALIGN_CENTER,
-                     "-");
-        al_draw_text(police, NOIR, 880, 475, ALLEGRO_ALIGN_CENTER,
-                     "-");
-                     */
         al_draw_text(police, NOIR, 360, 325, ALLEGRO_ALIGN_LEFT,
                      pseudoJoueur1);
         al_draw_text(police, NOIR, 360, 475, ALLEGRO_ALIGN_LEFT,
@@ -109,10 +120,10 @@ ChoisirPseudo(Joueur *joueur1, Joueur *joueur2, ALLEGRO_DISPLAY *display, ALLEGR
             case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
                 for (int i = 0; i < nbBoutons; ++i) {
                     if (EstDansLeBouton(boutons[i], event3.mouse.x, event3.mouse.y)) {
-                        if (!(strcmp(boutons[i].texte, "<"))) {
+                        if (!(strcmp(boutons[i].texte, "<-"))) {
                             done = true;
                         }
-                        if (!(strcmp(boutons[i].texte, ">")) && joueur1_saisi && joueur2_saisi) {
+                        if (!(strcmp(boutons[i].texte, "->")) && joueur1_saisi && joueur2_saisi) {
                             *LancerJeu = 1;
                             strcpy(joueur1->pseudo, pseudoJoueur1);
                             strcpy(joueur2->pseudo, pseudoJoueur2);
