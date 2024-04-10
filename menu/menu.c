@@ -83,7 +83,7 @@ void Credits(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEU
     }
 }
 
-void menuOptions(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE* queue1) {
+void menuOptions(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE* queue1) {
     bool done = false;
     Bouton boutons[] = {
             {-10, 612, 130, 70, "<-"}
@@ -169,7 +169,7 @@ void menuOptions(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FO
     }
 }
 
-void menuScores(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE* queue1) {
+void menuScores(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE* queue1) {
     bool done = false;
     Bouton boutons[] = {
             {-10, 612, 130, 70, "<-"}
@@ -265,7 +265,7 @@ void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *pol
                             }
                         }
                         if (!(strcmp(boutons[i].texte, "Options"))) {
-                            menuOptions(display, ImageMenu, police, queue1);
+                            menuOptions(ImageMenu, police, queue1);
                             al_clear_to_color(BLANC);
                             al_draw_bitmap(ImageMenu, 0, 0, 0);
                             for (i = 0; i < nbBoutons; ++i) {
@@ -278,7 +278,7 @@ void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *pol
                             al_flip_display();
                         }
                         if (!(strcmp(boutons[i].texte, "Scores"))) {
-                            menuScores(display, ImageMenu, police, queue1);
+                            menuScores(ImageMenu, police, queue1);
                             al_clear_to_color(BLANC);
                             al_draw_bitmap(ImageMenu, 0, 0, 0);
                             for (i = 0; i < nbBoutons; ++i) {
