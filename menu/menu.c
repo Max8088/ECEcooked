@@ -29,7 +29,7 @@ bool EstDansLeBouton(Bouton bouton, float x, float y) {
             y >= bouton.y && y <= bouton.y + bouton.height);
 }
 
-void Credits(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE* queue1) {
+void Credits(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE* queue1) {
     bool done = false;
     Bouton boutons[] = {
             {-10, 612, 130, 70, "<-"}
@@ -143,7 +143,24 @@ void menuOptions(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FO
                 for (int i = 0; i < nbBoutonsSousMenu; ++i) {
                     if (EstDansLeBouton(boutonsSousMenu[i], event6.mouse.x, event6.mouse.y)) {
                         if (!(strcmp(boutonsSousMenu[i].texte, "Credits"))) {
-                            Credits(display, ImageMenu, police, queue1);
+                            Credits(ImageMenu, police, queue1);
+                            al_clear_to_color(BLANC);
+                            al_draw_bitmap(ImageMenu, 0, 0, 0);
+                            for (i = 0; i < nbBoutons; ++i) {
+                                if (EstDansLeBouton(boutons[i], event6.mouse.x, event6.mouse.y)) {
+                                    dessinerBouton2(boutons[i], police, NOIR, BLANC);
+                                } else {
+                                    dessinerBouton1(boutons[i], police, NOIR, GRIS_CLAIR);
+                                }
+                            }
+                            for (i = 0; i < nbBoutonsSousMenu; ++i) {
+                                if (EstDansLeBouton(boutonsSousMenu[i], event6.mouse.x, event6.mouse.y)) {
+                                    dessinerBouton2(boutonsSousMenu[i], police, NOIR_TRANSPARENT, GRIS_CLAIR);
+                                } else {
+                                    dessinerBouton1(boutonsSousMenu[i], police, NOIR, BLANC);
+                                }
+                            }
+                            al_flip_display();
                         }
                     }
                 }
@@ -249,9 +266,29 @@ void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *pol
                         }
                         if (!(strcmp(boutons[i].texte, "Options"))) {
                             menuOptions(display, ImageMenu, police, queue1);
+                            al_clear_to_color(BLANC);
+                            al_draw_bitmap(ImageMenu, 0, 0, 0);
+                            for (i = 0; i < nbBoutons; ++i) {
+                                if (EstDansLeBouton(boutons[i], event2.mouse.x, event2.mouse.y)) {
+                                    dessinerBouton2(boutons[i], police, NOIR_TRANSPARENT, GRIS_CLAIR_TRANSPARENT);
+                                } else {
+                                    dessinerBouton1(boutons[i], police, NOIR, BLANC);
+                                }
+                            }
+                            al_flip_display();
                         }
                         if (!(strcmp(boutons[i].texte, "Scores"))) {
                             menuScores(display, ImageMenu, police, queue1);
+                            al_clear_to_color(BLANC);
+                            al_draw_bitmap(ImageMenu, 0, 0, 0);
+                            for (i = 0; i < nbBoutons; ++i) {
+                                if (EstDansLeBouton(boutons[i], event2.mouse.x, event2.mouse.y)) {
+                                    dessinerBouton2(boutons[i], police, NOIR_TRANSPARENT, GRIS_CLAIR_TRANSPARENT);
+                                } else {
+                                    dessinerBouton1(boutons[i], police, NOIR, BLANC);
+                                }
+                            }
+                            al_flip_display();
                         }
                         if (!(strcmp(boutons[i].texte, "Exit"))) {
                             QuitterMenu = true;
