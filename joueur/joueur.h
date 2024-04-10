@@ -8,7 +8,7 @@
 #include "../constantes.h"
 
 typedef struct {
-    char pseudo[25];
+    char pseudo[13];
 } Joueur;
 
 void ChoisirPseudo(Joueur *joueur1, Joueur *joueur2, ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu,

@@ -31,6 +31,7 @@ int main(void) {
 
     al_register_event_source(queue1, al_get_display_event_source(display));
     al_register_event_source(queue1, al_get_keyboard_event_source());
+    al_register_event_source(queue1, al_get_mouse_event_source());
 
     al_set_window_title(display, "Escooked");
     al_set_window_position(display, 130, 30);
@@ -51,7 +52,7 @@ int main(void) {
             case ALLEGRO_EVENT_KEY_UP:
                 switch (event1.keyboard.keycode) {
                     case ALLEGRO_KEY_ENTER:
-                        menu(display, ImageMenu, police);
+                        menu(display, ImageMenu, police, queue1);
                         fini = true;
                         break;
                     case ALLEGRO_KEY_ESCAPE:

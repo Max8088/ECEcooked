@@ -225,8 +225,7 @@ void menuScores(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FON
     queue5 = NULL;
 }
 
-void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police) {
-    ALLEGRO_EVENT_QUEUE *queue2 = NULL;
+void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE* queue1) {
     Joueur joueur1;
     Joueur joueur2;
     int LancerJeu = 0;
@@ -239,12 +238,6 @@ void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *pol
     int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
     bool QuitterMenu = false;
 
-    queue2 = al_create_event_queue();
-    assert(queue2);
-
-    al_register_event_source(queue2, al_get_display_event_source(display));
-    al_register_event_source(queue2, al_get_mouse_event_source());
-
     al_clear_to_color(BLANC);
     al_draw_bitmap(ImageMenu, 0, 0, 0);
     for (int i = 0; i < nbBoutons; ++i) {
@@ -254,7 +247,7 @@ void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *pol
 
     while (!QuitterMenu) {
         ALLEGRO_EVENT event2;
-        al_wait_for_event(queue2, &event2);
+        al_wait_for_event(queue1, &event2);
 
         switch (event2.type) {
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
@@ -295,6 +288,4 @@ void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *pol
                 break;
         }
     }
-    al_destroy_event_queue(queue2);
-    queue2 = NULL;
 }

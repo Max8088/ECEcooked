@@ -15,7 +15,7 @@ ChoisirPseudo(Joueur *joueur1, Joueur *joueur2, ALLEGRO_DISPLAY *display, ALLEGR
     bool joueur2_saisi = false;
     bool done = false;
     Bouton boutons[] = {
-            {-10, 612, 140, 70, "<-"},
+            {-10,  612, 140, 70, "<-"},
             {1118, 612, 140, 70, "->"}
     };
     Bouton boutonPseudo1 = {300, 255, 650, 70, "Pseudo player 1:"};
