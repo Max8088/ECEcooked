@@ -29,19 +29,12 @@ bool EstDansLeBouton(Bouton bouton, float x, float y) {
             y >= bouton.y && y <= bouton.y + bouton.height);
 }
 
-void Credits(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police) {
-    ALLEGRO_EVENT_QUEUE *queue8 = NULL;
+void Credits(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE* queue1) {
     bool done = false;
     Bouton boutons[] = {
             {-10, 612, 130, 70, "<-"}
     };
     int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
-
-    queue8 = al_create_event_queue();
-    assert(queue8);
-
-    al_register_event_source(queue8, al_get_display_event_source(display));
-    al_register_event_source(queue8, al_get_mouse_event_source());
 
     al_clear_to_color(BLANC);
     al_draw_bitmap(ImageMenu, 0, 0, 0);
@@ -56,7 +49,7 @@ void Credits(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *
 
     while (!done) {
         ALLEGRO_EVENT event7;
-        al_wait_for_event(queue8, &event7);
+        al_wait_for_event(queue1, &event7);
         switch (event7.type) {
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
                 done = true;
@@ -88,12 +81,9 @@ void Credits(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *
                 break;
         }
     }
-    al_destroy_event_queue(queue8);
-    queue8 = NULL;
 }
 
-void menuOptions(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police) {
-    ALLEGRO_EVENT_QUEUE *queue6 = NULL;
+void menuOptions(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE* queue1) {
     bool done = false;
     Bouton boutons[] = {
             {-10, 612, 130, 70, "<-"}
@@ -105,12 +95,6 @@ void menuOptions(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FO
     };
     int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
     int nbBoutonsSousMenu = sizeof(boutonsSousMenu) / sizeof(boutonsSousMenu[0]);
-
-    queue6 = al_create_event_queue();
-    assert(queue6);
-
-    al_register_event_source(queue6, al_get_display_event_source(display));
-    al_register_event_source(queue6, al_get_mouse_event_source());
 
     al_clear_to_color(NOIR);
     al_draw_bitmap(ImageMenu, 0, 0, 0);
@@ -124,7 +108,7 @@ void menuOptions(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FO
 
     while (!done) {
         ALLEGRO_EVENT event6;
-        al_wait_for_event(queue6, &event6);
+        al_wait_for_event(queue1, &event6);
         switch (event6.type) {
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
                 done = true;
@@ -159,30 +143,21 @@ void menuOptions(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FO
                 for (int i = 0; i < nbBoutonsSousMenu; ++i) {
                     if (EstDansLeBouton(boutonsSousMenu[i], event6.mouse.x, event6.mouse.y)) {
                         if (!(strcmp(boutonsSousMenu[i].texte, "Credits"))) {
-                            Credits(display, ImageMenu, police);
+                            Credits(display, ImageMenu, police, queue1);
                         }
                     }
                 }
                 break;
         }
     }
-    al_destroy_event_queue(queue6);
-    queue6 = NULL;
 }
 
-void menuScores(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police) {
-    ALLEGRO_EVENT_QUEUE *queue5 = NULL;
+void menuScores(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE* queue1) {
     bool done = false;
     Bouton boutons[] = {
             {-10, 612, 130, 70, "<-"}
     };
     int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
-
-    queue5 = al_create_event_queue();
-    assert(queue5);
-
-    al_register_event_source(queue5, al_get_display_event_source(display));
-    al_register_event_source(queue5, al_get_mouse_event_source());
 
     al_clear_to_color(NOIR);
     al_draw_bitmap(ImageMenu, 0, 0, 0);
@@ -193,7 +168,7 @@ void menuScores(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FON
 
     while (!done) {
         ALLEGRO_EVENT event5;
-        al_wait_for_event(queue5, &event5);
+        al_wait_for_event(queue1, &event5);
         al_clear_to_color(BLANC);
         al_draw_bitmap(ImageMenu, 0, 0, 0);
         switch (event5.type) {
@@ -221,8 +196,6 @@ void menuScores(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FON
                 break;
         }
     }
-    al_destroy_event_queue(queue5);
-    queue5 = NULL;
 }
 
 void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE* queue1) {
@@ -275,10 +248,10 @@ void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *pol
                             }
                         }
                         if (!(strcmp(boutons[i].texte, "Options"))) {
-                            menuOptions(display, ImageMenu, police);
+                            menuOptions(display, ImageMenu, police, queue1);
                         }
                         if (!(strcmp(boutons[i].texte, "Scores"))) {
-                            menuScores(display, ImageMenu, police);
+                            menuScores(display, ImageMenu, police, queue1);
                         }
                         if (!(strcmp(boutons[i].texte, "Exit"))) {
                             QuitterMenu = true;
