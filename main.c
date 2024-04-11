@@ -5,6 +5,8 @@
 int main(void) {
     ALLEGRO_DISPLAY *display = NULL;
     ALLEGRO_BITMAP *ImageMenu = NULL;
+    ALLEGRO_BITMAP *decor1 = NULL;
+    ALLEGRO_BITMAP *personnage = NULL;
     ALLEGRO_EVENT_QUEUE *queue1 = NULL;
     ALLEGRO_FONT *police = NULL;
     ALLEGRO_FONT *policeTitre = NULL;
@@ -22,6 +24,10 @@ int main(void) {
     assert(display);
     ImageMenu = al_load_bitmap("../images/fondmenuV2.jpg");
     assert(ImageMenu);
+    decor1 = al_load_bitmap("../images/decor1.png");
+    assert(decor1);
+    personnage = al_load_bitmap("../images/personnage (2).png");
+    assert(personnage);
     queue1 = al_create_event_queue();
     assert(queue1);
     police = al_load_ttf_font("../police/RubikDoodleShadow-Regular.ttf", 50, 0);
@@ -52,7 +58,7 @@ int main(void) {
             case ALLEGRO_EVENT_KEY_UP:
                 switch (event1.keyboard.keycode) {
                     case ALLEGRO_KEY_ENTER:
-                        menu(display, ImageMenu, police, queue1);
+                        menu(display, ImageMenu, decor1, police, queue1);
                         fini = true;
                         break;
                     case ALLEGRO_KEY_ESCAPE:

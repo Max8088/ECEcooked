@@ -7,6 +7,6 @@
 
 #include "../constantes.h"
 
-void jeu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police);
+void jeu(ALLEGRO_BITMAP *decor1, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE* queue1);
 
 #endif //ESCOOKED_JOUER_H
