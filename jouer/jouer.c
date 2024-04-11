@@ -3,11 +3,7 @@
 //
 #include "../constantes.h"
 #include "../joueur/joueur.h"
-
-typedef struct {
-    ALLEGRO_BITMAP* image;
-    int x, y;
-}ElementCuisine;
+#include "jouer.h"
 
 #define NB_LIGNES 9
 #define NB_COLONNES 17
@@ -15,8 +11,8 @@ typedef struct {
 #define MARGE_GAUCHE_DROITE 114
 #define MARGE_HAUT_BAS 81
 
-void afficherJeuDepuisFichier(ALLEGRO_BITMAP* sol, ALLEGRO_BITMAP* personnage) {
-    FILE* fichier = fopen("../FichierTexte", "r");
+void afficherJeuDepuisFichier(ALLEGRO_BITMAP *sol, ALLEGRO_BITMAP *personnage) {
+    FILE *fichier = fopen("../FichierTexte", "r");
     if (!fichier) {
         fprintf(stderr, "Erreur lors de l'ouverture du fichier.\n");
         exit(EXIT_FAILURE);
@@ -55,12 +51,9 @@ void afficherJeuDepuisFichier(ALLEGRO_BITMAP* sol, ALLEGRO_BITMAP* personnage) {
     fclose(fichier);
 }
 
-void jeu(ALLEGRO_BITMAP *decor1, ALLEGRO_BITMAP* sol, ALLEGRO_BITMAP* personnage, ALLEGRO_EVENT_QUEUE* queue1, Joueur joueur1, Joueur joueur2) {
-    FILE* fichiertxt = NULL;
+void jeu(ALLEGRO_BITMAP *decor1, ALLEGRO_BITMAP *sol, ALLEGRO_BITMAP *personnage, ALLEGRO_EVENT_QUEUE *queue1,
+         Joueur joueur1, Joueur joueur2) {
     bool fini = false;
-
-    fichiertxt = fopen("../FichierTexte", "r");
-    assert(fichiertxt);
 
     al_clear_to_color(BLANC);
     al_draw_bitmap(decor1, 0, 0, 0);
