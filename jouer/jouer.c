@@ -2,22 +2,74 @@
 // Created by pierr on 03/04/2024.
 //
 #include "../constantes.h"
+#include "../joueur/joueur.h"
 
-void jeu(ALLEGRO_BITMAP *decor1, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE* queue1) {
+typedef struct {
+    ALLEGRO_BITMAP* image;
+    int x, y;
+}ElementCuisine;
+
+#define NB_LIGNES 9
+#define NB_COLONNES 17
+#define TAILLE_CASE 60
+#define MARGE_GAUCHE_DROITE 114
+#define MARGE_HAUT_BAS 81
+
+void afficherJeuDepuisFichier(ALLEGRO_BITMAP* sol, ALLEGRO_BITMAP* personnage) {
+    FILE* fichier = fopen("../FichierTexte", "r");
+    if (!fichier) {
+        fprintf(stderr, "Erreur lors de l'ouverture du fichier.\n");
+        exit(EXIT_FAILURE);
+    }
+    if (!sol || !personnage) {
+        fprintf(stderr, "Erreur lors du chargement des images.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    int x, y;
+    int entier;
+
+    for (int i = 0; i < NB_LIGNES; i++) {
+        for (int j = 0; j < NB_COLONNES; j++) {
+            if (fscanf(fichier, "%d", &entier) == EOF) {
+                fprintf(stderr, "Erreur : Fin de fichier prématurée.\n");
+                exit(EXIT_FAILURE);
+            }
+
+            x = MARGE_GAUCHE_DROITE + j * TAILLE_CASE;
+            y = MARGE_HAUT_BAS + i * TAILLE_CASE;
+
+            switch (entier) {
+                case 0:
+                    al_draw_bitmap(sol, x, y, 0);
+                    break;
+                case 1:
+                    al_draw_bitmap(personnage, x, y, 0);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    al_flip_display();
+    fclose(fichier);
+}
+
+void jeu(ALLEGRO_BITMAP *decor1, ALLEGRO_BITMAP* sol, ALLEGRO_BITMAP* personnage, ALLEGRO_EVENT_QUEUE* queue1, Joueur joueur1, Joueur joueur2) {
+    FILE* fichiertxt = NULL;
     bool fini = false;
+
+    fichiertxt = fopen("../FichierTexte", "r");
+    assert(fichiertxt);
 
     al_clear_to_color(BLANC);
     al_draw_bitmap(decor1, 0, 0, 0);
-    //al_draw_text(police, al_map_rgba(0, 0, 0, 200), 640, 351, ALLEGRO_ALIGN_CENTRE, "GAME STARTING...");
     al_flip_display();
 
     while (!fini) {
         ALLEGRO_EVENT event4;
         al_wait_for_event(queue1, &event4);
-        //al_clear_to_color(BLANC);
-        al_draw_bitmap(decor1, 0, 0, 0);
-        //al_draw_text(police, al_map_rgba(0, 0, 0, 200), 640, 351, ALLEGRO_ALIGN_CENTRE, "GAME STARTING...");
-        al_flip_display();
+        afficherJeuDepuisFichier(sol, personnage);
         switch (event4.type) {
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
                 fini = true;

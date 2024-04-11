@@ -10,7 +10,8 @@ add_executable(EScooked main.c
         joueur/joueur.c
         joueur/joueur.h
         jouer/jouer.c
-        jouer/jouer.h)
+        jouer/jouer.h
+        FichierTexte)
 
 IF(WIN32)
     target_link_libraries(EScooked -lmingw32 -lallegro-5.0.10-monolith-md-debug)

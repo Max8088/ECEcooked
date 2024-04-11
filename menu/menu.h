@@ -20,7 +20,7 @@ void dessinerMenu(ALLEGRO_BITMAP* ImageMenu, int nbBoutons, Bouton boutons[], AL
 
 bool EstDansLeBouton(Bouton bouton, float x, float y);
 
-void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *decor1, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE* queue1);
+void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *decor1, ALLEGRO_BITMAP* sol, ALLEGRO_BITMAP* personnage, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE* queue1);
 
 void menuScores(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE* queue1);
 

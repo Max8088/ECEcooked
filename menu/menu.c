@@ -232,7 +232,7 @@ void menuScores(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_Q
     }
 }
 
-void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *decor1, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE* queue1) {
+void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *decor1, ALLEGRO_BITMAP* sol, ALLEGRO_BITMAP* personnage, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE* queue1) {
     Joueur joueur1;
     Joueur joueur2;
     int LancerJeu = 0;
@@ -269,7 +269,7 @@ void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *d
                         if (!(strcmp(boutons[i].texte, "Play"))) {
                             ChoisirPseudo(&joueur1, &joueur2, display, ImageMenu, police, &LancerJeu);
                             if (LancerJeu) {
-                                jeu(decor1, police, queue1);
+                                jeu(decor1, sol, personnage, queue1, joueur1, joueur2);
                             }
                             dessinerMenu(ImageMenu, nbBoutons, boutons, event2, police);
                         }
