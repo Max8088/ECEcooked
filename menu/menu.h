@@ -1,3 +1,4 @@
+
 //
 // Created by pierr on 03/04/2024.
 //
@@ -16,14 +17,18 @@ void dessinerBouton1(Bouton bouton, ALLEGRO_FONT *police, ALLEGRO_COLOR couleurR
 
 void dessinerBouton2(Bouton bouton, ALLEGRO_FONT *police, ALLEGRO_COLOR couleurRectangle, ALLEGRO_COLOR couleurTexte);
 
+void
+dessinerMenu(ALLEGRO_BITMAP *ImageMenu, int nbBoutons, Bouton boutons[], ALLEGRO_EVENT event2, ALLEGRO_FONT *police);
+
 bool EstDansLeBouton(Bouton bouton, float x, float y);
 
-void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE* queue1);
+void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *decor1, ALLEGRO_BITMAP *sol,
+          ALLEGRO_BITMAP *personnage,ALLEGRO_BITMAP *cuisson,ALLEGRO_BITMAP *decoupe,ALLEGRO_BITMAP *distrib_assiette,ALLEGRO_BITMAP *poubelle,ALLEGRO_BITMAP *sortie, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1);
 
-void menuScores(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police);
+void menuScores(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1);
 
-void menuOptions(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police);
+void menuOptions(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1);
 
-void Credits(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police);
+void Credits(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1);
 
 #endif //ESCOOKED_MENU_H

@@ -1,3 +1,4 @@
+
 //
 // Created by pierr on 03/04/2024.
 //
@@ -9,6 +10,7 @@
 
 typedef struct {
     char pseudo[13];
+    ALLEGRO_BITMAP *image;
 } Joueur;
 
 void ChoisirPseudo(Joueur *joueur1, Joueur *joueur2, ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu,
