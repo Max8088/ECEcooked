@@ -1,8 +1,6 @@
-
 #include <stdio.h>
 #include "constantes.h"
 #include "./menu/menu.h"
-#include "./jouer/jouer.h"
 
 int main(void) {
     ALLEGRO_DISPLAY *display = NULL;
