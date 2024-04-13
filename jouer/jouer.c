@@ -5,13 +5,10 @@
 #include "../joueur/joueur.h"
 #include "jouer.h"
 
-#define NB_LIGNES 9
-#define NB_COLONNES 17
-#define TAILLE_CASE 60
-#define MARGE_GAUCHE_DROITE 114
-#define MARGE_HAUT_BAS 81
 
-void afficherJeuDepuisFichier(ALLEGRO_BITMAP *sol, ALLEGRO_BITMAP *personnage, ALLEGRO_BITMAP *cuisson,ALLEGRO_BITMAP *decoupe,ALLEGRO_BITMAP *distrib_assiette,ALLEGRO_BITMAP *poubelle,ALLEGRO_BITMAP *sortie ) {
+void afficherJeuDepuisFichier(ALLEGRO_BITMAP *sol, ALLEGRO_BITMAP *personnage, ALLEGRO_BITMAP *cuisson,
+                              ALLEGRO_BITMAP *decoupe, ALLEGRO_BITMAP *distrib_assiette, ALLEGRO_BITMAP *poubelle,
+                              ALLEGRO_BITMAP *sortie, ALLEGRO_BITMAP *planDeTravail) {
     FILE *fichier = fopen("../FichierTexte", "r");
     if (!fichier) {
         fprintf(stderr, "Erreur lors de l'ouverture du fichier.\n");
@@ -37,7 +34,7 @@ void afficherJeuDepuisFichier(ALLEGRO_BITMAP *sol, ALLEGRO_BITMAP *personnage, A
 
             switch (entier) {
                 case 0:
-                    al_draw_bitmap(sol, x, y, 0);
+                    //al_draw_bitmap(sol, x, y, 0);
                     break;
                 case 1:
                     al_draw_bitmap(personnage, x, y, 0);
@@ -57,6 +54,9 @@ void afficherJeuDepuisFichier(ALLEGRO_BITMAP *sol, ALLEGRO_BITMAP *personnage, A
                 case 6:
                     al_draw_bitmap(sortie, x, y, 0);
                     break;
+                case 7:
+                    al_draw_bitmap(planDeTravail, x, y, 0);
+                    break;
                 default:
                     break;
 
@@ -67,19 +67,21 @@ void afficherJeuDepuisFichier(ALLEGRO_BITMAP *sol, ALLEGRO_BITMAP *personnage, A
     fclose(fichier);
 }
 
-void jeu(ALLEGRO_BITMAP *decor1, ALLEGRO_BITMAP *sol, ALLEGRO_BITMAP *personnage,ALLEGRO_BITMAP *cuisson,ALLEGRO_BITMAP *decoupe,
-         ALLEGRO_BITMAP *distrib_assiette,ALLEGRO_BITMAP *poubelle,ALLEGRO_BITMAP *sortie, ALLEGRO_EVENT_QUEUE *queue1,
+void jeu(ALLEGRO_BITMAP *decor1, ALLEGRO_BITMAP *sol, ALLEGRO_BITMAP *personnage, ALLEGRO_BITMAP *cuisson,
+         ALLEGRO_BITMAP *decoupe,
+         ALLEGRO_BITMAP *distrib_assiette, ALLEGRO_BITMAP *poubelle, ALLEGRO_BITMAP *sortie,
+         ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_BITMAP *planDeTravail,
          Joueur joueur1, Joueur joueur2) {
     bool fini = false;
 
     al_clear_to_color(BLANC);
     al_draw_bitmap(decor1, 0, 0, 0);
-    al_flip_display();
+    afficherJeuDepuisFichier(sol, personnage, cuisson, decoupe, distrib_assiette, poubelle, sortie, planDeTravail);
+    //al_flip_display();
 
     while (!fini) {
         ALLEGRO_EVENT event4;
         al_wait_for_event(queue1, &event4);
-        afficherJeuDepuisFichier(sol, personnage,cuisson,decoupe,distrib_assiette,poubelle,sortie);
         switch (event4.type) {
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
                 fini = true;

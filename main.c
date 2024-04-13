@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "constantes.h"
 #include "./menu/menu.h"
+#include "./jouer/jouer.h"
 
 int main(void) {
     ALLEGRO_DISPLAY *display = NULL;
@@ -10,12 +11,22 @@ int main(void) {
     ALLEGRO_BITMAP *sol = NULL;
     ALLEGRO_BITMAP *cuisson = NULL;
     ALLEGRO_BITMAP *decoupe = NULL;
+    ALLEGRO_BITMAP *planDeTravail = NULL;
     ALLEGRO_BITMAP *distrib_assiette = NULL;
     ALLEGRO_BITMAP *poubelle = NULL;
     ALLEGRO_BITMAP *sortie = NULL;
     ALLEGRO_EVENT_QUEUE *queue1 = NULL;
     ALLEGRO_FONT *police = NULL;
     ALLEGRO_FONT *policeTitre = NULL;
+    ElementCuisine elementsCuisine[] = {
+            {sol, 0, 0},
+            {cuisson, 0, 0},
+            {decoupe, 0, 0},
+            {planDeTravail, 0, 0},
+            {distrib_assiette, 0, 0},
+            {poubelle, 0, 0},
+            {sortie, 0, 0}
+    };
     bool fini = false;
 
     assert(al_init());
@@ -30,7 +41,7 @@ int main(void) {
     assert(display);
     ImageMenu = al_load_bitmap("../images/fondmenuV2.jpg");
     assert(ImageMenu);
-    decor1 = al_load_bitmap("../images/decor1.png");
+    decor1 = al_load_bitmap("../images/decor2.png");
     assert(decor1);
     personnage = al_load_bitmap("../images/personnage(1).png");
     assert(personnage);
@@ -40,6 +51,8 @@ int main(void) {
     assert(cuisson);
     decoupe = al_load_bitmap("../images/decoupe.png");
     assert(decoupe);
+    planDeTravail = al_load_bitmap("../images/plantravail.png");
+    assert(planDeTravail);
     distrib_assiette = al_load_bitmap("../images/distributeurassiettes.png");
     assert(distrib_assiette);
     poubelle = al_load_bitmap("../images/poubelle.png");
@@ -76,7 +89,7 @@ int main(void) {
             case ALLEGRO_EVENT_KEY_UP:
                 switch (event1.keyboard.keycode) {
                     case ALLEGRO_KEY_ENTER:
-                        menu(display, ImageMenu, decor1, sol, personnage,cuisson,decoupe,distrib_assiette,poubelle,sortie, police, queue1);
+                        menu(display, ImageMenu, decor1, sol, personnage, cuisson, decoupe, planDeTravail, distrib_assiette, poubelle, sortie, police, queue1);
                         fini = true;
                         break;
                     case ALLEGRO_KEY_ESCAPE:
@@ -92,6 +105,7 @@ int main(void) {
     al_destroy_bitmap(personnage);
     al_destroy_bitmap(sol);
     al_destroy_bitmap(decoupe);
+    al_destroy_bitmap(planDeTravail);
     al_destroy_bitmap(distrib_assiette);
     al_destroy_bitmap(poubelle);
     al_destroy_bitmap(sortie);
@@ -104,6 +118,7 @@ int main(void) {
     personnage = NULL;
     sol = NULL;
     decoupe = NULL;
+    planDeTravail = NULL;
     distrib_assiette = NULL;
     poubelle = NULL;
     sortie = NULL;
