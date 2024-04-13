@@ -89,7 +89,8 @@ int main(void) {
             case ALLEGRO_EVENT_KEY_UP:
                 switch (event1.keyboard.keycode) {
                     case ALLEGRO_KEY_ENTER:
-                        menu(display, ImageMenu, decor1, sol, personnage, cuisson, decoupe, planDeTravail, distrib_assiette, poubelle, sortie, police, queue1);
+                        menu(display, ImageMenu, decor1, sol, personnage, cuisson, decoupe, planDeTravail,
+                             distrib_assiette, poubelle, sortie, police, queue1);
                         fini = true;
                         break;
                     case ALLEGRO_KEY_ESCAPE:
