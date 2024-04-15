@@ -67,9 +67,9 @@ int main(void) {
     police = al_load_ttf_font("../police/RubikDoodleShadow-Regular.ttf", 50, 0);
     assert(police);
     policeTitre = al_load_ttf_font("../police/BungeeShade-Regular.ttf", 90, 0);
-    assert(policeTitre);/*
-    sonBouton = al_load_sample("../soundeffect/cliqueBouton.wav");
-    assert(sonBouton);*/
+    assert(policeTitre);
+    sonBouton = al_load_sample("../soundeffect/mixkit-arcade-game-jump-coin-216.wav");
+    assert(sonBouton);
 
     al_register_event_source(queue1, al_get_display_event_source(display));
     al_register_event_source(queue1, al_get_keyboard_event_source());

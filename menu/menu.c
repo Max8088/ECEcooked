@@ -275,7 +275,7 @@ void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *d
                 for (int i = 0; i < nbBoutons; ++i) {
                     if (EstDansLeBouton(boutons[i], event2.mouse.x, event2.mouse.y)) {
                         if (!(strcmp(boutons[i].texte, "Play"))) {
-                            //jouerSon(sonBouton);
+                            jouerSon(sonBouton);
                             ChoisirPseudo(&joueur1, &joueur2, display, ImageMenu, police, &LancerJeu);
                             if (LancerJeu) {
                                 jeu(decor1, sol, personnage, cuisson, decoupe, distrib_assiette, poubelle, sortie,
