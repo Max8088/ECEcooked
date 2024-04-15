@@ -29,6 +29,10 @@ bool EstDansLeBouton(Bouton bouton, float x, float y) {
             y >= bouton.y && y <= bouton.y + bouton.height);
 }
 
+void jouerSon(ALLEGRO_SAMPLE* son) {
+    al_play_sample(son, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+}
+
 void
 dessinerMenu(ALLEGRO_BITMAP *ImageMenu, int nbBoutons, Bouton boutons[], ALLEGRO_EVENT event2, ALLEGRO_FONT *police) {
     al_clear_to_color(BLANC);
@@ -236,7 +240,7 @@ void menuScores(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_Q
 void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *decor1, ALLEGRO_BITMAP *sol,
           ALLEGRO_BITMAP *personnage, ALLEGRO_BITMAP *cuisson, ALLEGRO_BITMAP *decoupe, ALLEGRO_BITMAP *planDeTravail,
           ALLEGRO_BITMAP *distrib_assiette, ALLEGRO_BITMAP *poubelle, ALLEGRO_BITMAP *sortie, ALLEGRO_FONT *police,
-          ALLEGRO_EVENT_QUEUE *queue1) {
+          ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_SAMPLE* sonBouton) {
     Joueur joueur1;
     Joueur joueur2;
     int LancerJeu = 0;
@@ -271,6 +275,7 @@ void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *d
                 for (int i = 0; i < nbBoutons; ++i) {
                     if (EstDansLeBouton(boutons[i], event2.mouse.x, event2.mouse.y)) {
                         if (!(strcmp(boutons[i].texte, "Play"))) {
+                            //jouerSon(sonBouton);
                             ChoisirPseudo(&joueur1, &joueur2, display, ImageMenu, police, &LancerJeu);
                             if (LancerJeu) {
                                 jeu(decor1, sol, personnage, cuisson, decoupe, distrib_assiette, poubelle, sortie,

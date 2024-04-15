@@ -18,6 +18,7 @@ int main(void) {
     ALLEGRO_EVENT_QUEUE *queue1 = NULL;
     ALLEGRO_FONT *police = NULL;
     ALLEGRO_FONT *policeTitre = NULL;
+    ALLEGRO_SAMPLE* sonBouton = NULL;
     ElementCuisine elementsCuisine[] = {
             {sol, 0, 0},
             {cuisson, 0, 0},
@@ -36,6 +37,8 @@ int main(void) {
     al_init_font_addon();
     assert(al_init_ttf_addon());
     assert(al_install_mouse());
+    assert(al_install_audio());
+    assert(al_init_acodec_addon());
 
     display = al_create_display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
     assert(display);
@@ -64,7 +67,9 @@ int main(void) {
     police = al_load_ttf_font("../police/RubikDoodleShadow-Regular.ttf", 50, 0);
     assert(police);
     policeTitre = al_load_ttf_font("../police/BungeeShade-Regular.ttf", 90, 0);
-    assert(policeTitre);
+    assert(policeTitre);/*
+    sonBouton = al_load_sample("../soundeffect/cliqueBouton.wav");
+    assert(sonBouton);*/
 
     al_register_event_source(queue1, al_get_display_event_source(display));
     al_register_event_source(queue1, al_get_keyboard_event_source());
@@ -90,7 +95,7 @@ int main(void) {
                 switch (event1.keyboard.keycode) {
                     case ALLEGRO_KEY_ENTER:
                         menu(display, ImageMenu, decor1, sol, personnage, cuisson, decoupe, planDeTravail,
-                             distrib_assiette, poubelle, sortie, police, queue1);
+                             distrib_assiette, poubelle, sortie, police, queue1, sonBouton);
                         fini = true;
                         break;
                     case ALLEGRO_KEY_ESCAPE:
@@ -113,6 +118,7 @@ int main(void) {
     al_destroy_event_queue(queue1);
     al_destroy_font(police);
     al_destroy_font(policeTitre);
+    al_destroy_sample(sonBouton);
     policeTitre = NULL;
     display = NULL;
     ImageMenu = NULL;
@@ -126,5 +132,6 @@ int main(void) {
     cuisson = NULL;
     queue1 = NULL;
     police = NULL;
+    sonBouton = NULL;
     return 0;
 }
