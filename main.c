@@ -70,6 +70,15 @@ int main(void) {
     assert(policeTitre);
     sonBouton = al_load_sample("../soundeffect/mixkit-arcade-game-jump-coin-216.wav");
     assert(sonBouton);
+    if (!al_reserve_samples(1)) {
+        fprintf(stderr, "Erreur : Impossible de réserver les échantillons audio.\n");
+        return -1;
+    }
+    ALLEGRO_MIXER *mixer = al_get_default_mixer();
+    if (!mixer) {
+        fprintf(stderr, "Erreur : Impossible d'obtenir le mélangeur par défaut.\n");
+        return -1;
+    }
 
     al_register_event_source(queue1, al_get_display_event_source(display));
     al_register_event_source(queue1, al_get_keyboard_event_source());

@@ -30,7 +30,7 @@ bool EstDansLeBouton(Bouton bouton, float x, float y) {
 }
 
 void jouerSon(ALLEGRO_SAMPLE* son) {
-    al_play_sample(son, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    al_play_sample(son, 10.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
 }
 
 void
@@ -259,6 +259,22 @@ void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *d
         dessinerBouton1(boutons[i], police, NOIR, BLANC);
     }
     al_flip_display();
+
+    ALLEGRO_SAMPLE_INSTANCE *sampleInstance = NULL;
+    sampleInstance = al_create_sample_instance(sonBouton);
+    if (!sampleInstance) {
+        fprintf(stderr, "Erreur : Impossible de créer l'instance de l'échantillon.\n");
+        return;
+    }
+    al_set_sample_instance_playmode(sampleInstance, ALLEGRO_PLAYMODE_ONCE);
+    al_attach_sample_instance_to_mixer(sampleInstance, al_get_default_mixer());
+
+    // Chargement du son
+    if (!sonBouton) {
+        fprintf(stderr, "Erreur : Chargement du son a échoué.\n");
+        al_destroy_sample_instance(sampleInstance);
+        return;
+    }
 
     while (!QuitterMenu) {
         ALLEGRO_EVENT event2;
