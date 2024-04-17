@@ -68,7 +68,7 @@ int main(void) {
     assert(police);
     policeTitre = al_load_ttf_font("../police/BungeeShade-Regular.ttf", 90, 0);
     assert(policeTitre);
-    sonBouton = al_load_sample("../soundeffect/mixkit-pebbles-click-1128.wav");
+    sonBouton = al_load_sample("../soundeffect/mixkit-arcade-game-jump-coin-216.wav");
     assert(sonBouton);
     if (!al_reserve_samples(1)) {
         fprintf(stderr, "Erreur : Impossible de réserver les échantillons audio.\n");

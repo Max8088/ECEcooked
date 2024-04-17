@@ -29,6 +29,11 @@ bool EstDansLeBouton(Bouton bouton, float x, float y) {
             y >= bouton.y && y <= bouton.y + bouton.height);
 }
 
+bool EstDansLeCurseur(CurseurSon curseurSon, float x, float y) {
+    return (x>= curseurSon.x && x <= curseurSon.x + curseurSon.width &&
+    y >= curseurSon.y && y <= curseurSon.y + curseurSon.height);
+}
+
 void jouerSon(ALLEGRO_SAMPLE* son) {
     al_play_sample(son, 10.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
 }
@@ -237,6 +242,58 @@ void menuScores(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_Q
     }
 }
 
+void dessinerCurseur(CurseurSon curseurSon, float volume, ALLEGRO_FONT* police) {
+    al_draw_filled_rounded_rectangle(curseurSon.x, curseurSon.y, curseurSon.x + curseurSon.width, curseurSon.y + curseurSon.height, 10, 10, NOIR);
+    char volumeText[20];
+    snprintf(volumeText, 20, "Volume: %.2f", volume);
+    al_draw_text(police, NOIR, curseurSon.x + curseurSon.width + 10, curseurSon.y + curseurSon.height / 2 - 10, ALLEGRO_ALIGN_LEFT, volumeText);
+
+}
+
+void ajusterVolume(ALLEGRO_SAMPLE_INSTANCE *sampleInstance, float volume) {
+    al_set_sample_instance_gain(sampleInstance, volume);
+}
+
+void menuVolume(ALLEGRO_EVENT_QUEUE* queue1, ALLEGRO_SAMPLE_INSTANCE* sampleInstance, ALLEGRO_FONT* police) {
+    bool fini = false;
+    float volume = 1.0;
+    Bouton boutons[] = {
+            {-10, 612, 130, 70, "<-"}
+    };
+    int nbBoutons= sizeof(boutons) / sizeof(boutons[0]);
+    CurseurSon curseurSon;
+
+    while (!fini) {
+        ALLEGRO_EVENT event;
+        al_wait_for_event(queue1, &event);
+
+        switch (event.type) {
+            case ALLEGRO_EVENT_DISPLAY_CLOSE:
+                fini = true;
+                break;
+            case ALLEGRO_EVENT_MOUSE_AXES:
+                if (EstDansLeCurseur(curseurSon, event.mouse.x, event.mouse.y)) {
+                    dessinerCurseur(curseurSon, volume, police);
+                } else{
+                    for (int i = 0; i < nbBoutons; ++i) {
+                        dessinerBouton1(boutons[i], police, NOIR, BLANC);
+                    }
+                }
+                break;
+            case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
+                if (EstDansLeBouton(boutons[0], event.mouse.x, event.mouse.y)) {
+                    fini = true;
+                } else if (EstDansLeCurseur(curseurSon, event.mouse.x, event.mouse.y)) {
+                    volume = (event.mouse.x - curseurSon.x) / curseurSon.width;
+                    ajusterVolume(sampleInstance, volume);
+                    dessinerCurseur(curseurSon, volume, police);
+                    al_flip_display();
+                }
+                break;
+        }
+    }
+}
+
 void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *decor1, ALLEGRO_BITMAP *sol,
           ALLEGRO_BITMAP *personnage, ALLEGRO_BITMAP *cuisson, ALLEGRO_BITMAP *decoupe, ALLEGRO_BITMAP *planDeTravail,
           ALLEGRO_BITMAP *distrib_assiette, ALLEGRO_BITMAP *poubelle, ALLEGRO_BITMAP *sortie, ALLEGRO_FONT *police,
@@ -300,10 +357,12 @@ void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *d
                             dessinerMenu(ImageMenu, nbBoutons, boutons, event2, police);
                         }
                         if (!(strcmp(boutons[i].texte, "Options"))) {
+                            jouerSon(sonBouton);
                             menuOptions(ImageMenu, police, queue1);
                             dessinerMenu(ImageMenu, nbBoutons, boutons, event2, police);
                         }
                         if (!(strcmp(boutons[i].texte, "Scores"))) {
+                            jouerSon(sonBouton);
                             menuScores(ImageMenu, police, queue1);
                             dessinerMenu(ImageMenu, nbBoutons, boutons, event2, police);
 
