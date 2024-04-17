@@ -18,7 +18,7 @@ int main(void) {
     ALLEGRO_EVENT_QUEUE *queue1 = NULL;
     ALLEGRO_FONT *police = NULL;
     ALLEGRO_FONT *policeTitre = NULL;
-    ALLEGRO_SAMPLE* sonBouton = NULL;
+    ALLEGRO_SAMPLE_INSTANCE * sonBouton = NULL;
     ElementCuisine elementsCuisine[] = {
             {sol, 0, 0},
             {cuisson, 0, 0},

@@ -36,7 +36,7 @@ void menuVolume(ALLEGRO_EVENT_QUEUE* queue1, ALLEGRO_SAMPLE_INSTANCE* sampleInst
 void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *decor1, ALLEGRO_BITMAP *sol,
           ALLEGRO_BITMAP *personnage, ALLEGRO_BITMAP *cuisson, ALLEGRO_BITMAP *decoupe, ALLEGRO_BITMAP *planDeTravail,
           ALLEGRO_BITMAP *distrib_assiette, ALLEGRO_BITMAP *poubelle, ALLEGRO_BITMAP *sortie, ALLEGRO_FONT *police,
-          ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_SAMPLE* sonBouton);
+          ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_SAMPLE_INSTANCE* sonBouton);
 
 void menuScores(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1);
 
