@@ -33,7 +33,6 @@ void SoundCliquedButton(ALLEGRO_SAMPLE *sonBoutonClique) {
     al_play_sample(sonBoutonClique, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, NULL);
 }
 
-
 void
 dessinerMenu(ALLEGRO_BITMAP *ImageMenu, int nbBoutons, Bouton boutons[], ALLEGRO_EVENT event2, ALLEGRO_FONT *police) {
     al_clear_to_color(BLANC);
@@ -172,18 +171,23 @@ void menuVolume(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_MIXER *
                 for (int i = 0; i < nbBoutonsV; ++i) {
                     if (EstDansLeBouton(volumeButtons[i], event5.mouse.x, event5.mouse.y)) {
                         if (!(strcmp(volumeButtons[i].texte, "0%"))) {
+                            SoundCliquedButton(sonBoutonClique);
                             al_set_sample_instance_gain(instanceMusique, 0.0);
                         }
                         if (!(strcmp(volumeButtons[i].texte, "25%"))) {
+                            SoundCliquedButton(sonBoutonClique);
                             al_set_sample_instance_gain(instanceMusique, 0.25);
                         }
                         if (!(strcmp(volumeButtons[i].texte, "50%"))) {
+                            SoundCliquedButton(sonBoutonClique);
                             al_set_sample_instance_gain(instanceMusique, 0.5);
                         }
                         if (!(strcmp(volumeButtons[i].texte, "75%"))) {
+                            SoundCliquedButton(sonBoutonClique);
                             al_set_sample_instance_gain(instanceMusique, 0.75);
                         }
                         if (!(strcmp(volumeButtons[i].texte, "100%"))) {
+                            SoundCliquedButton(sonBoutonClique);
                             al_set_sample_instance_gain(instanceMusique, 1.0);
                         }
                     }

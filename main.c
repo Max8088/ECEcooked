@@ -130,15 +130,6 @@ int main(void) {
     ALLEGRO_SAMPLE_INSTANCE *instanceMusique = NULL;
     ALLEGRO_SAMPLE *sonBoutonClique = NULL;
 
-    ElementCuisine elementsCuisine[] = {
-            {sol,              0, 0},
-            {cuisson,          0, 0},
-            {decoupe,          0, 0},
-            {planDeTravail,    0, 0},
-            {distrib_assiette, 0, 0},
-            {poubelle,         0, 0},
-            {sortie,           0, 0}
-    };
     bool fini = false;
 
     InitialiserAllegro();
