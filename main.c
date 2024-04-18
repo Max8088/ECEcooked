@@ -3,21 +3,33 @@
 #include "./menu/menu.h"
 #include "./jouer/jouer.h"
 
-void jouerMusiqueFond(ALLEGRO_SAMPLE *musiqueFond, ALLEGRO_SAMPLE_INSTANCE *instanceMusique, ALLEGRO_MIXER *mixer) {
-    musiqueFond = al_load_sample("../soundeffect/Elevator-music.wav");
-    if (!musiqueFond) {
+void InitialiserAllegro() {
+    assert(al_init());
+    assert(al_init_primitives_addon());
+    assert(al_init_image_addon());
+    assert(al_install_keyboard());
+    al_init_font_addon();
+    assert(al_init_ttf_addon());
+    assert(al_install_mouse());
+    assert(al_install_audio());
+    assert(al_init_acodec_addon());
+}
+
+void jouerMusiqueFond(ALLEGRO_SAMPLE **musiqueFond, ALLEGRO_SAMPLE_INSTANCE **instanceMusique, ALLEGRO_MIXER *mixer) {
+    *musiqueFond = al_load_sample("../soundeffect/Elevator-music.wav");
+    if (!*musiqueFond) {
         fprintf(stderr, "Impossible de charger la musique de fond.\n");
         return;
     }
-    instanceMusique = al_create_sample_instance(musiqueFond);
-    if (!instanceMusique) {
+    *instanceMusique = al_create_sample_instance(*musiqueFond);
+    if (!*instanceMusique) {
         fprintf(stderr, "Impossible de créer une instance de musique.\n");
         return;
     }
-    al_set_sample_instance_playmode(instanceMusique, ALLEGRO_PLAYMODE_LOOP);
-    al_set_sample_instance_gain(instanceMusique, 0.5);
-    al_attach_sample_instance_to_mixer(instanceMusique, mixer);
-    al_play_sample_instance(instanceMusique);
+    al_set_sample_instance_playmode(*instanceMusique, ALLEGRO_PLAYMODE_LOOP);
+    al_set_sample_instance_gain(*instanceMusique, 0.5);
+    al_attach_sample_instance_to_mixer(*instanceMusique, mixer);
+    al_play_sample_instance(*instanceMusique);
 }
 
 void Liberation(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *decor1, ALLEGRO_BITMAP *personnage,
@@ -129,26 +141,15 @@ int main(void) {
     };
     bool fini = false;
 
-    assert(al_init());
-    assert(al_init_primitives_addon());
-    assert(al_init_image_addon());
-    assert(al_install_keyboard());
-    al_init_font_addon();
-    assert(al_init_ttf_addon());
-    assert(al_install_mouse());
-    assert(al_install_audio());
-    assert(al_init_acodec_addon());
+    InitialiserAllegro();
+
     if (!al_reserve_samples(2)) {
         fprintf(stderr, "Erreur lors de la reservation des echantillons.\n");
         return -1;
     }
     ALLEGRO_MIXER *mixer = al_get_default_mixer();
-    if (!mixer) {
-        fprintf(stderr, "Erreur lors de la recuperation du mixer par defaut.\n");
-        return -1;
-    }
-    jouerMusiqueFond(musiqueFond, instanceMusique, mixer);
-    sonBoutonClique = al_load_sample("../soundeffect/click-sound.wav");
+
+    jouerMusiqueFond(&musiqueFond, &instanceMusique, mixer);
 
     display = al_create_display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
     assert(display);
@@ -178,6 +179,8 @@ int main(void) {
     assert(police);
     policeTitre = al_load_ttf_font("../police/BungeeShade-Regular.ttf", 90, 0);
     assert(policeTitre);
+    sonBoutonClique = al_load_sample("../soundeffect/click-sound.wav");
+    assert(sonBoutonClique);
 
     al_register_event_source(queue1, al_get_display_event_source(display));
     al_register_event_source(queue1, al_get_keyboard_event_source());
@@ -203,7 +206,8 @@ int main(void) {
                 switch (event1.keyboard.keycode) {
                     case ALLEGRO_KEY_ENTER:
                         menu(display, ImageMenu, decor1, sol, personnage, cuisson, decoupe, planDeTravail,
-                             distrib_assiette, poubelle, sortie, police, queue1, mixer, instanceMusique, sonBoutonClique);
+                             distrib_assiette, poubelle, sortie, police, queue1, mixer, instanceMusique,
+                             sonBoutonClique);
                         fini = true;
                         break;
                     case ALLEGRO_KEY_ESCAPE:

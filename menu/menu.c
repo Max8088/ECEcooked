@@ -48,7 +48,8 @@ dessinerMenu(ALLEGRO_BITMAP *ImageMenu, int nbBoutons, Bouton boutons[], ALLEGRO
     al_flip_display();
 }
 
-void Credits(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_SAMPLE *sonBoutonClique) {
+void
+Credits(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_SAMPLE *sonBoutonClique) {
     SoundCliquedButton(sonBoutonClique);
     bool done = false;
     Bouton boutons[] = {
@@ -105,8 +106,12 @@ void Credits(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEU
 }
 
 void menuVolume(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_MIXER *mixer, ALLEGRO_EVENT_QUEUE *queue1,
-                ALLEGRO_SAMPLE_INSTANCE *instanceMusique, ALLEGRO_SAMPLE* sonBoutonClique) {
+                ALLEGRO_SAMPLE_INSTANCE *instanceMusique, ALLEGRO_SAMPLE *sonBoutonClique) {
     SoundCliquedButton(sonBoutonClique);
+    if (!instanceMusique) {
+        fprintf(stderr, "Instance musique non initialisée.\n");
+        return;
+    }
     bool done = false;
     Bouton boutons[] = {
             {-10, 612, 130, 70, "<-"}
@@ -189,7 +194,7 @@ void menuVolume(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_MIXER *
 }
 
 void menuOptions(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_MIXER *mixer,
-                 ALLEGRO_SAMPLE_INSTANCE *instanceMusique, ALLEGRO_SAMPLE* sonBoutonClique) {
+                 ALLEGRO_SAMPLE_INSTANCE *instanceMusique, ALLEGRO_SAMPLE *sonBoutonClique) {
     SoundCliquedButton(sonBoutonClique);
     bool done = false;
     Bouton boutons[] = {
@@ -298,7 +303,8 @@ void menuOptions(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_
     }
 }
 
-void menuScores(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_SAMPLE *sonBoutonClique) {
+void menuScores(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1,
+                ALLEGRO_SAMPLE *sonBoutonClique) {
     SoundCliquedButton(sonBoutonClique);
     bool done = false;
     Bouton boutons[] = {
@@ -349,7 +355,8 @@ void menuScores(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_Q
 void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *decor1, ALLEGRO_BITMAP *sol,
           ALLEGRO_BITMAP *personnage, ALLEGRO_BITMAP *cuisson, ALLEGRO_BITMAP *decoupe, ALLEGRO_BITMAP *planDeTravail,
           ALLEGRO_BITMAP *distrib_assiette, ALLEGRO_BITMAP *poubelle, ALLEGRO_BITMAP *sortie, ALLEGRO_FONT *police,
-          ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_MIXER *mixer, ALLEGRO_SAMPLE_INSTANCE *instanceMusique, ALLEGRO_SAMPLE *sonBoutonClique) {
+          ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_MIXER *mixer, ALLEGRO_SAMPLE_INSTANCE *instanceMusique,
+          ALLEGRO_SAMPLE *sonBoutonClique) {
     SoundCliquedButton(sonBoutonClique);
     Joueur joueur1;
     Joueur joueur2;
