@@ -112,6 +112,8 @@ int main(void) {
     ALLEGRO_FONT *policeTitre = NULL;
     ALLEGRO_SAMPLE *musiqueFond = NULL;
     ALLEGRO_SAMPLE_INSTANCE *instanceMusique = NULL;
+    ALLEGRO_SAMPLE *button_click_sound = NULL;
+
     ElementCuisine elementsCuisine[] = {
             {sol,              0, 0},
             {cuisson,          0, 0},
@@ -133,12 +135,17 @@ int main(void) {
     assert(al_install_audio());
     assert(al_init_acodec_addon());
     if (!al_reserve_samples(1)) {
-        fprintf(stderr, "Erreur lors de la réservation des échantillons.\n");
+        fprintf(stderr, "Erreur lors de la reservation des echantillons.\n");
         return -1;
     }
     ALLEGRO_MIXER *mixer = al_get_default_mixer();
     if (!mixer) {
-        fprintf(stderr, "Erreur lors de la récupération du mixer par défaut.\n");
+        fprintf(stderr, "Erreur lors de la recuperation du mixer par defaut.\n");
+        return -1;
+    }
+    button_click_sound = al_load_sample("../sounds/click_sound.wav");
+    if (!button_click_sound) {
+        fprintf(stderr, "Failed to load 'click_sound.wav'\n");
         return -1;
     }
 
@@ -196,6 +203,7 @@ int main(void) {
             case ALLEGRO_EVENT_KEY_UP:
                 switch (event1.keyboard.keycode) {
                     case ALLEGRO_KEY_ENTER:
+                        al_play_sample(button_click_sound, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
                         menu(display, ImageMenu, decor1, sol, personnage, cuisson, decoupe, planDeTravail,
                              distrib_assiette, poubelle, sortie, police, queue1, mixer, instanceMusique);
                         fini = true;
@@ -210,6 +218,8 @@ int main(void) {
 
     Liberation(display, ImageMenu, decor1, personnage, sol, cuisson, decoupe, planDeTravail, distrib_assiette, poubelle,
                sortie, queue1, police, policeTitre, musiqueFond, instanceMusique, mixer);
+    al_destroy_sample(button_click_sound);
+    button_click_sound = NULL;
 
     return 0;
 }
