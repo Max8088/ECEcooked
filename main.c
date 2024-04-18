@@ -4,7 +4,7 @@
 #include "./jouer/jouer.h"
 
 void jouerMusiqueFond(ALLEGRO_SAMPLE *musiqueFond, ALLEGRO_SAMPLE_INSTANCE *instanceMusique) {
-    musiqueFond = al_load_sample("Elevator-music.mp3");
+    musiqueFond = al_load_sample("elevator_2jN6tnc.mp3");
     if (!musiqueFond) {
         fprintf(stderr, "Impossible de charger la musique de fond");
     }
@@ -47,7 +47,6 @@ int main(void) {
     ALLEGRO_FONT *policeTitre = NULL;
     ALLEGRO_SAMPLE *musiqueFond = NULL;
     ALLEGRO_SAMPLE_INSTANCE *instanceMusique = NULL;
-    jouerMusiqueFond(musiqueFond, instanceMusique);
     ElementCuisine elementsCuisine[] = {
             {sol,              0, 0},
             {cuisson,          0, 0},
@@ -109,6 +108,8 @@ int main(void) {
     al_draw_text(policeTitre, NOIR, 624, 308, ALLEGRO_ALIGN_CENTRE, "-ESCOOKED-");
     al_draw_text(police, NOIR, 624, 500, ALLEGRO_ALIGN_CENTRE, "PRESS ENTER");
     al_flip_display();
+
+    jouerMusiqueFond(musiqueFond, instanceMusique);
 
     while (!fini) {
         ALLEGRO_EVENT event1;
