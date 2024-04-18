@@ -29,6 +29,11 @@ bool EstDansLeBouton(Bouton bouton, float x, float y) {
             y >= bouton.y && y <= bouton.y + bouton.height);
 }
 
+void SoundCliquedButton(ALLEGRO_SAMPLE *sonBoutonClique) {
+    al_play_sample(sonBoutonClique, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, NULL);
+}
+
+
 void
 dessinerMenu(ALLEGRO_BITMAP *ImageMenu, int nbBoutons, Bouton boutons[], ALLEGRO_EVENT event2, ALLEGRO_FONT *police) {
     al_clear_to_color(BLANC);
@@ -44,7 +49,7 @@ dessinerMenu(ALLEGRO_BITMAP *ImageMenu, int nbBoutons, Bouton boutons[], ALLEGRO
 }
 
 void Credits(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_SAMPLE *sonBoutonClique) {
-    al_play_sample(sonBoutonClique, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    SoundCliquedButton(sonBoutonClique);
     bool done = false;
     Bouton boutons[] = {
             {-10, 612, 130, 70, "<-"}
@@ -89,7 +94,7 @@ void Credits(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEU
                 for (int i = 0; i < nbBoutons; ++i) {
                     if (EstDansLeBouton(boutons[i], event7.mouse.x, event7.mouse.y)) {
                         if (!(strcmp(boutons[i].texte, "<-"))) {
-                            al_play_sample(sonBoutonClique, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                            SoundCliquedButton(sonBoutonClique);
                             done = true;
                         }
                     }
@@ -101,7 +106,7 @@ void Credits(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEU
 
 void menuVolume(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_MIXER *mixer, ALLEGRO_EVENT_QUEUE *queue1,
                 ALLEGRO_SAMPLE_INSTANCE *instanceMusique, ALLEGRO_SAMPLE* sonBoutonClique) {
-    al_play_sample(sonBoutonClique, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    SoundCliquedButton(sonBoutonClique);
     bool done = false;
     Bouton boutons[] = {
             {-10, 612, 130, 70, "<-"}
@@ -154,7 +159,7 @@ void menuVolume(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_MIXER *
                 for (int i = 0; i < nbBoutons; ++i) {
                     if (EstDansLeBouton(boutons[i], event5.mouse.x, event5.mouse.y)) {
                         if (!(strcmp(boutons[i].texte, "<-"))) {
-                            al_play_sample(sonBoutonClique, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                            SoundCliquedButton(sonBoutonClique);
                             done = true;
                         }
                     }
@@ -185,7 +190,7 @@ void menuVolume(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_MIXER *
 
 void menuOptions(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_MIXER *mixer,
                  ALLEGRO_SAMPLE_INSTANCE *instanceMusique, ALLEGRO_SAMPLE* sonBoutonClique) {
-    al_play_sample(sonBoutonClique, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    SoundCliquedButton(sonBoutonClique);
     bool done = false;
     Bouton boutons[] = {
             {-10, 612, 130, 70, "<-"}
@@ -238,7 +243,7 @@ void menuOptions(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_
                 for (int i = 0; i < nbBoutons; ++i) {
                     if (EstDansLeBouton(boutons[i], event6.mouse.x, event6.mouse.y)) {
                         if (!(strcmp(boutons[i].texte, "<-"))) {
-                            al_play_sample(sonBoutonClique, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                            SoundCliquedButton(sonBoutonClique);
                             done = true;
                         }
                     }
@@ -294,6 +299,7 @@ void menuOptions(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_
 }
 
 void menuScores(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_SAMPLE *sonBoutonClique) {
+    SoundCliquedButton(sonBoutonClique);
     bool done = false;
     Bouton boutons[] = {
             {-10, 612, 130, 70, "<-"}
@@ -330,7 +336,7 @@ void menuScores(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_Q
                 for (int i = 0; i < nbBoutons; ++i) {
                     if (EstDansLeBouton(boutons[i], event5.mouse.x, event5.mouse.y)) {
                         if (!(strcmp(boutons[i].texte, "<-"))) {
-                            al_play_sample(sonBoutonClique, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                            SoundCliquedButton(sonBoutonClique);
                             done = true;
                         }
                     }
@@ -344,7 +350,7 @@ void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *d
           ALLEGRO_BITMAP *personnage, ALLEGRO_BITMAP *cuisson, ALLEGRO_BITMAP *decoupe, ALLEGRO_BITMAP *planDeTravail,
           ALLEGRO_BITMAP *distrib_assiette, ALLEGRO_BITMAP *poubelle, ALLEGRO_BITMAP *sortie, ALLEGRO_FONT *police,
           ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_MIXER *mixer, ALLEGRO_SAMPLE_INSTANCE *instanceMusique, ALLEGRO_SAMPLE *sonBoutonClique) {
-    al_play_sample(sonBoutonClique, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    SoundCliquedButton(sonBoutonClique);
     Joueur joueur1;
     Joueur joueur2;
     int LancerJeu = 0;
@@ -396,7 +402,6 @@ void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *d
 
                         }
                         if (!(strcmp(boutons[i].texte, "Exit"))) {
-                            al_play_sample(sonBoutonClique, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
                             QuitterMenu = true;
                         }
                     }

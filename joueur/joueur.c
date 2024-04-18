@@ -9,7 +9,7 @@
 void
 ChoisirPseudo(Joueur *joueur1, Joueur *joueur2, ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu,
               ALLEGRO_FONT *police, int *LancerJeu, ALLEGRO_SAMPLE *sonBoutonClique) {
-    al_play_sample(sonBoutonClique, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    SoundCliquedButton(sonBoutonClique);
     ALLEGRO_EVENT_QUEUE *queue3 = NULL;
     char pseudoJoueur1[13] = "";
     char pseudoJoueur2[13] = "";
@@ -104,7 +104,7 @@ ChoisirPseudo(Joueur *joueur1, Joueur *joueur2, ALLEGRO_DISPLAY *display, ALLEGR
                     } else if (event3.keyboard.keycode == ALLEGRO_KEY_ENTER && strlen(pseudoJoueur1) > 0 &&
                                strlen(pseudoJoueur1) < 13) {
                         joueur1_saisi = true;
-                        al_play_sample(sonBoutonClique, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                        SoundCliquedButton(sonBoutonClique);
                     }
                 } else if (!joueur2_saisi) {
                     if (event3.keyboard.unichar >= 32 && event3.keyboard.unichar <= 126) {
@@ -117,7 +117,7 @@ ChoisirPseudo(Joueur *joueur1, Joueur *joueur2, ALLEGRO_DISPLAY *display, ALLEGR
                     } else if (event3.keyboard.keycode == ALLEGRO_KEY_ENTER && strlen(pseudoJoueur2) > 0 &&
                                strlen(pseudoJoueur2) < 13) {
                         joueur2_saisi = true;
-                        al_play_sample(sonBoutonClique, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                        SoundCliquedButton(sonBoutonClique);
                     }
                 }
                 break;
@@ -125,14 +125,14 @@ ChoisirPseudo(Joueur *joueur1, Joueur *joueur2, ALLEGRO_DISPLAY *display, ALLEGR
                 for (int i = 0; i < nbBoutons; ++i) {
                     if (EstDansLeBouton(boutons[i], event3.mouse.x, event3.mouse.y)) {
                         if (!(strcmp(boutons[i].texte, "<-"))) {
-                            al_play_sample(sonBoutonClique, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                            SoundCliquedButton(sonBoutonClique);
                             done = true;
                         }
                         if (!(strcmp(boutons[i].texte, "->")) && joueur1_saisi && joueur2_saisi) {
                             *LancerJeu = 1;
                             strcpy(joueur1->pseudo, pseudoJoueur1);
                             strcpy(joueur2->pseudo, pseudoJoueur2);
-                            al_play_sample(sonBoutonClique, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                            SoundCliquedButton(sonBoutonClique);
                             done = true;
                         }
                     }

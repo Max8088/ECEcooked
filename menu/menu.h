@@ -37,5 +37,7 @@ void menuOptions(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_
 
 void Credits(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_SAMPLE *sonBoutonClique);
 
+void SoundCliquedButton(ALLEGRO_SAMPLE *sonBoutonClique);
+
 
 #endif //ESCOOKED_MENU_H
