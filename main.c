@@ -18,7 +18,7 @@ int main(void) {
     ALLEGRO_EVENT_QUEUE *queue1 = NULL;
     ALLEGRO_FONT *police = NULL;
     ALLEGRO_FONT *policeTitre = NULL;
-    ALLEGRO_SAMPLE_INSTANCE * sonBouton = NULL;
+    //ALLEGRO_SAMPLE_INSTANCE *sonBouton = NULL;
     ElementCuisine elementsCuisine[] = {
             {sol, 0, 0},
             {cuisson, 0, 0},
@@ -68,6 +68,7 @@ int main(void) {
     assert(police);
     policeTitre = al_load_ttf_font("../police/BungeeShade-Regular.ttf", 90, 0);
     assert(policeTitre);
+    /*
     sonBouton = al_load_sample("../soundeffect/mixkit-arcade-game-jump-coin-216.wav");
     assert(sonBouton);
     if (!al_reserve_samples(1)) {
@@ -79,6 +80,7 @@ int main(void) {
         fprintf(stderr, "Erreur : Impossible d'obtenir le mélangeur par défaut.\n");
         return -1;
     }
+     */
 
     al_register_event_source(queue1, al_get_display_event_source(display));
     al_register_event_source(queue1, al_get_keyboard_event_source());
@@ -104,7 +106,7 @@ int main(void) {
                 switch (event1.keyboard.keycode) {
                     case ALLEGRO_KEY_ENTER:
                         menu(display, ImageMenu, decor1, sol, personnage, cuisson, decoupe, planDeTravail,
-                             distrib_assiette, poubelle, sortie, police, queue1, sonBouton);
+                             distrib_assiette, poubelle, sortie, police, queue1);
                         fini = true;
                         break;
                     case ALLEGRO_KEY_ESCAPE:
@@ -127,7 +129,7 @@ int main(void) {
     al_destroy_event_queue(queue1);
     al_destroy_font(police);
     al_destroy_font(policeTitre);
-    al_destroy_sample(sonBouton);
+
     policeTitre = NULL;
     display = NULL;
     ImageMenu = NULL;
@@ -141,6 +143,9 @@ int main(void) {
     cuisson = NULL;
     queue1 = NULL;
     police = NULL;
+    /*
+    al_destroy_sample_instance(sonBouton);
     sonBouton = NULL;
+     */
     return 0;
 }
