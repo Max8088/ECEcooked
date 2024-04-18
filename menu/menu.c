@@ -97,17 +97,6 @@ void Credits(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEU
     }
 }
 
-void
-adjustVolume(ALLEGRO_SAMPLE_INSTANCE *instanceMusique, Bouton volumeButtons[], int nbBoutons, int mouseX, int mouseY) {
-    float volumes[] = {0.0, 0.25, 0.5, 0.75, 1.0};
-    for (int i = 0; i < nbBoutons; ++i) {
-        if (EstDansLeBouton(volumeButtons[i], mouseX, mouseY)) {
-            al_set_sample_instance_gain(instanceMusique, volumes[i]);
-            return;
-        }
-    }
-}
-
 void menuVolume(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_MIXER *mixer, ALLEGRO_EVENT_QUEUE *queue1,
                 ALLEGRO_SAMPLE_INSTANCE *instanceMusique) {
     bool done = false;
@@ -166,9 +155,25 @@ void menuVolume(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_MIXER *
                         }
                     }
                 }
-                int mouseX = event5.mouse.x;
-                int mouseY = event5.mouse.y;
-                adjustVolume(instanceMusique, volumeButtons, nbBoutonsV, mouseX, mouseY);
+                for (int i = 0; i < nbBoutonsV; ++i) {
+                    if (EstDansLeBouton(volumeButtons[i], event5.mouse.x, event5.mouse.y)) {
+                        if (!(strcmp(volumeButtons[i].texte, "0%"))) {
+                            al_set_sample_instance_gain(instanceMusique, 0.0);
+                        }
+                        if (!(strcmp(volumeButtons[i].texte, "25%"))) {
+                            al_set_sample_instance_gain(instanceMusique, 0.25);
+                        }
+                        if (!(strcmp(volumeButtons[i].texte, "50%"))) {
+                            al_set_sample_instance_gain(instanceMusique, 0.5);
+                        }
+                        if (!(strcmp(volumeButtons[i].texte, "75%"))) {
+                            al_set_sample_instance_gain(instanceMusique, 0.75);
+                        }
+                        if (!(strcmp(volumeButtons[i].texte, "100%"))) {
+                            al_set_sample_instance_gain(instanceMusique, 1.0);
+                        }
+                    }
+                }
                 break;
         }
     }
