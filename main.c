@@ -3,18 +3,20 @@
 #include "./menu/menu.h"
 #include "./jouer/jouer.h"
 
-void jouerMusiqueFond(ALLEGRO_SAMPLE *musiqueFond, ALLEGRO_SAMPLE_INSTANCE *instanceMusique) {
-    musiqueFond = al_load_sample("elevator_2jN6tnc.mp3");
+void jouerMusiqueFond(ALLEGRO_SAMPLE *musiqueFond, ALLEGRO_SAMPLE_INSTANCE *instanceMusique, ALLEGRO_MIXER* mixer) {
+    musiqueFond = al_load_sample("../soundeffect/Elevator-music.wav");
     if (!musiqueFond) {
-        fprintf(stderr, "Impossible de charger la musique de fond");
+        fprintf(stderr, "Impossible de charger la musique de fond.\n");
+        return;
     }
     instanceMusique = al_create_sample_instance(musiqueFond);
     if (!instanceMusique) {
-        fprintf(stderr, "Impossible de créer une instance de musique");
+        fprintf(stderr, "Impossible de créer une instance de musique.\n");
+        return;
     }
     al_set_sample_instance_playmode(instanceMusique, ALLEGRO_PLAYMODE_LOOP);
     al_set_sample_instance_gain(instanceMusique, 0.5);
-    al_attach_sample_instance_to_mixer(instanceMusique, al_get_default_mixer());
+    al_attach_sample_instance_to_mixer(instanceMusique, mixer);
     al_play_sample_instance(instanceMusique);
 }
 
@@ -67,6 +69,15 @@ int main(void) {
     assert(al_install_mouse());
     assert(al_install_audio());
     assert(al_init_acodec_addon());
+    if (!al_reserve_samples(1)) {
+        fprintf(stderr, "Erreur lors de la réservation des échantillons.\n");
+        return -1;
+    }
+    ALLEGRO_MIXER *mixer = al_get_default_mixer();
+    if (!mixer) {
+        fprintf(stderr, "Erreur lors de la récupération du mixer par défaut.\n");
+        return -1;
+    }
 
     display = al_create_display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
     assert(display);
@@ -109,7 +120,7 @@ int main(void) {
     al_draw_text(police, NOIR, 624, 500, ALLEGRO_ALIGN_CENTRE, "PRESS ENTER");
     al_flip_display();
 
-    jouerMusiqueFond(musiqueFond, instanceMusique);
+    jouerMusiqueFond(musiqueFond, instanceMusique, mixer);
 
     while (!fini) {
         ALLEGRO_EVENT event1;
@@ -156,6 +167,8 @@ int main(void) {
     planDeTravail = NULL;
     distrib_assiette = NULL;
     arreterMusiqueFond(musiqueFond, instanceMusique);
+    al_destroy_mixer(mixer);
+    mixer = NULL;
     poubelle = NULL;
     sortie = NULL;
     cuisson = NULL;
