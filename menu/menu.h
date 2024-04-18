@@ -12,10 +12,6 @@ typedef struct {
     char *texte;
 } Bouton;
 
-typedef struct {
-    float x, y, width, height;
-} CurseurSon;
-
 void dessinerBouton1(Bouton bouton, ALLEGRO_FONT *police, ALLEGRO_COLOR couleurRectangle, ALLEGRO_COLOR couleurTexte);
 
 void dessinerBouton2(Bouton bouton, ALLEGRO_FONT *police, ALLEGRO_COLOR couleurRectangle, ALLEGRO_COLOR couleurTexte);
@@ -26,19 +22,20 @@ dessinerMenu(ALLEGRO_BITMAP *ImageMenu, int nbBoutons, Bouton boutons[], ALLEGRO
 bool EstDansLeBouton(Bouton bouton, float x, float y);
 
 void menuVolume(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_MIXER *mixer, ALLEGRO_EVENT_QUEUE *queue1,
-                ALLEGRO_SAMPLE_INSTANCE *instanceMusique);
+                ALLEGRO_SAMPLE_INSTANCE *instanceMusique, ALLEGRO_SAMPLE *sonBoutonClique);
 
 void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *decor1, ALLEGRO_BITMAP *sol,
           ALLEGRO_BITMAP *personnage, ALLEGRO_BITMAP *cuisson, ALLEGRO_BITMAP *decoupe, ALLEGRO_BITMAP *planDeTravail,
           ALLEGRO_BITMAP *distrib_assiette, ALLEGRO_BITMAP *poubelle, ALLEGRO_BITMAP *sortie, ALLEGRO_FONT *police,
-          ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_MIXER *mixer, ALLEGRO_SAMPLE_INSTANCE *instanceMusique);
+          ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_MIXER *mixer, ALLEGRO_SAMPLE_INSTANCE *instanceMusique, ALLEGRO_SAMPLE
+          *sonBoutonClique);
 
-void menuScores(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1);
+void menuScores(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_SAMPLE *sonBoutonClique);
 
-void menuOptions(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_MIXER *mixer, ALLEGRO_SAMPLE_INSTANCE *instanceMusique);
+void menuOptions(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_MIXER *mixer,
+                 ALLEGRO_SAMPLE_INSTANCE *instanceMusique, ALLEGRO_SAMPLE *sonBoutonclique);
 
-void Credits(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1);
-
+void Credits(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_SAMPLE *sonBoutonClique);
 
 
 #endif //ESCOOKED_MENU_H

@@ -14,6 +14,6 @@ typedef struct {
 } Joueur;
 
 void ChoisirPseudo(Joueur *joueur1, Joueur *joueur2, ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu,
-                   ALLEGRO_FONT *police, int *pLancerJeu);
+                   ALLEGRO_FONT *police, int *pLancerJeu, ALLEGRO_SAMPLE *sonBoutonClique);
 
 #endif //ESCOOKED_JOUEUR_H

@@ -24,7 +24,7 @@ void Liberation(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BIT
                 ALLEGRO_BITMAP *sol, ALLEGRO_BITMAP *cuisson, ALLEGRO_BITMAP *decoupe, ALLEGRO_BITMAP *planDeTravail,
                 ALLEGRO_BITMAP *distrib_assiette, ALLEGRO_BITMAP *poubelle, ALLEGRO_BITMAP *sortie, ALLEGRO_EVENT_QUEUE
                 *queue1, ALLEGRO_FONT *police, ALLEGRO_FONT *policeTitre, ALLEGRO_SAMPLE *musiqueFond,
-                ALLEGRO_SAMPLE_INSTANCE *instanceMusique, ALLEGRO_MIXER *mixer) {
+                ALLEGRO_SAMPLE_INSTANCE *instanceMusique, ALLEGRO_MIXER *mixer, ALLEGRO_SAMPLE *sonBoutonClique) {
     if (display) {
         al_destroy_display(display);
         display = NULL;
@@ -93,6 +93,10 @@ void Liberation(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BIT
         al_destroy_mixer(mixer);
         mixer = NULL;
     }
+    if (sonBoutonClique) {
+        al_destroy_sample(sonBoutonClique);
+        sonBoutonClique = NULL;
+    }
 }
 
 int main(void) {
@@ -112,7 +116,7 @@ int main(void) {
     ALLEGRO_FONT *policeTitre = NULL;
     ALLEGRO_SAMPLE *musiqueFond = NULL;
     ALLEGRO_SAMPLE_INSTANCE *instanceMusique = NULL;
-    ALLEGRO_SAMPLE *button_click_sound = NULL;
+    ALLEGRO_SAMPLE *sonBoutonClique = NULL;
 
     ElementCuisine elementsCuisine[] = {
             {sol,              0, 0},
@@ -134,7 +138,7 @@ int main(void) {
     assert(al_install_mouse());
     assert(al_install_audio());
     assert(al_init_acodec_addon());
-    if (!al_reserve_samples(1)) {
+    if (!al_reserve_samples(2)) {
         fprintf(stderr, "Erreur lors de la reservation des echantillons.\n");
         return -1;
     }
@@ -143,11 +147,8 @@ int main(void) {
         fprintf(stderr, "Erreur lors de la recuperation du mixer par defaut.\n");
         return -1;
     }
-    button_click_sound = al_load_sample("../sounds/click_sound.wav");
-    if (!button_click_sound) {
-        fprintf(stderr, "Failed to load 'click_sound.wav'\n");
-        return -1;
-    }
+    jouerMusiqueFond(musiqueFond, instanceMusique, mixer);
+    sonBoutonClique = al_load_sample("../soundeffect/click-sound.wav");
 
     display = al_create_display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
     assert(display);
@@ -190,8 +191,6 @@ int main(void) {
     al_draw_text(police, NOIR, 624, 500, ALLEGRO_ALIGN_CENTRE, "PRESS ENTER");
     al_flip_display();
 
-    jouerMusiqueFond(musiqueFond, instanceMusique, mixer);
-
     while (!fini) {
         ALLEGRO_EVENT event1;
         al_wait_for_event(queue1, &event1);
@@ -203,9 +202,8 @@ int main(void) {
             case ALLEGRO_EVENT_KEY_UP:
                 switch (event1.keyboard.keycode) {
                     case ALLEGRO_KEY_ENTER:
-                        al_play_sample(button_click_sound, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
                         menu(display, ImageMenu, decor1, sol, personnage, cuisson, decoupe, planDeTravail,
-                             distrib_assiette, poubelle, sortie, police, queue1, mixer, instanceMusique);
+                             distrib_assiette, poubelle, sortie, police, queue1, mixer, instanceMusique, sonBoutonClique);
                         fini = true;
                         break;
                     case ALLEGRO_KEY_ESCAPE:
@@ -217,9 +215,7 @@ int main(void) {
     }
 
     Liberation(display, ImageMenu, decor1, personnage, sol, cuisson, decoupe, planDeTravail, distrib_assiette, poubelle,
-               sortie, queue1, police, policeTitre, musiqueFond, instanceMusique, mixer);
-    al_destroy_sample(button_click_sound);
-    button_click_sound = NULL;
+               sortie, queue1, police, policeTitre, musiqueFond, instanceMusique, mixer, sonBoutonClique);
 
     return 0;
 }
