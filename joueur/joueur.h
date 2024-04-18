@@ -11,6 +11,7 @@
 typedef struct {
     char pseudo[13];
     ALLEGRO_BITMAP *image;
+    int score;
 } Joueur;
 
 void ChoisirPseudo(Joueur *joueur1, Joueur *joueur2, ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu,

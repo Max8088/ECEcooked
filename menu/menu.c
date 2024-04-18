@@ -307,6 +307,18 @@ void menuOptions(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_
     }
 }
 
+int getBestScore() {
+    int score = 0;
+    /*
+    FILE *file = fopen("best_score.txt", "r");
+    if (file) {
+        fscanf(file, "%d", &score);
+        fclose(file);
+    }  /!\ En prévision de la sauvegarde du meilleur score /!\
+     */
+    return score;
+}
+
 void menuScores(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1,
                 ALLEGRO_SAMPLE *sonBoutonClique) {
     SoundCliquedButton(sonBoutonClique);
@@ -315,12 +327,16 @@ void menuScores(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_Q
             {-10, 612, 130, 70, "<-"}
     };
     int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
+    int bestScore = getBestScore();
 
     al_clear_to_color(NOIR);
     al_draw_bitmap(ImageMenu, 0, 0, 0);
     for (int i = 0; i < nbBoutons; ++i) {
         dessinerBouton1(boutons[i], police, NOIR, GRIS_CLAIR);
     }
+    char scoreText[50];
+    sprintf(scoreText, "BEST SCORE : %d", bestScore);
+    al_draw_text(police, NOIR, 624, 330, ALLEGRO_ALIGN_CENTER, scoreText);
     al_flip_display();
 
     while (!done) {
@@ -328,6 +344,7 @@ void menuScores(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_Q
         al_wait_for_event(queue1, &event5);
         al_clear_to_color(BLANC);
         al_draw_bitmap(ImageMenu, 0, 0, 0);
+        al_draw_text(police, NOIR, 624, 330, ALLEGRO_ALIGN_CENTER, scoreText);
         switch (event5.type) {
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
                 done = true;
@@ -364,6 +381,8 @@ void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *d
     SoundCliquedButton(sonBoutonClique);
     Joueur joueur1;
     Joueur joueur2;
+    joueur1.score = 0;
+    joueur2.score = 0;
     int LancerJeu = 0;
     Bouton boutons[] = {
             {425, 235, 400, 70, "Play"},
