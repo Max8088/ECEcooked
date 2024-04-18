@@ -4,7 +4,7 @@
 #include "./jouer/jouer.h"
 
 void jouerMusiqueFond(ALLEGRO_SAMPLE *musiqueFond, ALLEGRO_SAMPLE_INSTANCE *instanceMusique) {
-    musiqueFond = al_load_sample("../soundeffect/Elevator-music.mp3");
+    musiqueFond = al_load_sample("Elevator-music.mp3");
     if (!musiqueFond) {
         fprintf(stderr, "Impossible de charger la musique de fond");
     }
