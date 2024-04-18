@@ -3,6 +3,33 @@
 #include "./menu/menu.h"
 #include "./jouer/jouer.h"
 
+void jouerMusiqueFond(ALLEGRO_SAMPLE *musiqueFond, ALLEGRO_SAMPLE_INSTANCE *instanceMusique) {
+    musiqueFond = al_load_sample("../soundeffect/bensound-movingwayup.mp3");
+    if (!musiqueFond) {
+        fprintf(stderr, "Impossible de charger la musique de fond");
+    }
+    instanceMusique = al_create_sample_instance(musiqueFond);
+    if (!instanceMusique) {
+        fprintf(stderr, "Impossible de créer une instance de musique");
+    }
+    al_set_sample_instance_playmode(instanceMusique, ALLEGRO_PLAYMODE_LOOP);
+    al_set_sample_instance_gain(instanceMusique, 0.5);
+    al_attach_sample_instance_to_mixer(instanceMusique, al_get_default_mixer());
+    al_play_sample_instance(instanceMusique);
+}
+
+void arreterMusiqueFond(ALLEGRO_SAMPLE *musiqueFond, ALLEGRO_SAMPLE_INSTANCE *instanceMusique) {
+    if (instanceMusique) {
+        al_stop_sample_instance(instanceMusique);
+        al_destroy_sample_instance(instanceMusique);
+        instanceMusique = NULL;
+    }
+    if (musiqueFond) {
+        al_destroy_sample(musiqueFond);
+        musiqueFond = NULL;
+    }
+}
+
 int main(void) {
     ALLEGRO_DISPLAY *display = NULL;
     ALLEGRO_BITMAP *ImageMenu = NULL;
@@ -18,15 +45,17 @@ int main(void) {
     ALLEGRO_EVENT_QUEUE *queue1 = NULL;
     ALLEGRO_FONT *police = NULL;
     ALLEGRO_FONT *policeTitre = NULL;
-    //ALLEGRO_SAMPLE_INSTANCE *sonBouton = NULL;
+    ALLEGRO_SAMPLE *musiqueFond = NULL;
+    ALLEGRO_SAMPLE_INSTANCE *instanceMusique = NULL;
+    jouerMusiqueFond(musiqueFond, instanceMusique);
     ElementCuisine elementsCuisine[] = {
-            {sol, 0, 0},
-            {cuisson, 0, 0},
-            {decoupe, 0, 0},
-            {planDeTravail, 0, 0},
+            {sol,              0, 0},
+            {cuisson,          0, 0},
+            {decoupe,          0, 0},
+            {planDeTravail,    0, 0},
             {distrib_assiette, 0, 0},
-            {poubelle, 0, 0},
-            {sortie, 0, 0}
+            {poubelle,         0, 0},
+            {sortie,           0, 0}
     };
     bool fini = false;
 
@@ -68,19 +97,6 @@ int main(void) {
     assert(police);
     policeTitre = al_load_ttf_font("../police/BungeeShade-Regular.ttf", 90, 0);
     assert(policeTitre);
-    /*
-    sonBouton = al_load_sample("../soundeffect/mixkit-arcade-game-jump-coin-216.wav");
-    assert(sonBouton);
-    if (!al_reserve_samples(1)) {
-        fprintf(stderr, "Erreur : Impossible de réserver les échantillons audio.\n");
-        return -1;
-    }
-    ALLEGRO_MIXER *mixer = al_get_default_mixer();
-    if (!mixer) {
-        fprintf(stderr, "Erreur : Impossible d'obtenir le mélangeur par défaut.\n");
-        return -1;
-    }
-     */
 
     al_register_event_source(queue1, al_get_display_event_source(display));
     al_register_event_source(queue1, al_get_keyboard_event_source());
@@ -138,14 +154,12 @@ int main(void) {
     decoupe = NULL;
     planDeTravail = NULL;
     distrib_assiette = NULL;
+    arreterMusiqueFond(musiqueFond, instanceMusique);
     poubelle = NULL;
     sortie = NULL;
     cuisson = NULL;
     queue1 = NULL;
     police = NULL;
-    /*
-    al_destroy_sample_instance(sonBouton);
-    sonBouton = NULL;
-     */
+
     return 0;
 }
