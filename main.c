@@ -3,7 +3,7 @@
 #include "./menu/menu.h"
 #include "./jouer/jouer.h"
 
-void jouerMusiqueFond(ALLEGRO_SAMPLE *musiqueFond, ALLEGRO_SAMPLE_INSTANCE *instanceMusique, ALLEGRO_MIXER* mixer) {
+void jouerMusiqueFond(ALLEGRO_SAMPLE *musiqueFond, ALLEGRO_SAMPLE_INSTANCE *instanceMusique, ALLEGRO_MIXER *mixer) {
     musiqueFond = al_load_sample("../soundeffect/Elevator-music.wav");
     if (!musiqueFond) {
         fprintf(stderr, "Impossible de charger la musique de fond.\n");
@@ -20,15 +20,78 @@ void jouerMusiqueFond(ALLEGRO_SAMPLE *musiqueFond, ALLEGRO_SAMPLE_INSTANCE *inst
     al_play_sample_instance(instanceMusique);
 }
 
-void arreterMusiqueFond(ALLEGRO_SAMPLE *musiqueFond, ALLEGRO_SAMPLE_INSTANCE *instanceMusique) {
-    if (instanceMusique) {
-        al_stop_sample_instance(instanceMusique);
-        al_destroy_sample_instance(instanceMusique);
-        instanceMusique = NULL;
+void Liberation(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *decor1, ALLEGRO_BITMAP *personnage,
+                ALLEGRO_BITMAP *sol, ALLEGRO_BITMAP *cuisson, ALLEGRO_BITMAP *decoupe, ALLEGRO_BITMAP *planDeTravail,
+                ALLEGRO_BITMAP *distrib_assiette, ALLEGRO_BITMAP *poubelle, ALLEGRO_BITMAP *sortie, ALLEGRO_EVENT_QUEUE
+                *queue1, ALLEGRO_FONT *police, ALLEGRO_FONT *policeTitre, ALLEGRO_SAMPLE *musiqueFond,
+                ALLEGRO_SAMPLE_INSTANCE *instanceMusique, ALLEGRO_MIXER *mixer) {
+    if (display) {
+        al_destroy_display(display);
+        display = NULL;
+    }
+    if (ImageMenu) {
+        al_destroy_bitmap(ImageMenu);
+        ImageMenu = NULL;
+    }
+    if (decor1) {
+        al_destroy_bitmap(decor1);
+        decor1 = NULL;
+    }
+    if (personnage) {
+        al_destroy_bitmap(personnage);
+        personnage = NULL;
+    }
+    if (sol) {
+        al_destroy_bitmap(sol);
+        sol = NULL;
+    }
+    if (cuisson) {
+        al_destroy_bitmap(cuisson);
+        cuisson = NULL;
+    }
+    if (decoupe) {
+        al_destroy_bitmap(decoupe);
+        decoupe = NULL;
+    }
+    if (planDeTravail) {
+        al_destroy_bitmap(planDeTravail);
+        planDeTravail = NULL;
+    }
+    if (distrib_assiette) {
+        al_destroy_bitmap(distrib_assiette);
+        distrib_assiette = NULL;
+    }
+    if (poubelle) {
+        al_destroy_bitmap(poubelle);
+        poubelle = NULL;
+    }
+    if (sortie) {
+        al_destroy_bitmap(sortie);
+        sortie = NULL;
+    }
+    if (queue1) {
+        al_destroy_event_queue(queue1);
+        queue1 = NULL;
+    }
+    if (police) {
+        al_destroy_font(police);
+        police = NULL;
+    }
+    if (policeTitre) {
+        al_destroy_font(policeTitre);
+        policeTitre = NULL;
     }
     if (musiqueFond) {
         al_destroy_sample(musiqueFond);
         musiqueFond = NULL;
+    }
+    if (instanceMusique) {
+        al_destroy_sample_instance(instanceMusique);
+        instanceMusique = NULL;
+    }
+    if (mixer) {
+        al_destroy_mixer(mixer);
+        mixer = NULL;
     }
 }
 
@@ -134,7 +197,7 @@ int main(void) {
                 switch (event1.keyboard.keycode) {
                     case ALLEGRO_KEY_ENTER:
                         menu(display, ImageMenu, decor1, sol, personnage, cuisson, decoupe, planDeTravail,
-                             distrib_assiette, poubelle, sortie, police, queue1);
+                             distrib_assiette, poubelle, sortie, police, queue1, mixer, instanceMusique);
                         fini = true;
                         break;
                     case ALLEGRO_KEY_ESCAPE:
@@ -144,36 +207,9 @@ int main(void) {
                 break;
         }
     }
-    al_destroy_display(display);
-    al_destroy_bitmap(ImageMenu);
-    al_destroy_bitmap(decor1);
-    al_destroy_bitmap(personnage);
-    al_destroy_bitmap(sol);
-    al_destroy_bitmap(decoupe);
-    al_destroy_bitmap(planDeTravail);
-    al_destroy_bitmap(distrib_assiette);
-    al_destroy_bitmap(poubelle);
-    al_destroy_bitmap(sortie);
-    al_destroy_event_queue(queue1);
-    al_destroy_font(police);
-    al_destroy_font(policeTitre);
 
-    policeTitre = NULL;
-    display = NULL;
-    ImageMenu = NULL;
-    personnage = NULL;
-    sol = NULL;
-    decoupe = NULL;
-    planDeTravail = NULL;
-    distrib_assiette = NULL;
-    arreterMusiqueFond(musiqueFond, instanceMusique);
-    al_destroy_mixer(mixer);
-    mixer = NULL;
-    poubelle = NULL;
-    sortie = NULL;
-    cuisson = NULL;
-    queue1 = NULL;
-    police = NULL;
+    Liberation(display, ImageMenu, decor1, personnage, sol, cuisson, decoupe, planDeTravail, distrib_assiette, poubelle,
+               sortie, queue1, police, policeTitre, musiqueFond, instanceMusique, mixer);
 
     return 0;
 }
