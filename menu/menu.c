@@ -97,7 +97,8 @@ void Credits(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEU
     }
 }
 
-void adjustVolume(ALLEGRO_SAMPLE_INSTANCE *instanceMusique, Bouton volumeButtons[], int nbBoutons, int mouseX, int mouseY) {
+void
+adjustVolume(ALLEGRO_SAMPLE_INSTANCE *instanceMusique, Bouton volumeButtons[], int nbBoutons, int mouseX, int mouseY) {
     float volumes[] = {0.0, 0.25, 0.5, 0.75, 1.0};
     for (int i = 0; i < nbBoutons; ++i) {
         if (EstDansLeBouton(volumeButtons[i], mouseX, mouseY)) {
@@ -107,7 +108,8 @@ void adjustVolume(ALLEGRO_SAMPLE_INSTANCE *instanceMusique, Bouton volumeButtons
     }
 }
 
-void menuVolume(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_MIXER *mixer, ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_SAMPLE_INSTANCE *instanceMusique) {
+void menuVolume(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_MIXER *mixer, ALLEGRO_EVENT_QUEUE *queue1,
+                ALLEGRO_SAMPLE_INSTANCE *instanceMusique) {
     bool done = false;
     Bouton boutons[] = {
             {-10, 612, 130, 70, "<-"}
@@ -152,7 +154,7 @@ void menuVolume(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_MIXER *
                 for (int i = 0; i < nbBoutonsV; ++i) {
                     if (EstDansLeBouton(volumeButtons[i], event5.mouse.x, event5.mouse.y)) {
                         dessinerBouton2(volumeButtons[i], police, NOIR, BLANC);
-                    } else {dessinerBouton1(volumeButtons[i], police, NOIR, GRIS_CLAIR_TRANSPARENT);}
+                    } else { dessinerBouton1(volumeButtons[i], police, NOIR, GRIS_CLAIR_TRANSPARENT); }
                 }
                 al_flip_display();
                 break;
@@ -172,7 +174,8 @@ void menuVolume(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_MIXER *
     }
 }
 
-void menuOptions(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_MIXER *mixer, ALLEGRO_SAMPLE_INSTANCE *instanceMusique) {
+void menuOptions(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_MIXER *mixer,
+                 ALLEGRO_SAMPLE_INSTANCE *instanceMusique) {
     bool done = false;
     Bouton boutons[] = {
             {-10, 612, 130, 70, "<-"}
@@ -328,7 +331,7 @@ void menuScores(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_Q
 void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *decor1, ALLEGRO_BITMAP *sol,
           ALLEGRO_BITMAP *personnage, ALLEGRO_BITMAP *cuisson, ALLEGRO_BITMAP *decoupe, ALLEGRO_BITMAP *planDeTravail,
           ALLEGRO_BITMAP *distrib_assiette, ALLEGRO_BITMAP *poubelle, ALLEGRO_BITMAP *sortie, ALLEGRO_FONT *police,
-          ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_MIXER* mixer, ALLEGRO_SAMPLE_INSTANCE *instanceMusique) {
+          ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_MIXER *mixer, ALLEGRO_SAMPLE_INSTANCE *instanceMusique) {
     Joueur joueur1;
     Joueur joueur2;
     int LancerJeu = 0;
