@@ -27,7 +27,7 @@ bool EstDansLeBouton(Bouton bouton, float x, float y);
 
 int getBestScore();
 
-void dessinerCurseur(const Curseur *curseur, float volume);
+void dessinerCurseur(const Curseur *curseur, float volume, ALLEGRO_FONT* police);
 
 bool EstDansLeCurseurVolume(const Curseur *curseur, float mx, float my);
 

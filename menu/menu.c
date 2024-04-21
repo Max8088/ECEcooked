@@ -105,10 +105,13 @@ Credits(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *qu
     }
 }
 
-void dessinerCurseur(const Curseur *curseur, float volume) {
+void dessinerCurseur(const Curseur *curseur, float volume, ALLEGRO_FONT* police) {
     al_draw_filled_rounded_rectangle(curseur->x - 5, curseur->y, curseur->x + curseur->width + 5, curseur->y + curseur->height, 10, 10, GRIS_CLAIR_TRANSPARENT);
     float curseurPos = (volume - curseur->min) / (curseur->max - curseur->min) * curseur->width;
     al_draw_filled_circle(curseur->x + curseurPos, curseur->y + curseur->height / 2, curseur->height / 2, NOIR);
+    char volText[50];
+    sprintf(volText, "Volume: %.0f%%", volume * 100);
+    al_draw_text(police, NOIR, 624, curseur->y + 30, ALLEGRO_ALIGN_CENTER, volText);
 }
 
 bool EstDansLeCurseurVolume(const Curseur *curseur, float mx, float my) {
@@ -136,8 +139,7 @@ void menuVolume(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_MIXER *
     for (int i = 0; i < nbBoutons; ++i) {
         dessinerBouton1(boutons[i], police, NOIR, GRIS_CLAIR);
     }
-    dessinerCurseur(&curseurVolume, curseurVolume.value);
-    al_draw_text(police, NOIR, 624, 240, ALLEGRO_ALIGN_CENTRE, "-VOLUME-");
+    dessinerCurseur(&curseurVolume, curseurVolume.value, police);
     al_flip_display();
 
     while (!done) {
@@ -167,8 +169,7 @@ void menuVolume(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_MIXER *
             case ALLEGRO_EVENT_MOUSE_AXES:
                 al_clear_to_color(NOIR);
                 al_draw_bitmap(ImageMenu, 0, 0, 0);
-                dessinerCurseur(&curseurVolume, curseurVolume.value);
-                al_draw_text(police, NOIR, 624, 240, ALLEGRO_ALIGN_CENTRE, "-VOLUME-");
+                dessinerCurseur(&curseurVolume, curseurVolume.value, police);
                 if (dragging) {
                     float dx = event5.mouse.x - dernierX;
                     dernierX = event5.mouse.x;
