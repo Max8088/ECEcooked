@@ -48,6 +48,62 @@ dessinerMenu(ALLEGRO_BITMAP *ImageMenu, int nbBoutons, Bouton boutons[], ALLEGRO
     al_flip_display();
 }
 
+void menuControls(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1,
+                  ALLEGRO_SAMPLE *sonBoutonClique) {
+    SoundCliquedButton(sonBoutonClique);
+    bool fini = false;
+    Bouton boutonRetour = {-10, 612, 130, 70, "<-"};
+    const char *controlsInfoJoueur1[] = {
+            "-Déplacements: Z, Q, S, D",
+            "-Prender/Lâcher: C",
+            "-Découper: V"
+    };
+    const char *controlsInfoJoueur2[] = {
+            "-Déplacements: ^, <, v, >",
+            "-Prender/Lâcher: L",
+            "-Découper: M"
+    };
+    int nbControlsJoueur1 = sizeof(controlsInfoJoueur1) / sizeof(controlsInfoJoueur1[0]);
+    int nbControlsJoueur2 = sizeof(controlsInfoJoueur2) / sizeof(controlsInfoJoueur2[0]);
+
+    al_clear_to_color(NOIR);
+    al_draw_bitmap(ImageMenu, 0, 0, 0);
+    dessinerBouton1(boutonRetour, police, NOIR, GRIS_CLAIR);
+    al_draw_text(police, NOIR, 300, 200, ALLEGRO_ALIGN_LEFT, "Contrôles Joueur 1:");
+    al_draw_text(police, NOIR, 300, 400, ALLEGRO_ALIGN_LEFT, "Contrôles Joueur 2:");
+    for (int i = 0; i < nbControlsJoueur1; ++i) {
+        al_draw_text(police, NOIR, 320, 250 + 50 * i, ALLEGRO_ALIGN_LEFT, controlsInfoJoueur1[i]);
+    }
+    for (int i = 0; i < nbControlsJoueur2; ++i) {
+        al_draw_text(police, NOIR, 320, 450 + 50 * i, ALLEGRO_ALIGN_LEFT, controlsInfoJoueur2[i]);
+    }
+    al_flip_display();
+
+    while (!fini) {
+        ALLEGRO_EVENT event;
+        al_wait_for_event(queue1, &event);
+        switch (event.type) {
+            case ALLEGRO_EVENT_DISPLAY_CLOSE:
+                fini = true;
+                break;
+            case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
+                if (EstDansLeBouton(boutonRetour, event.mouse.x, event.mouse.y)) {
+                    SoundCliquedButton(sonBoutonClique);
+                    fini = true;
+                }
+                break;
+            case ALLEGRO_EVENT_MOUSE_AXES:
+                if (EstDansLeBouton(boutonRetour, event.mouse.x, event.mouse.y)) {
+                    dessinerBouton2(boutonRetour, police, NOIR, BLANC);
+                } else {
+                    dessinerBouton1(boutonRetour, police, NOIR, GRIS_CLAIR_TRANSPARENT);
+                }
+                al_flip_display();
+                break;
+        }
+    }
+}
+
 void
 Credits(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_SAMPLE *sonBoutonClique) {
     SoundCliquedButton(sonBoutonClique);
@@ -76,12 +132,6 @@ Credits(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *qu
                 done = true;
                 break;
             case ALLEGRO_EVENT_MOUSE_AXES:
-                al_clear_to_color(BLANC);
-                al_draw_bitmap(ImageMenu, 0, 0, 0);
-                al_draw_text(police, NOIR, 624, 225, ALLEGRO_ALIGN_CENTRE, "-PIERRE-");
-                al_draw_text(police, NOIR, 624, 325, ALLEGRO_ALIGN_CENTRE, "-MAXIME-");
-                al_draw_text(police, NOIR, 624, 425, ALLEGRO_ALIGN_CENTRE, "-NIKITA-");
-                al_draw_text(police, NOIR, 624, 525, ALLEGRO_ALIGN_CENTRE, "-FANIRY-");
                 for (int i = 0; i < nbBoutons; ++i) {
                     if (EstDansLeBouton(boutons[i], event7.mouse.x, event7.mouse.y)) {
                         dessinerBouton2(boutons[i], police, NOIR, BLANC);
@@ -105,8 +155,9 @@ Credits(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *qu
     }
 }
 
-void dessinerCurseur(const Curseur *curseur, float volume, ALLEGRO_FONT* police) {
-    al_draw_filled_rounded_rectangle(curseur->x - 5, curseur->y, curseur->x + curseur->width + 5, curseur->y + curseur->height, 10, 10, GRIS_CLAIR_TRANSPARENT);
+void dessinerCurseur(const Curseur *curseur, float volume, ALLEGRO_FONT *police) {
+    al_draw_filled_rounded_rectangle(curseur->x - 5, curseur->y, curseur->x + curseur->width + 5,
+                                     curseur->y + curseur->height, 10, 10, GRIS_CLAIR_TRANSPARENT);
     float curseurPos = (volume - curseur->min) / (curseur->max - curseur->min) * curseur->width;
     al_draw_filled_circle(curseur->x + curseurPos, curseur->y + curseur->height / 2, curseur->height / 2, NOIR);
     char volText[50];
@@ -115,7 +166,8 @@ void dessinerCurseur(const Curseur *curseur, float volume, ALLEGRO_FONT* police)
 }
 
 bool EstDansLeCurseurVolume(const Curseur *curseur, float mx, float my) {
-    return (mx >= curseur->x && mx <= curseur->x + curseur->width && my >= curseur->y && my <= curseur->y + curseur->height);
+    return (mx >= curseur->x && mx <= curseur->x + curseur->width && my >= curseur->y &&
+            my <= curseur->y + curseur->height);
 }
 
 void menuVolume(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_MIXER *mixer, ALLEGRO_EVENT_QUEUE *queue1,
@@ -173,9 +225,10 @@ void menuVolume(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_MIXER *
                 if (dragging) {
                     float dx = event5.mouse.x - dernierX;
                     dernierX = event5.mouse.x;
-                    float nouveauVolume = curseurVolume.value + (dx / curseurVolume.width) * (curseurVolume.max - curseurVolume.min);
-                    if (nouveauVolume < curseurVolume.min) {nouveauVolume = curseurVolume.min;}
-                    if (nouveauVolume > curseurVolume.max) {nouveauVolume = curseurVolume.max;}
+                    float nouveauVolume =
+                            curseurVolume.value + (dx / curseurVolume.width) * (curseurVolume.max - curseurVolume.min);
+                    if (nouveauVolume < curseurVolume.min) { nouveauVolume = curseurVolume.min; }
+                    if (nouveauVolume > curseurVolume.max) { nouveauVolume = curseurVolume.max; }
                     curseurVolume.value = nouveauVolume;
                     al_set_sample_instance_gain(instanceMusique, curseurVolume.value);
                 }
@@ -254,6 +307,26 @@ void menuOptions(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_
                 }
                 for (int i = 0; i < nbBoutonsSousMenu; ++i) {
                     if (EstDansLeBouton(boutonsSousMenu[i], event6.mouse.x, event6.mouse.y)) {
+                        if (!(strcmp(boutonsSousMenu[i].texte, "Controls"))) {
+                            menuControls(ImageMenu, police, queue1, sonBoutonClique);
+                            al_clear_to_color(BLANC);
+                            al_draw_bitmap(ImageMenu, 0, 0, 0);
+                            for (i = 0; i < nbBoutons; ++i) {
+                                if (EstDansLeBouton(boutons[i], event6.mouse.x, event6.mouse.y)) {
+                                    dessinerBouton2(boutons[i], police, NOIR, BLANC);
+                                } else {
+                                    dessinerBouton1(boutons[i], police, NOIR, GRIS_CLAIR);
+                                }
+                            }
+                            for (i = 0; i < nbBoutonsSousMenu; ++i) {
+                                if (EstDansLeBouton(boutonsSousMenu[i], event6.mouse.x, event6.mouse.y)) {
+                                    dessinerBouton2(boutonsSousMenu[i], police, NOIR_TRANSPARENT, GRIS_CLAIR);
+                                } else {
+                                    dessinerBouton1(boutonsSousMenu[i], police, NOIR, BLANC);
+                                }
+                            }
+                            al_flip_display();
+                        }
                         if (!(strcmp(boutonsSousMenu[i].texte, "Credits"))) {
                             Credits(ImageMenu, police, queue1, sonBoutonClique);
                             al_clear_to_color(BLANC);
