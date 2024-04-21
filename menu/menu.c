@@ -5,6 +5,7 @@
 #include "menu.h."
 #include "../joueur/joueur.h"
 #include "../jouer/jouer.h"
+#include "menu.h"
 
 void dessinerBouton1(Bouton bouton, ALLEGRO_FONT *police, ALLEGRO_COLOR couleurRectangle, ALLEGRO_COLOR couleurTexte) {
     al_draw_filled_rounded_rectangle(bouton.x, bouton.y, bouton.x + bouton.width, bouton.y + bouton.height, 10, 10,
@@ -104,6 +105,16 @@ Credits(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *qu
     }
 }
 
+void dessinerCurseur(const Curseur *curseur, float volume) {
+    al_draw_filled_rounded_rectangle(curseur->x - 5, curseur->y, curseur->x + curseur->width + 5, curseur->y + curseur->height, 10, 10, GRIS_CLAIR_TRANSPARENT);
+    float curseurPos = (volume - curseur->min) / (curseur->max - curseur->min) * curseur->width;
+    al_draw_filled_circle(curseur->x + curseurPos, curseur->y + curseur->height / 2, curseur->height / 2, NOIR);
+}
+
+bool EstDansLeCurseurVolume(const Curseur *curseur, float mx, float my) {
+    return (mx >= curseur->x && mx <= curseur->x + curseur->width && my >= curseur->y && my <= curseur->y + curseur->height);
+}
+
 void menuVolume(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_MIXER *mixer, ALLEGRO_EVENT_QUEUE *queue1,
                 ALLEGRO_SAMPLE_INSTANCE *instanceMusique, ALLEGRO_SAMPLE *sonBoutonClique) {
     SoundCliquedButton(sonBoutonClique);
@@ -112,52 +123,35 @@ void menuVolume(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_MIXER *
         return;
     }
     bool done = false;
+    bool dragging = false;
+    float dernierX = 0;
     Bouton boutons[] = {
             {-10, 612, 130, 70, "<-"}
     };
     int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
-    Bouton volumeButtons[] = {
-            {465, 325, 160, 60, "0%"},
-            {640, 325, 160, 60, "25%"},
-            {365, 415, 160, 60, "50%"},
-            {550, 415, 160, 60, "75%"},
-            {735, 415, 160, 60, "100%"}
-    };
-    int nbBoutonsV = sizeof(volumeButtons) / sizeof(volumeButtons[0]);
+    Curseur curseurVolume = {300, 400, 648, 30, 0.0, 1.0, al_get_sample_instance_gain(instanceMusique)};
 
     al_clear_to_color(NOIR);
     al_draw_bitmap(ImageMenu, 0, 0, 0);
     for (int i = 0; i < nbBoutons; ++i) {
         dessinerBouton1(boutons[i], police, NOIR, GRIS_CLAIR);
     }
-    for (int i = 0; i < nbBoutonsV; ++i) {
-        dessinerBouton1(volumeButtons[i], police, NOIR, GRIS_CLAIR);
-    }
+    dessinerCurseur(&curseurVolume, curseurVolume.value);
+    al_draw_text(police, NOIR, 624, 240, ALLEGRO_ALIGN_CENTRE, "-VOLUME-");
     al_flip_display();
 
     while (!done) {
         ALLEGRO_EVENT event5;
         al_wait_for_event(queue1, &event5);
-        al_clear_to_color(BLANC);
-        al_draw_bitmap(ImageMenu, 0, 0, 0);
         switch (event5.type) {
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
                 done = true;
                 break;
-            case ALLEGRO_EVENT_MOUSE_AXES:
-                for (int i = 0; i < nbBoutons; ++i) {
-                    if (EstDansLeBouton(boutons[i], event5.mouse.x, event5.mouse.y)) {
-                        dessinerBouton2(boutons[i], police, NOIR, BLANC);
-                    } else {
-                        dessinerBouton1(boutons[i], police, NOIR, GRIS_CLAIR_TRANSPARENT);
-                    }
+            case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
+                if (EstDansLeCurseurVolume(&curseurVolume, event5.mouse.x, event5.mouse.y)) {
+                    dragging = true;
+                    dernierX = event5.mouse.x;
                 }
-                for (int i = 0; i < nbBoutonsV; ++i) {
-                    if (EstDansLeBouton(volumeButtons[i], event5.mouse.x, event5.mouse.y)) {
-                        dessinerBouton2(volumeButtons[i], police, NOIR, BLANC);
-                    } else { dessinerBouton1(volumeButtons[i], police, NOIR, GRIS_CLAIR_TRANSPARENT); }
-                }
-                al_flip_display();
                 break;
             case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
                 for (int i = 0; i < nbBoutons; ++i) {
@@ -168,30 +162,30 @@ void menuVolume(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_MIXER *
                         }
                     }
                 }
-                for (int i = 0; i < nbBoutonsV; ++i) {
-                    if (EstDansLeBouton(volumeButtons[i], event5.mouse.x, event5.mouse.y)) {
-                        if (!(strcmp(volumeButtons[i].texte, "0%"))) {
-                            SoundCliquedButton(sonBoutonClique);
-                            al_set_sample_instance_gain(instanceMusique, 0.0);
-                        }
-                        if (!(strcmp(volumeButtons[i].texte, "25%"))) {
-                            SoundCliquedButton(sonBoutonClique);
-                            al_set_sample_instance_gain(instanceMusique, 0.25);
-                        }
-                        if (!(strcmp(volumeButtons[i].texte, "50%"))) {
-                            SoundCliquedButton(sonBoutonClique);
-                            al_set_sample_instance_gain(instanceMusique, 0.5);
-                        }
-                        if (!(strcmp(volumeButtons[i].texte, "75%"))) {
-                            SoundCliquedButton(sonBoutonClique);
-                            al_set_sample_instance_gain(instanceMusique, 0.75);
-                        }
-                        if (!(strcmp(volumeButtons[i].texte, "100%"))) {
-                            SoundCliquedButton(sonBoutonClique);
-                            al_set_sample_instance_gain(instanceMusique, 1.0);
-                        }
+                dragging = false;
+                break;
+            case ALLEGRO_EVENT_MOUSE_AXES:
+                al_clear_to_color(NOIR);
+                al_draw_bitmap(ImageMenu, 0, 0, 0);
+                dessinerCurseur(&curseurVolume, curseurVolume.value);
+                al_draw_text(police, NOIR, 624, 240, ALLEGRO_ALIGN_CENTRE, "-VOLUME-");
+                if (dragging) {
+                    float dx = event5.mouse.x - dernierX;
+                    dernierX = event5.mouse.x;
+                    float nouveauVolume = curseurVolume.value + (dx / curseurVolume.width) * (curseurVolume.max - curseurVolume.min);
+                    if (nouveauVolume < curseurVolume.min) {nouveauVolume = curseurVolume.min;}
+                    if (nouveauVolume > curseurVolume.max) {nouveauVolume = curseurVolume.max;}
+                    curseurVolume.value = nouveauVolume;
+                    al_set_sample_instance_gain(instanceMusique, curseurVolume.value);
+                }
+                for (int i = 0; i < nbBoutons; ++i) {
+                    if (EstDansLeBouton(boutons[i], event5.mouse.x, event5.mouse.y)) {
+                        dessinerBouton2(boutons[i], police, NOIR, BLANC);
+                    } else {
+                        dessinerBouton1(boutons[i], police, NOIR, GRIS_CLAIR_TRANSPARENT);
                     }
                 }
+                al_flip_display();
                 break;
         }
     }
@@ -206,8 +200,8 @@ void menuOptions(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_
     };
     Bouton boutonsSousMenu[] = {
             {425, 235, 400, 70, "Controls"},
-            {425, 335, 400, 70, "Credits"},
-            {425, 435, 400, 70, "Volume"}
+            {425, 435, 400, 70, "Credits"},
+            {425, 335, 400, 70, "Volume"}
     };
     int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
     int nbBoutonsSousMenu = sizeof(boutonsSousMenu) / sizeof(boutonsSousMenu[0]);
@@ -342,9 +336,6 @@ void menuScores(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_Q
     while (!done) {
         ALLEGRO_EVENT event5;
         al_wait_for_event(queue1, &event5);
-        al_clear_to_color(BLANC);
-        al_draw_bitmap(ImageMenu, 0, 0, 0);
-        al_draw_text(police, NOIR, 624, 330, ALLEGRO_ALIGN_CENTER, scoreText);
         switch (event5.type) {
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
                 done = true;
@@ -378,7 +369,6 @@ void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *d
           ALLEGRO_BITMAP *distrib_assiette, ALLEGRO_BITMAP *poubelle, ALLEGRO_BITMAP *sortie, ALLEGRO_FONT *police,
           ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_MIXER *mixer, ALLEGRO_SAMPLE_INSTANCE *instanceMusique,
           ALLEGRO_SAMPLE *sonBoutonClique) {
-    SoundCliquedButton(sonBoutonClique);
     Joueur joueur1;
     Joueur joueur2;
     joueur1.score = 0;
@@ -403,7 +393,6 @@ void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *d
     while (!QuitterMenu) {
         ALLEGRO_EVENT event2;
         al_wait_for_event(queue1, &event2);
-
         switch (event2.type) {
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
                 QuitterMenu = true;

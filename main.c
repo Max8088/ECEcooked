@@ -196,6 +196,7 @@ int main(void) {
             case ALLEGRO_EVENT_KEY_UP:
                 switch (event1.keyboard.keycode) {
                     case ALLEGRO_KEY_ENTER:
+                        SoundCliquedButton(sonBoutonClique);
                         menu(display, ImageMenu, decor1, sol, personnage, cuisson, decoupe, planDeTravail,
                              distrib_assiette, poubelle, sortie, police, queue1, mixer, instanceMusique,
                              sonBoutonClique);
