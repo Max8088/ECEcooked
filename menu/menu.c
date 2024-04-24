@@ -1,6 +1,3 @@
-//
-// Created by pierr on 03/04/2024.
-//
 #include "../constantes.h"
 #include "menu.h."
 #include "../joueur/joueur.h"
@@ -213,6 +210,7 @@ void menuVolume(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_MIXER *
                         if (!(strcmp(boutons[i].texte, "<-"))) {
                             SoundCliquedButton(sonBoutonClique);
                             done = true;
+
                         }
                     }
                 }
@@ -255,7 +253,8 @@ void menuOptions(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_
     Bouton boutonsSousMenu[] = {
             {425, 235, 400, 70, "Controls"},
             {425, 435, 400, 70, "Credits"},
-            {425, 335, 400, 70, "Volume"}
+            {425, 335, 400, 70, "Volume"},
+            {425, 535, 400, 70, "Rules"}
     };
     int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
     int nbBoutonsSousMenu = sizeof(boutonsSousMenu) / sizeof(boutonsSousMenu[0]);
@@ -367,6 +366,26 @@ void menuOptions(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_
                             }
                             al_flip_display();
                         }
+                        if (!(strcmp(boutonsSousMenu[i].texte, "Rules"))) {
+                            menuRegle(ImageMenu, police, queue1, sonBoutonClique);
+                            al_clear_to_color(BLANC);
+                            al_draw_bitmap(ImageMenu, 0, 0, 0);
+                            for (i = 0; i < nbBoutons; ++i) {
+                                if (EstDansLeBouton(boutons[i], event6.mouse.x, event6.mouse.y)) {
+                                    dessinerBouton2(boutons[i], police, NOIR, BLANC);
+                                } else {
+                                    dessinerBouton1(boutons[i], police, NOIR, GRIS_CLAIR);
+                                }
+                            }
+                            for (i = 0; i < nbBoutonsSousMenu; ++i) {
+                                if (EstDansLeBouton(boutonsSousMenu[i], event6.mouse.x, event6.mouse.y)) {
+                                    dessinerBouton2(boutonsSousMenu[i], police, NOIR_TRANSPARENT, GRIS_CLAIR);
+                                } else {
+                                    dessinerBouton1(boutonsSousMenu[i], police, NOIR, BLANC);
+                                }
+                            }
+                            al_flip_display();
+                        }
                     }
                 }
 
@@ -438,6 +457,8 @@ void menuScores(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_Q
     }
 }
 
+
+
 void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *decor1, ALLEGRO_BITMAP *sol,
           ALLEGRO_BITMAP *personnage, ALLEGRO_BITMAP *cuisson, ALLEGRO_BITMAP *decoupe, ALLEGRO_BITMAP *planDeTravail,
           ALLEGRO_BITMAP *distrib_assiette, ALLEGRO_BITMAP *poubelle, ALLEGRO_BITMAP *sortie, ALLEGRO_FONT *police,
@@ -499,6 +520,54 @@ void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *d
                         }
                     }
                 }
+                break;
+        }
+    }
+}
+
+
+
+void menuRegle(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1,
+                  ALLEGRO_SAMPLE *sonBoutonClique) {
+    SoundCliquedButton(sonBoutonClique);
+    bool fini = false;
+    Bouton boutonRetour = {-10, 612, 130, 70, "<-"};
+    const char *Rules[] = {
+            "Vous êtes deux cuisiniers qui travaillent ensemble pour cuisiner [en fonction du thème] "
+    };
+
+    int nbControlsJoueur1 = sizeof(Rules) / sizeof(Rules[0]);
+
+    al_clear_to_color(NOIR);
+    al_draw_bitmap(ImageMenu, 0, 0, 0);
+    dessinerBouton1(boutonRetour, police, NOIR, GRIS_CLAIR);
+    al_draw_text(police, BLANC, 550, 200, ALLEGRO_ALIGN_LEFT, "Rules");
+    for (int i = 0; i < nbControlsJoueur1; ++i) {
+        al_draw_text(police, NOIR, 320, 250 + 50 * i, ALLEGRO_ALIGN_LEFT, Rules[i]);
+    }
+
+    al_flip_display();
+
+    while (!fini) {
+        ALLEGRO_EVENT event;
+        al_wait_for_event(queue1, &event);
+        switch (event.type) {
+            case ALLEGRO_EVENT_DISPLAY_CLOSE:
+                fini = true;
+                break;
+            case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
+                if (EstDansLeBouton(boutonRetour, event.mouse.x, event.mouse.y)) {
+                    SoundCliquedButton(sonBoutonClique);
+                    fini = true;
+                }
+                break;
+            case ALLEGRO_EVENT_MOUSE_AXES:
+                if (EstDansLeBouton(boutonRetour, event.mouse.x, event.mouse.y)) {
+                    dessinerBouton2(boutonRetour, police, NOIR, BLANC);
+                } else {
+                    dessinerBouton1(boutonRetour, police, NOIR, GRIS_CLAIR_TRANSPARENT);
+                }
+                al_flip_display();
                 break;
         }
     }
