@@ -9,8 +9,8 @@ add_executable(EScooked main.c
         menu/menu.h
         joueur/joueur.c
         joueur/joueur.h
-        jouer/jouer.c
-        jouer/jouer.h
+        jeu/jeu.c
+        jeu/jeu.h
         FichierTexte)
 
 IF(WIN32)

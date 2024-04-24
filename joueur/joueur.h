@@ -11,10 +11,12 @@
 typedef struct {
     char pseudo[13];
     ALLEGRO_BITMAP *image;
-    int score;
+    int score, x, y, vx, vy;
+    float angle;
 } Joueur;
 
-void ChoisirPseudo(Joueur *joueur1, Joueur *joueur2, ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu,
-                   ALLEGRO_FONT *police, int *pLancerJeu, ALLEGRO_SAMPLE *sonBoutonClique);
+void InitialiserJoueur(Joueur *joueur, const char *cheminVersImage, float x, float y);
+
+void ChoisirPseudos(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, bool *lancerJeu);
 
 #endif //ESCOOKED_JOUEUR_H

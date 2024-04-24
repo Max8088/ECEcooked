@@ -6,6 +6,8 @@
 #define ESCOOKED_MENU_H
 
 #include "../constantes.h"
+#include "../jeu/jeu.h"
+#include "../joueur/joueur.h"
 
 typedef struct {
     float x, y, width, height;
@@ -16,59 +18,31 @@ typedef struct {
     float x, y, width, height, min, max, value;
 } Curseur;
 
+void DessinerBouton1(Bouton bouton, ALLEGRO_FONT *police, ALLEGRO_COLOR couleurRectangle, ALLEGRO_COLOR couleurTexte);
 
-typedef struct {
-    float x;
-    float y;
-    float width;
-    float height;
-    char texte[20];
-} BoutonVolume;
-
-#define VOLUME_MIN 0
-#define VOLUME_MAX 100
-#define VOLUME_STEP 5
-
-void dessinerBouton1(Bouton bouton, ALLEGRO_FONT *police, ALLEGRO_COLOR couleurRectangle, ALLEGRO_COLOR couleurTexte);
-
-void dessinerBouton2(Bouton bouton, ALLEGRO_FONT *police, ALLEGRO_COLOR couleurRectangle, ALLEGRO_COLOR couleurTexte);
-
-void
-dessinerMenu(ALLEGRO_BITMAP *ImageMenu, int nbBoutons, Bouton boutons[], ALLEGRO_EVENT event2, ALLEGRO_FONT *police);
+void DessinerBouton2(Bouton bouton, ALLEGRO_FONT *police, ALLEGRO_COLOR couleurRectangle, ALLEGRO_COLOR couleurTexte);
 
 bool EstDansLeBouton(Bouton bouton, float x, float y);
 
-int getBestScore();
+void SonBoutonClique(Sons *son);
 
-void dessinerCurseur(const Curseur *curseur, float volume, ALLEGRO_FONT *police);
+void MenuCredits(ComposantsJeu ***jeu);
+
+void DessinerCurseur(const Curseur *curseur, ComposantsJeu ***jeu, float volume);
 
 bool EstDansLeCurseurVolume(const Curseur *curseur, float mx, float my);
 
-void menuControls(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1,
-                  ALLEGRO_SAMPLE *sonBoutonClique);
+void MenuVolume(Sons ***son, ComposantsJeu ***jeu);
 
-void menuRegle(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1,
-                  ALLEGRO_SAMPLE *sonBoutonClique);
+void MenuControls(ComposantsJeu ***jeu);
 
-void menuVolume(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_MIXER *mixer, ALLEGRO_EVENT_QUEUE *queue1,
-                ALLEGRO_SAMPLE_INSTANCE *instanceMusique, ALLEGRO_SAMPLE *sonBoutonClique);
+void MenuOptions(ComposantsJeu **jeu, Sons **son);
 
-void menu(ALLEGRO_DISPLAY *display, ALLEGRO_BITMAP *ImageMenu, ALLEGRO_BITMAP *decor1, ALLEGRO_BITMAP *sol,
-          ALLEGRO_BITMAP *personnage, ALLEGRO_BITMAP *cuisson, ALLEGRO_BITMAP *decoupe, ALLEGRO_BITMAP *planDeTravail,
-          ALLEGRO_BITMAP *distrib_assiette, ALLEGRO_BITMAP *poubelle, ALLEGRO_BITMAP *sortie, ALLEGRO_FONT *police,
-          ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_MIXER *mixer, ALLEGRO_SAMPLE_INSTANCE *instanceMusique, ALLEGRO_SAMPLE
-          *sonBoutonClique);
+void PremierAffichageMenu(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, int nbBoutons, Bouton *boutons);
 
-void menuScores(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1,
-                ALLEGRO_SAMPLE *sonBoutonClique);
+void DessinerMenu(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, float mouseX, float mouseY, Bouton boutons[], int nbBoutons);
 
-void menuOptions(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_MIXER *mixer,
-                 ALLEGRO_SAMPLE_INSTANCE *instanceMusique, ALLEGRO_SAMPLE *sonBoutonclique);
-
-void
-Credits(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1, ALLEGRO_SAMPLE *sonBoutonClique);
-
-void SoundCliquedButton(ALLEGRO_SAMPLE *sonBoutonClique);
+void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son);
 
 
 #endif //ESCOOKED_MENU_H

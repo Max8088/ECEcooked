@@ -25,4 +25,11 @@
 #define VERT_CLAIR al_map_rgb(0, 200, 0)
 #define ROUGE al_map_rgb(150, 0, 0)
 
+typedef struct {
+    ALLEGRO_SAMPLE *musiqueDeFond;
+    ALLEGRO_SAMPLE_INSTANCE *instanceDeMusqiue;
+    ALLEGRO_SAMPLE *sonBoutonClique;
+    ALLEGRO_MIXER *mixer;
+} Sons;
+
 #endif //ESCOOKED_CONSTANTES_H
