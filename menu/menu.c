@@ -338,42 +338,59 @@ void DessinerMenu(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, float mouseX,
     al_flip_display();
 }
 
-void menuRegle(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, ALLEGRO_EVENT_QUEUE *queue1,
-                  ALLEGRO_SAMPLE *sonBoutonClique) {
-    SoundCliquedButton(sonBoutonClique);
-    bool fini = false;
-    Bouton boutonRetour = {-10, 612, 130, 70, "<-"};
+void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son) {
+    SonBoutonClique(son);
+    bool fini = false, lancerJeu = false;
+    Bouton boutons[] = {
+            {425, 235, 400, 70, "Play"},
+            {425, 335, 400, 70, "Options"},
+            {425, 435, 400, 70, "Scores"},
+            {425, 535, 400, 70, "Exit"}
+    };
+    int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
+    ALLEGRO_EVENT event;
+    float mouseX = 0, mouseY = 0;
 
-    al_clear_to_color(NOIR);
-    al_draw_bitmap(ImageMenu, 0, 0, 0);
-    dessinerBouton1(boutonRetour, police, NOIR, GRIS_CLAIR);
-    al_draw_text(police, BLANC, 550, 200, ALLEGRO_ALIGN_LEFT, "Rules");
+    PremierAffichageMenu(jeu->ImageMenu, jeu->police, nbBoutons, boutons);
 
-    al_draw_text(police, NOIR, 100, 300, ALLEGRO_ALIGN_LEFT,"Vous êtes deux cuisiniers qui travaillent ");
-
-    al_flip_display();
-
+    al_start_timer(jeu->timer);
     while (!fini) {
-        ALLEGRO_EVENT event;
-        al_wait_for_event(queue1, &event);
+        al_wait_for_event(jeu->file, &event);
         switch (event.type) {
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
                 fini = true;
                 break;
             case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
-                if (EstDansLeBouton(boutonRetour, event.mouse.x, event.mouse.y)) {
-                    SoundCliquedButton(sonBoutonClique);
-                    fini = true;
+                for (int i = 0; i < nbBoutons; ++i) {
+                    if (EstDansLeBouton(boutons[i], event.mouse.x, event.mouse.y)) {
+                        if (!(strcmp(boutons[i].texte, "Play"))) {
+                            SonBoutonClique(son);
+                            ChoisirPseudos(jeu, joueur1, joueur2, &lancerJeu);
+                            if (lancerJeu) {
+                                //jeu
+                            }
+                        }
+                        if (!(strcmp(boutons[i].texte, "Options"))) {
+                            SonBoutonClique(son);
+                            MenuOptions(&jeu, &son);
+                        }
+                        if (!(strcmp(boutons[i].texte, "Scores"))) {
+                            SonBoutonClique(son);
+                        }
+                        if (!(strcmp(boutons[i].texte, "Exit"))) {
+                            fini = true;
+                        }
+                    }
                 }
                 break;
             case ALLEGRO_EVENT_MOUSE_AXES:
-                if (EstDansLeBouton(boutonRetour, event.mouse.x, event.mouse.y)) {
-                    dessinerBouton2(boutonRetour, police, NOIR, BLANC);
-                } else {
-                    dessinerBouton1(boutonRetour, police, NOIR, GRIS_CLAIR_TRANSPARENT);
-                }
-                al_flip_display();
+                mouseX = event.mouse.x;
+                mouseY = event.mouse.y;
+                break;
+            case ALLEGRO_EVENT_TIMER:
+                DessinerMenu(jeu->ImageMenu, jeu->police, mouseX, mouseY, boutons, nbBoutons);
                 break;
         }
     }
+
 }
