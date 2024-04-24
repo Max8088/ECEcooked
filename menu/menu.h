@@ -27,7 +27,7 @@ bool EstDansLeBouton(Bouton bouton, float x, float y);
 
 void SonBoutonClique(Sons *son);
 
-void MenuCredits(ComposantsJeu ***jeu);
+void MenuCredits(ComposantsJeu ***jeu, Sons ***son);
 
 void DessinerCurseur(const Curseur *curseur, ComposantsJeu ***jeu, float volume);
 
@@ -35,7 +35,7 @@ bool EstDansLeCurseurVolume(const Curseur *curseur, float mx, float my);
 
 void MenuVolume(Sons ***son, ComposantsJeu ***jeu);
 
-void MenuControls(ComposantsJeu ***jeu);
+void MenuControls(ComposantsJeu ***jeu, Sons ***son);
 
 void MenuOptions(ComposantsJeu **jeu, Sons **son);
 

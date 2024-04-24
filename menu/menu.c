@@ -29,7 +29,7 @@ void SonBoutonClique(Sons *son) {
     al_play_sample(son->sonBoutonClique, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, NULL);
 }
 
-void MenuCredits(ComposantsJeu ***jeu) {
+void MenuCredits(ComposantsJeu ***jeu, Sons ***son) {
     ALLEGRO_EVENT event;
     bool fini = false;
     Bouton boutons[] = {
@@ -59,6 +59,7 @@ void MenuCredits(ComposantsJeu ***jeu) {
                 for (int i = 0; i < nbBoutons; ++i) {
                     if (EstDansLeBouton(boutons[i], mouseX, mouseY)) {
                         if (!(strcmp(boutons[i].texte, "<-"))) {
+                            SonBoutonClique(**son);
                             fini = true;
                         }
                     }
@@ -101,7 +102,6 @@ bool EstDansLeCurseurVolume(const Curseur *curseur, float mx, float my) {
 }
 
 void MenuVolume(Sons ***son, ComposantsJeu ***jeu) {
-    SonBoutonClique(**son);
     ALLEGRO_EVENT event;
     bool fini = false, dragging = false;
     float dernierX = 0;
@@ -174,7 +174,7 @@ void MenuVolume(Sons ***son, ComposantsJeu ***jeu) {
 
 }
 
-void MenuControls(ComposantsJeu ***jeu) {
+void MenuControls(ComposantsJeu ***jeu, Sons ***son) {
     ALLEGRO_EVENT event;
     bool fini = false;
     Bouton boutonRetour = {-10, 612, 130, 70, "<-"};
@@ -213,6 +213,7 @@ void MenuControls(ComposantsJeu ***jeu) {
                 break;
             case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
                 if (EstDansLeBouton(boutonRetour, mouseX, mouseY)) {
+                    SonBoutonClique(**son);
                     fini = true;
                 }
                 break;
@@ -276,13 +277,16 @@ void MenuOptions(ComposantsJeu **jeu, Sons **son) {
                 for (int i = 0; i < nbBoutonsSousMenu; ++i) {
                     if (EstDansLeBouton(boutonsSousMenu[i], mouseX, mouseY)) {
                         if (!(strcmp(boutonsSousMenu[i].texte, "Controls"))) {
-                            MenuControls(&jeu);
+                            SonBoutonClique(*son);
+                            MenuControls(&jeu, &son);
                         }
                         if (!(strcmp(boutonsSousMenu[i].texte, "Volume"))) {
+                            SonBoutonClique(*son);
                             MenuVolume(&son, &jeu);
                         }
                         if (!(strcmp(boutonsSousMenu[i].texte, "Credits"))) {
-                            MenuCredits(&jeu);
+                            SonBoutonClique(*son);
+                            MenuCredits(&jeu, &son);
                         }
 
                     }
@@ -365,7 +369,7 @@ void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son) {
                     if (EstDansLeBouton(boutons[i], event.mouse.x, event.mouse.y)) {
                         if (!(strcmp(boutons[i].texte, "Play"))) {
                             SonBoutonClique(son);
-                            ChoisirPseudos(jeu, joueur1, joueur2, &lancerJeu);
+                            ChoisirPseudos(jeu, joueur1, joueur2, &lancerJeu, son);
                             if (lancerJeu) {
                                 //Jeu(jeu, joueur1, joueur2);
                             }

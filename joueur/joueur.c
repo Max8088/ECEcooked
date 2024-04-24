@@ -14,7 +14,7 @@ void InitialiserJoueur(Joueur *joueur, const char *cheminVersImage, float x, flo
     assert(joueur->image);
 }
 
-void ChoisirPseudos(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, bool *lancerJeu) {
+void ChoisirPseudos(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, bool *lancerJeu, Sons *sons) {
     bool fini = false, joueur1_saisi = false, joueur2_saisi = false;
     Bouton boutons[] = {
             {-10,  612, 140, 70, "<-"},
@@ -57,6 +57,7 @@ void ChoisirPseudos(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, bool *
                         joueur1->pseudo[strlen(joueur1->pseudo) - 1] = '\0';
                     } else if (event.keyboard.keycode == ALLEGRO_KEY_ENTER && strlen(joueur1->pseudo) > 0 &&
                                strlen(joueur1->pseudo) < 13) {
+                        SonBoutonClique(sons);
                         joueur1_saisi = true;
                     }
                 } else if (!joueur2_saisi) {
@@ -69,6 +70,7 @@ void ChoisirPseudos(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, bool *
                         joueur2->pseudo[strlen(joueur2->pseudo) - 1] = '\0';
                     } else if (event.keyboard.keycode == ALLEGRO_KEY_ENTER && strlen(joueur2->pseudo) > 0 &&
                                strlen(joueur2->pseudo) < 13) {
+                        SonBoutonClique(sons);
                         joueur2_saisi = true;
                     }
                 }
@@ -77,12 +79,14 @@ void ChoisirPseudos(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, bool *
                 for (int i = 0; i < nbBoutons; ++i) {
                     if (EstDansLeBouton(boutons[i], event.mouse.x, event.mouse.y)) {
                         if (!(strcmp(boutons[i].texte, "<-"))) {
+                            SonBoutonClique(sons);
                             fini = true;
                         }
                         if (!(strcmp(boutons[i].texte, "->")) && joueur1_saisi && joueur2_saisi) {
                             strcpy(joueur1->pseudo, joueur1->pseudo);
                             strcpy(joueur2->pseudo, joueur2->pseudo);
                             *lancerJeu = true;
+                            SonBoutonClique(sons);
                             fini = true;
                         }
                     }
