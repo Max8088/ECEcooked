@@ -11,7 +11,7 @@ void InitialiserFenetreFileTimer(ComposantsJeu *jeu) {
     al_register_event_source(jeu->file, al_get_mouse_event_source());
     al_register_event_source(jeu->file, al_get_timer_event_source(jeu->timer));
 }
-
+/*
 void ChargerFichierTxt(ComposantsJeu *jeu) {
     FILE *fichier = fopen("../images/FichierTexte", "r");
     if (!fichier) {
@@ -98,4 +98,4 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
                 break;
         }
     }
-}
+}*/

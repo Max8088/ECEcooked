@@ -6,7 +6,7 @@
 #define ESCOOKED_JEU_H
 
 #include "../constantes.h"
-#include "../joueur/joueur.h"
+
 
 #define NB_LIGNES 7
 #define NB_COLONNES 13
@@ -41,11 +41,11 @@ typedef struct {
 } ComposantsJeu;
 
 void InitialiserFenetreFileTimer(ComposantsJeu *jeu);
-
+/*
 void ChargerFichierTxt(ComposantsJeu *jeu);
 
 void DessinerElements(const ComposantsJeu *jeu);
 
 void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2);
-
+*/
 #endif //ESCOOKED_JEU_H

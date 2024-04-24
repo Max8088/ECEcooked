@@ -7,7 +7,6 @@
 #define ESCOOKED_JOUEUR_H
 
 #include "../constantes.h"
-#include "../jeu/jeu.h"
 
 typedef struct {
     char pseudo[13];
