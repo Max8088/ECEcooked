@@ -123,6 +123,7 @@ int main(void) {
     }
 
 
+
     LibererMemoire(&jeu, &joueur1, &joueur2);
     return 0;
 }
