@@ -6,6 +6,13 @@
 #define ESCOOKED_JEU_H
 
 #include "../constantes.h"
+#include "../joueur/joueur.h"
+
+#define NB_LIGNES 7
+#define NB_COLONNES 13
+#define TAILLE_CASE 60
+#define MARGE_GAUCHE_DROITE 234
+#define MARGE_HAUT_BAS 141
 
 typedef struct {
     int type, x, y;
@@ -34,5 +41,11 @@ typedef struct {
 } ComposantsJeu;
 
 void InitialiserFenetreFileTimer(ComposantsJeu *jeu);
+
+void ChargerFichierTxt(ComposantsJeu *jeu);
+
+void DessinerElements(const ComposantsJeu *jeu);
+
+void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2);
 
 #endif //ESCOOKED_JEU_H

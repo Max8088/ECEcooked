@@ -123,5 +123,6 @@ int main(void) {
     }
 
     LibererMemoire(&jeu, &joueur1, &joueur2);
+    printf("\nTout marche bene chef\n");
     return 0;
 }

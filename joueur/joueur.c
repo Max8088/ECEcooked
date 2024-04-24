@@ -24,7 +24,6 @@ void ChoisirPseudos(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, bool *
     Bouton boutonPseudo2 = {300, 405, 650, 70, "Pseudo player 2:"};
     int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
     float mouseX = 0, mouseY = 0;
-
     ALLEGRO_EVENT event;
 
     al_clear_to_color(NOIR);
