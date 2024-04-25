@@ -8,14 +8,8 @@
 
 #include "../constantes.h"
 #include "../jeu/jeu.h"
+#include "../jeu+joueur/jeu+joueur.h"
 
-
-typedef struct {
-    char pseudo[13];
-    ALLEGRO_BITMAP *image;
-    int score, x, y, vx, vy;
-    float angle;
-} Joueur;
 
 void InitialiserJoueur(Joueur *joueur, const char *cheminVersImage, float x, float y);
 

@@ -1,5 +1,6 @@
 
 #include "../constantes.h"
+#include "../jeu/jeu.h"
 #include "menu.h"
 
 void DessinerBouton1(Bouton bouton, ALLEGRO_FONT *police, ALLEGRO_COLOR couleurRectangle, ALLEGRO_COLOR couleurTexte) {
@@ -240,9 +241,9 @@ void MenuOptions(ComposantsJeu **jeu, Sons **son) {
             {-10, 612, 130, 70, "<-"}
     };
     Bouton boutonsSousMenu[] = {
-            {425, 235, 400, 70, "Controls"},
+            {425, 335, 400, 70, "Controls"},
             {425, 435, 400, 70, "Credits"},
-            {425, 335, 400, 70, "Volume"}
+            {425, 235, 400, 70, "Volume"}
     };
     int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
     int nbBoutonsSousMenu = sizeof(boutonsSousMenu) / sizeof(boutonsSousMenu[0]);
@@ -371,7 +372,7 @@ void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son) {
                             SonBoutonClique(son);
                             ChoisirPseudos(jeu, joueur1, joueur2, &lancerJeu, son);
                             if (lancerJeu) {
-                                //Jeu(jeu, joueur1, joueur2);
+                                Jeu(jeu, joueur1, joueur2);
                             }
                         }
                         if (!(strcmp(boutons[i].texte, "Options"))) {

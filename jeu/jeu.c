@@ -1,7 +1,7 @@
 
 #include "../constantes.h"
 #include "jeu.h"
-#include "../joueur/joueur.h"
+#include "math.h"
 
 void InitialiserFenetreFileTimer(ComposantsJeu *jeu) {
     jeu->fenetre = al_create_display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
@@ -75,16 +75,112 @@ void DessinerElements(const ComposantsJeu *jeu) {
     }
 }
 
+void VerifierPosJoueur(Joueur *joueur) {
+    int joueur_width = al_get_bitmap_width(joueur->image);
+    int joueur_height = al_get_bitmap_height(joueur->image);
+
+    if (joueur->x < 0) { joueur->x = 0; }
+    if (joueur->x + joueur_width > DISPLAY_WIDTH - MARGE_GAUCHE_DROITE) { joueur->x = DISPLAY_WIDTH - MARGE_GAUCHE_DROITE - joueur_width; }
+    if (joueur->y < 0) { joueur->y = 0; }
+    if (joueur->y + joueur_height > DISPLAY_HEIGHT) { joueur->y = DISPLAY_HEIGHT - joueur_height; }
+}
+
+void MAJAngleJoueur(Joueur *joueur) {
+    if (joueur->vx != 0 || joueur->vy != 0) {
+        joueur->angle = atan2(joueur->vy, joueur->vx) + M_PI / 2;
+    }
+}
+
+void MAJPosJoueurs(Joueur *joueur1, Joueur *joueur2, bool *maj) {
+    if (joueur1->vx != 0 || joueur1->vy != 0) {
+        joueur1->x += joueur1->vx;
+        joueur1->y += joueur1->vy;
+        MAJAngleJoueur(joueur1);
+        VerifierPosJoueur(joueur1);
+        *maj = true;
+    }
+    if (joueur2->vx != 0 || joueur2->vy != 0) {
+        joueur2->x += joueur2->vx;
+        joueur2->y += joueur2->vy;
+        MAJAngleJoueur(joueur2);
+        VerifierPosJoueur(joueur2);
+        *maj = true;
+    }
+}
+
 void DessinerJoueur(Joueur *joueur) {
     float cx = al_get_bitmap_width(joueur->image) / 2;
     float cy = al_get_bitmap_height(joueur->image) / 2;
     al_draw_rotated_bitmap(joueur->image, cx, cy, joueur->x + cx, joueur->y + cy, joueur->angle, 0);
 }
 
+void GestionKeyDown(Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool *maj) {
+    switch (event->keyboard.keycode) {
+        case ALLEGRO_KEY_Z:
+            joueur1->vy = -1;
+            *maj = true;
+            break;
+        case ALLEGRO_KEY_S:
+            joueur1->vy = 1;
+            *maj = true;
+            break;
+        case ALLEGRO_KEY_Q:
+            joueur1->vx = -1;
+            *maj = true;
+            break;
+        case ALLEGRO_KEY_D:
+            joueur1->vx = 1;
+            *maj = true;
+            break;
+        case ALLEGRO_KEY_UP:
+            joueur2->vy = -1;
+            *maj = true;
+            break;
+        case ALLEGRO_KEY_DOWN:
+            joueur2->vy = 1;
+            *maj = true;
+            break;
+        case ALLEGRO_KEY_LEFT:
+            joueur2->vx = -1;
+            *maj = true;
+            break;
+        case ALLEGRO_KEY_RIGHT:
+            joueur2->vx = 1;
+            *maj = true;
+            break;
+    }
+}
+
+void GestionKeyUP(Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool *maj) {
+    switch (event->keyboard.keycode) {
+        case ALLEGRO_KEY_Z:
+        case ALLEGRO_KEY_S:
+            joueur1->vy = 0;
+            *maj = true;
+            break;
+        case ALLEGRO_KEY_Q:
+        case ALLEGRO_KEY_D:
+            joueur1->vx = 0;
+            *maj = true;
+            break;
+        case ALLEGRO_KEY_UP:
+        case ALLEGRO_KEY_DOWN:
+            joueur2->vy = 0;
+            *maj = true;
+            break;
+        case ALLEGRO_KEY_RIGHT:
+        case ALLEGRO_KEY_LEFT:
+            joueur2->vx = 0;
+            *maj = true;
+            break;
+    }
+}
+
 void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
     ALLEGRO_EVENT event;
     bool fini = false, maj = false;
 
+    al_clear_to_color(NOIR);
     ChargerFichierTxt(jeu);
     DessinerElements(jeu);
     DessinerJoueur(joueur1);
@@ -96,6 +192,23 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
         switch (event.type) {
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
                 fini = true;
+                break;
+            case ALLEGRO_EVENT_KEY_DOWN:
+                GestionKeyDown(joueur1, joueur2, &event, &maj);
+                break;
+            case ALLEGRO_EVENT_KEY_UP:
+                GestionKeyUP(joueur1, joueur2, &event, &maj);
+                break;
+            case ALLEGRO_EVENT_TIMER:
+                MAJPosJoueurs(joueur1, joueur2, &maj);
+                if (maj) {
+                    al_clear_to_color(NOIR);
+                    DessinerElements(jeu);
+                    DessinerJoueur(joueur1);
+                    DessinerJoueur(joueur2);
+                    al_flip_display();
+                    maj = false;
+                }
                 break;
         }
     }
