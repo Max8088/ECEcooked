@@ -17,18 +17,32 @@ void InitialiserAllegro() {
 
 void ChargerImages(ComposantsJeu *jeu) {
     jeu->decor = al_load_bitmap("../images/decor1.png");
-    jeu->sol = al_load_bitmap("../images/sol(1).png");
-    jeu->planDeTravail = al_load_bitmap("../images/plantravail.png");
+    jeu->sol1 = al_load_bitmap("../images/SOL 1.png");
+    jeu->sol2 = al_load_bitmap("../images/SOL 2.png");
+    jeu->planDeTravail = al_load_bitmap("../images/PLAN DE TRAVAIL.png");
     jeu->plaqueDeCuisson = al_load_bitmap("../images/cuisson(1).png");
     jeu->poubelle = al_load_bitmap("../images/poubelle.png");
     jeu->distributeurAssiette = al_load_bitmap("../images/distribassiettes.png");
     jeu->sortie = al_load_bitmap("../images/sortie(1).png");
     jeu->ImageMenu = al_load_bitmap("../images/fondmenuV2.jpg");
+    jeu->Z = al_load_bitmap("../images/Z.png");
+    jeu->Q = al_load_bitmap("../images/Q.png");
+    jeu->S = al_load_bitmap("../images/S.png");
+    jeu->D = al_load_bitmap("../images/D.png");
+    jeu->C = al_load_bitmap("../images/C.png");
+    jeu->V = al_load_bitmap("../images/V.png");
+    jeu->L = al_load_bitmap("../images/L.png");
+    jeu->M = al_load_bitmap("../images/M.png");
+    jeu->FlecheHaut = al_load_bitmap("../images/UP.png");
+    jeu->FlecheBas = al_load_bitmap("../images/DOWN.png");
+    jeu->FlecheGauche = al_load_bitmap("../images/LEFT.png");
+    jeu->FlecheDroite = al_load_bitmap("../images/RIGHT.png");
 }
 
 void ChargerPolices(ComposantsJeu *jeu) {
     jeu->police = al_load_ttf_font("../police/RubikDoodleShadow-Regular.ttf", 50, 0);
     jeu->policeTitre = al_load_ttf_font("../police/BungeeShade-Regular.ttf", 90, 0);
+    jeu->policePseudo = al_load_ttf_font("../police/RubikDoodleShadow-Regular.ttf", 20, 0);
 }
 
 void InitialiserSon(Sons *son) {
@@ -56,37 +70,132 @@ void PremierAffichageFenetre(ComposantsJeu *jeu) {
 }
 
 void LibererMemoire(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
-    al_destroy_display(jeu->fenetre);
-    al_destroy_event_queue(jeu->file);
-    al_destroy_timer(jeu->timer);
+    if (jeu->ImageMenu != NULL) {
+        al_destroy_bitmap(jeu->ImageMenu);
+        jeu->ImageMenu = NULL;
+    }
+    if (jeu->decor != NULL) {
+        al_destroy_bitmap(jeu->decor);
+        jeu->decor = NULL;
+    }
+    if (jeu->sol1 != NULL) {
+        al_destroy_bitmap(jeu->sol1);
+        jeu->sol1 = NULL;
+    }
+    if (jeu->sol2 != NULL) {
+        al_destroy_bitmap(jeu->sol2);
+        jeu->sol2 = NULL;
+    }
+    if (jeu->planDeTravail != NULL) {
+        al_destroy_bitmap(jeu->planDeTravail);
+        jeu->planDeTravail = NULL;
+    }
+    if (jeu->plaqueDeCuisson != NULL) {
+        al_destroy_bitmap(jeu->plaqueDeCuisson);
+        jeu->plaqueDeCuisson = NULL;
+    }
+    if (jeu->poubelle != NULL) {
+        al_destroy_bitmap(jeu->poubelle);
+        jeu->poubelle = NULL;
+    }
+    if (jeu->distributeurAssiette != NULL) {
+        al_destroy_bitmap(jeu->distributeurAssiette);
+        jeu->distributeurAssiette = NULL;
+    }
+    if (jeu->sortie != NULL) {
+        al_destroy_bitmap(jeu->sortie);
+        jeu->sortie = NULL;
+    }
+    if (jeu->Z != NULL) {
+        al_destroy_bitmap(jeu->Z);
+        jeu->Z = NULL;
+    }
+    if (jeu->S != NULL) {
+        al_destroy_bitmap(jeu->S);
+        jeu->S = NULL;
+    }
+    if (jeu->Q != NULL) {
+        al_destroy_bitmap(jeu->Q);
+        jeu->Q = NULL;
+    }
+    if (jeu->D != NULL) {
+        al_destroy_bitmap(jeu->D);
+        jeu->D = NULL;
+    }
+    if (jeu->C != NULL) {
+        al_destroy_bitmap(jeu->C);
+        jeu->C = NULL;
+    }
+    if (jeu->V != NULL) {
+        al_destroy_bitmap(jeu->V);
+        jeu->V = NULL;
+    }
+    if (jeu->L != NULL) {
+        al_destroy_bitmap(jeu->L);
+        jeu->L = NULL;
+    }
+    if (jeu->M != NULL) {
+        al_destroy_bitmap(jeu->M);
+        jeu->M = NULL;
+    }
+    if (jeu->FlecheHaut != NULL) {
+        al_destroy_bitmap(jeu->FlecheHaut);
+        jeu->FlecheHaut = NULL;
+    }
+    if (joueur1->image != NULL) {
+        al_destroy_bitmap(joueur1->image);
+        joueur1->image = NULL;
+    }
+    if (jeu->FlecheBas != NULL) {
+        al_destroy_bitmap(jeu->FlecheBas);
+        jeu->FlecheBas = NULL;
+    }
+    if (jeu->FlecheGauche != NULL) {
+        al_destroy_bitmap(jeu->FlecheGauche);
+        jeu->FlecheGauche = NULL;
+    }
+    if (jeu->FlecheDroite != NULL) {
+        al_destroy_bitmap(jeu->FlecheDroite);
+        jeu->FlecheDroite = NULL;
+    }
+    if (joueur2->image != NULL) {
+        al_destroy_bitmap(joueur2->image);
+        joueur2->image = NULL;
+    }
 
-    al_destroy_bitmap(jeu->ImageMenu);
-    al_destroy_bitmap(jeu->decor);
-    al_destroy_bitmap(jeu->sol);
-    al_destroy_bitmap(jeu->plaqueDeCuisson);
-    al_destroy_bitmap(jeu->planDeDecoupe);
-    al_destroy_bitmap(jeu->planDeTravail);
-    al_destroy_bitmap(jeu->distributeurAssiette);
-    al_destroy_bitmap(jeu->poubelle);
-    al_destroy_bitmap(jeu->sortie);
-    al_destroy_bitmap(joueur1->image);
-    al_destroy_bitmap(joueur2->image);
+    // Libération des polices
+    if (jeu->police != NULL) {
+        al_destroy_font(jeu->police);
+        jeu->police = NULL;
+    }
+    if (jeu->policeTitre != NULL) {
+        al_destroy_font(jeu->policeTitre);
+        jeu->policeTitre = NULL;
+    }
+    if (jeu->policePseudo != NULL) {
+        al_destroy_font(jeu->policePseudo);
+        jeu->policePseudo = NULL;
+    }
 
-    jeu->fenetre = NULL;
-    jeu->file = NULL;
-    jeu->timer = NULL;
+    // Arrêt et destruction du timer
+    if (jeu->timer != NULL) {
+        al_stop_timer(jeu->timer);
+        al_unregister_event_source(jeu->file, al_get_timer_event_source(jeu->timer));
+        al_destroy_timer(jeu->timer);
+        jeu->timer = NULL;
+    }
 
-    jeu->ImageMenu = NULL;
-    jeu->decor = NULL;
-    jeu->sol = NULL;
-    jeu->plaqueDeCuisson = NULL;
-    jeu->planDeDecoupe = NULL;
-    jeu->planDeTravail = NULL;
-    jeu->distributeurAssiette = NULL;
-    jeu->poubelle = NULL;
-    jeu->sortie = NULL;
-    joueur1->image = NULL;
-    joueur2->image = NULL;
+    // Destruction de la file d'événements
+    if (jeu->file != NULL) {
+        al_destroy_event_queue(jeu->file);
+        jeu->file = NULL;
+    }
+
+    // Destruction de la fenêtre d'affichage
+    if (jeu->fenetre != NULL) {
+        al_destroy_display(jeu->fenetre);
+        jeu->fenetre = NULL;
+    }
 }
 
 int main(void) {
@@ -100,8 +209,8 @@ int main(void) {
     InitialiserFenetreFileTimer(&jeu);
     ChargerImages(&jeu);
     ChargerPolices(&jeu);
-    InitialiserJoueur(&joueur1, "../images/personnage(1).png", 100, 100);
-    InitialiserJoueur(&joueur2, "../images/personnage(1).png", 300, 300);
+    InitialiserJoueur(&joueur1, "../images/PERSO 1.png", 450, 300);
+    InitialiserJoueur(&joueur2, "../images/PERSO 2.png", 300, 300);
     PremierAffichageFenetre(&jeu);
     InitialiserSon(&son);
 

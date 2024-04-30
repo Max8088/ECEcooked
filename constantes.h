@@ -23,7 +23,7 @@
 #define GRIS_CLAIR_TRANSPARENT al_map_rgba(150, 150, 150, 50)
 #define GRIS_CLAIR al_map_rgb(150, 150, 150)
 #define VERT_CLAIR al_map_rgb(0, 200, 0)
-#define ROUGE al_map_rgb(150, 0, 0)
+#define ROUGE al_map_rgb(250, 50, 50)
 
 typedef struct {
     ALLEGRO_SAMPLE *musiqueDeFond;

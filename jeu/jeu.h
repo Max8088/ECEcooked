@@ -13,6 +13,8 @@
 #define TAILLE_CASE 60
 #define MARGE_GAUCHE_DROITE 234
 #define MARGE_HAUT_BAS 141
+#define TYPE_SOL1 0
+#define TYPE_SOL2 1
 
 
 void InitialiserFenetreFileTimer(ComposantsJeu *jeu);

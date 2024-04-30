@@ -321,6 +321,39 @@ void MenuOptions(ComposantsJeu **jeu, Sons **son) {
     }
 }
 
+void AfficherControls(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
+    int countDown = 10;
+
+    while (countDown >= 0) {
+        al_clear_to_color(NOIR);
+        al_draw_text(jeu->police, BLANC, 228, 20, ALLEGRO_ALIGN_CENTER, joueur1->pseudo);
+        al_draw_bitmap(joueur1->image, 198, 100, 0);
+        al_draw_text(jeu->police, BLANC, 228, 180, ALLEGRO_ALIGN_CENTER, "Grab/Drop Keys");
+        al_draw_bitmap(jeu->C, 134, 280, 0);
+        al_draw_bitmap(jeu->V, 230, 280, 0);
+        al_draw_text(jeu->police, BLANC, 228, 400, ALLEGRO_ALIGN_CENTER, "Moving Keys");
+        al_draw_bitmap(jeu->Z, 180, 480, 0);
+        al_draw_bitmap(jeu->S, 180, 570, 0);
+        al_draw_bitmap(jeu->Q, 86, 570, 0);
+        al_draw_bitmap(jeu->D, 276, 570, 0);
+
+        al_draw_text(jeu->police, BLANC, 1020, 20, ALLEGRO_ALIGN_CENTER, joueur2->pseudo);
+        al_draw_bitmap(joueur2->image, 990, 100, 0);
+        al_draw_text(jeu->police, BLANC, 1020, 180, ALLEGRO_ALIGN_CENTER, "Grab/Drop Keys");
+        al_draw_bitmap(jeu->L, 922, 280, 0);
+        al_draw_bitmap(jeu->M, 1018, 280, 0);
+        al_draw_text(jeu->police, BLANC, 1020, 400, ALLEGRO_ALIGN_CENTER, "Moving Keys");
+        al_draw_bitmap(jeu->FlecheHaut, 972, 480, 0);
+        al_draw_bitmap(jeu->FlecheBas, 972, 580, 0);
+        al_draw_bitmap(jeu->FlecheGauche, 872, 570, 0);
+        al_draw_bitmap(jeu->FlecheDroite, 1072, 570, 0);
+        al_draw_textf(jeu->police, BLANC, 624, 351, ALLEGRO_ALIGN_CENTER, "Starting in %d...", countDown);
+        al_flip_display();
+        al_rest(1.0);
+        countDown--;
+    }
+}
+
 void PremierAffichageMenu(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, int nbBoutons, Bouton *boutons) {
     al_clear_to_color(NOIR);
     al_draw_bitmap(ImageMenu, 0, 0, 0);
@@ -372,7 +405,9 @@ void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son) {
                             SonBoutonClique(son);
                             ChoisirPseudos(jeu, joueur1, joueur2, &lancerJeu, son);
                             if (lancerJeu) {
+                                AfficherControls(jeu, joueur1, joueur2);
                                 Jeu(jeu, joueur1, joueur2);
+                                lancerJeu = false;
                             }
                         }
                         if (!(strcmp(boutons[i].texte, "Options"))) {
@@ -397,5 +432,4 @@ void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son) {
                 break;
         }
     }
-
 }

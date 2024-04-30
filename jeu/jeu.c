@@ -19,7 +19,7 @@ void ChargerFichierTxt(ComposantsJeu *jeu) {
         fprintf(stderr, "Erreur lors de l'ouverture du fichier.\n");
         exit(EXIT_FAILURE);
     }
-    if (!jeu->decor || !jeu->sol || !jeu->plaqueDeCuisson || !jeu->planDeDecoupe || !jeu->planDeTravail ||
+    if (!jeu->decor || !jeu->sol1 || !jeu->plaqueDeCuisson || !jeu->planDeDecoupe || !jeu->planDeTravail ||
         !jeu->distributeurAssiette || !jeu->poubelle || !jeu->sortie) {
         fprintf(stderr, "Erreur lors du chargement des images.\n");
         exit(EXIT_FAILURE);
@@ -48,16 +48,16 @@ void DessinerElements(const ComposantsJeu *jeu) {
         ALLEGRO_BITMAP *bitmap = NULL;
         switch (jeu->element[i].type) {
             case 0:
-                bitmap = jeu->sol;
+                bitmap = jeu->sol1;
                 break;
             case 1:
-                bitmap = jeu->planDeTravail;
+                bitmap = jeu->sol2;
                 break;
             case 2:
                 bitmap = jeu->planDeDecoupe;
                 break;
             case 3:
-                bitmap = jeu->plaqueDeCuisson;
+                bitmap = jeu->planDeTravail;
                 break;
             case 4:
                 bitmap = jeu->poubelle;
@@ -79,10 +79,27 @@ void VerifierPosJoueur(Joueur *joueur) {
     int joueur_width = al_get_bitmap_width(joueur->image);
     int joueur_height = al_get_bitmap_height(joueur->image);
 
-    if (joueur->x < 0) { joueur->x = 0; }
+    if (joueur->x < MARGE_GAUCHE_DROITE) { joueur->x = MARGE_GAUCHE_DROITE; }
     if (joueur->x + joueur_width > DISPLAY_WIDTH - MARGE_GAUCHE_DROITE) { joueur->x = DISPLAY_WIDTH - MARGE_GAUCHE_DROITE - joueur_width; }
-    if (joueur->y < 0) { joueur->y = 0; }
-    if (joueur->y + joueur_height > DISPLAY_HEIGHT) { joueur->y = DISPLAY_HEIGHT - joueur_height; }
+    if (joueur->y < MARGE_HAUT_BAS) { joueur->y = MARGE_HAUT_BAS; }
+    if (joueur->y + joueur_height > DISPLAY_HEIGHT - MARGE_HAUT_BAS) { joueur->y = DISPLAY_HEIGHT - MARGE_HAUT_BAS - joueur_height; }
+}
+
+bool VerifierCollisionJoueur(Joueur *joueur, ComposantsJeu *jeu) {
+    int joueur_width = al_get_bitmap_width(joueur->image);
+    int joueur_height = al_get_bitmap_height(joueur->image);
+
+    for (int i = 0; i < jeu->nbElement; i++) {
+        if (jeu->element[i].type != TYPE_SOL1 && jeu->element[i].type != TYPE_SOL2) {
+            if (joueur->x < jeu->element[i].x + TAILLE_CASE &&
+                joueur->x + joueur_width > jeu->element[i].x &&
+                joueur->y < jeu->element[i].y + TAILLE_CASE &&
+                joueur->y + joueur_height > jeu->element[i].y) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 void MAJAngleJoueur(Joueur *joueur) {
@@ -91,11 +108,18 @@ void MAJAngleJoueur(Joueur *joueur) {
     }
 }
 
-void MAJPosJoueurs(Joueur *joueur1, Joueur *joueur2, bool *maj) {
+void MAJPosJoueurs(Joueur *joueur1, Joueur *joueur2, ComposantsJeu *jeu, bool *maj) {
+    int ancienXjoueur1 = joueur1->x, ancienYjoueur1 = joueur1->y;
+    int ancienXjoueur2 = joueur2->x, ancienYjoueur2 = joueur2->y;
+
     if (joueur1->vx != 0 || joueur1->vy != 0) {
         joueur1->x += joueur1->vx;
         joueur1->y += joueur1->vy;
         MAJAngleJoueur(joueur1);
+        if (VerifierCollisionJoueur(joueur1, jeu)) {
+            joueur1->x = ancienXjoueur1;
+            joueur1->y = ancienYjoueur1;
+        }
         VerifierPosJoueur(joueur1);
         *maj = true;
     }
@@ -103,15 +127,22 @@ void MAJPosJoueurs(Joueur *joueur1, Joueur *joueur2, bool *maj) {
         joueur2->x += joueur2->vx;
         joueur2->y += joueur2->vy;
         MAJAngleJoueur(joueur2);
+        if (VerifierCollisionJoueur(joueur2, jeu)) {
+            joueur2->x = ancienXjoueur2;
+            joueur2->y = ancienYjoueur2;
+        }
         VerifierPosJoueur(joueur2);
         *maj = true;
     }
 }
 
-void DessinerJoueur(Joueur *joueur) {
+void DessinerJoueur(Joueur *joueur, ComposantsJeu *jeu) {
     float cx = al_get_bitmap_width(joueur->image) / 2;
     float cy = al_get_bitmap_height(joueur->image) / 2;
     al_draw_rotated_bitmap(joueur->image, cx, cy, joueur->x + cx, joueur->y + cy, joueur->angle, 0);
+    float text_x = joueur->x + cx;
+    float text_y = joueur->y - al_get_font_ascent(jeu->policePseudo);
+    al_draw_text(jeu->policePseudo, BLANC, text_x, text_y, ALLEGRO_ALIGN_CENTER, joueur->pseudo);
 }
 
 void GestionKeyDown(Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool *maj) {
@@ -183,8 +214,8 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
     al_clear_to_color(NOIR);
     ChargerFichierTxt(jeu);
     DessinerElements(jeu);
-    DessinerJoueur(joueur1);
-    DessinerJoueur(joueur2);
+    DessinerJoueur(joueur1, jeu);
+    DessinerJoueur(joueur2, jeu);
     al_flip_display();
 
     while (!fini) {
@@ -200,12 +231,12 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
                 GestionKeyUP(joueur1, joueur2, &event, &maj);
                 break;
             case ALLEGRO_EVENT_TIMER:
-                MAJPosJoueurs(joueur1, joueur2, &maj);
+                MAJPosJoueurs(joueur1, joueur2, jeu, &maj);
                 if (maj) {
                     al_clear_to_color(NOIR);
                     DessinerElements(jeu);
-                    DessinerJoueur(joueur1);
-                    DessinerJoueur(joueur2);
+                    DessinerJoueur(joueur1, jeu);
+                    DessinerJoueur(joueur2, jeu);
                     al_flip_display();
                     maj = false;
                 }
@@ -213,3 +244,4 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
         }
     }
 }
+

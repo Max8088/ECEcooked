@@ -37,7 +37,6 @@ void ChoisirPseudos(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, bool *
         DessinerBouton1(boutons[i], jeu->police, NOIR, GRIS_CLAIR_TRANSPARENT);
     }
     al_draw_filled_triangle(220, 270, 220, 300, 260, 285, NOIR);
-    al_draw_filled_triangle(1010, 632, 1010, 662, 1050, 647, ROUGE);
     al_flip_display();
 
     while (!fini) {
@@ -83,8 +82,6 @@ void ChoisirPseudos(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, bool *
                             fini = true;
                         }
                         if (!(strcmp(boutons[i].texte, "->")) && joueur1_saisi && joueur2_saisi) {
-                            strcpy(joueur1->pseudo, joueur1->pseudo);
-                            strcpy(joueur2->pseudo, joueur2->pseudo);
                             *lancerJeu = true;
                             SonBoutonClique(sons);
                             fini = true;
@@ -104,29 +101,27 @@ void ChoisirPseudos(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, bool *
                 al_draw_text(jeu->police, NOIR, 345, 475, ALLEGRO_ALIGN_CENTER, "-");
                 al_draw_text(jeu->police, NOIR, 360, 325, ALLEGRO_ALIGN_LEFT, joueur1->pseudo);
                 al_draw_text(jeu->police, NOIR, 360, 475, ALLEGRO_ALIGN_LEFT, joueur2->pseudo);
-                for (int i = 0; i < nbBoutons; ++i) {
-                    if (EstDansLeBouton(boutons[i], mouseX, mouseY)) {
-                        DessinerBouton2(boutons[i], jeu->police, NOIR, BLANC);
-                    } else {
-                        DessinerBouton1(boutons[i], jeu->police, NOIR, GRIS_CLAIR_TRANSPARENT);
-                    }
+                if (EstDansLeBouton(boutons[0], mouseX, mouseY)) {
+                    DessinerBouton1(boutons[0], jeu->police, NOIR, BLANC);
+                } else {
+                    DessinerBouton2(boutons[0], jeu->police, NOIR, GRIS_CLAIR_TRANSPARENT);
                 }
                 if (!joueur1_saisi) {
                     DessinerBouton2(boutonPseudo1, jeu->police, NOIR, BLANC);
                     DessinerBouton1(boutonPseudo2, jeu->police, NOIR_TRANSPARENT, GRIS_CLAIR_TRANSPARENT);
+                    DessinerBouton1(boutons[1], jeu->police, NOIR, ROUGE);
                     al_draw_filled_triangle(220, 270, 220, 300, 260, 285, NOIR);
-                    al_draw_filled_triangle(1010, 632, 1010, 662, 1050, 647, ROUGE);
                 }
                 if (!joueur2_saisi && joueur1_saisi) {
                     DessinerBouton1(boutonPseudo1, jeu->police, NOIR, VERT_CLAIR);
                     DessinerBouton2(boutonPseudo2, jeu->police, NOIR, GRIS_CLAIR);
+                    DessinerBouton1(boutons[1], jeu->police, NOIR, ROUGE);
                     al_draw_filled_triangle(220, 420, 220, 450, 260, 435, NOIR);
-                    al_draw_filled_triangle(1010, 632, 1010, 662, 1050, 647, ROUGE);
                 }
                 if (joueur1_saisi && joueur2_saisi) {
                     DessinerBouton1(boutonPseudo1, jeu->police, NOIR, VERT_CLAIR);
                     DessinerBouton1(boutonPseudo2, jeu->police, NOIR, VERT_CLAIR);
-                    al_draw_filled_triangle(1010, 632, 1010, 662, 1050, 647, VERT_CLAIR);
+                    DessinerBouton1(boutons[1], jeu->police, NOIR, VERT_CLAIR);
                 }
                 al_flip_display();
                 break;
