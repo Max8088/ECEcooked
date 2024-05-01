@@ -3,6 +3,7 @@
 #include "../menu/menu.h"
 #include "joueur.h"
 
+
 void InitialiserJoueur(Joueur *joueur, const char *cheminVersImage, float x, float y) {
     joueur->x = x;
     joueur->y = y;
@@ -13,7 +14,10 @@ void InitialiserJoueur(Joueur *joueur, const char *cheminVersImage, float x, flo
     strcpy(joueur->pseudo, "");
     assert(joueur->image);
 }
-
+void MAJpositionobjettenu(Joueur*joueur,ingredient*ing) {
+    ing->x=joueur->x;
+    ing->y=joueur->y;
+}
 void ChoisirPseudos(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, bool *lancerJeu, Sons *sons) {
     bool fini = false, joueur1_saisi = false, joueur2_saisi = false;
     Bouton boutons[] = {

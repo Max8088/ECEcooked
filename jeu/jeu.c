@@ -3,6 +3,7 @@
 #include "jeu.h"
 #include "math.h"
 
+
 void InitialiserFenetreFileTimer(ComposantsJeu *jeu) {
     jeu->fenetre = al_create_display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
     jeu->file = al_create_event_queue();
@@ -102,7 +103,9 @@ bool VerifierCollisionJoueur(Joueur *joueur, ComposantsJeu *jeu) {
     return false;
 }
 
-void MAJAngleJoueur(Joueur *joueur) {
+
+
+    void MAJAngleJoueur(Joueur *joueur) {
     if (joueur->vx != 0 || joueur->vy != 0) {
         joueur->angle = atan2(joueur->vy, joueur->vx) + M_PI / 2;
     }
@@ -179,6 +182,15 @@ void GestionKeyDown(Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool
             joueur2->vx = 1;
             *maj = true;
             break;
+        case ALLEGRO_KEY_C:
+        case ALLEGRO_KEY_L:
+            //bool vérifie la collision entre objet et joeur si true prendre
+            break;
+
+        case ALLEGRO_KEY_V:
+        case ALLEGRO_KEY_M:
+            //bool vérifie la collision entre objet et joeur si true lacher
+            break;
     }
 }
 
@@ -209,7 +221,7 @@ void GestionKeyUP(Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool *
 
 void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
     ALLEGRO_EVENT event;
-    bool fini = false, maj = false;
+    bool fini = false, maj = false,prendre=false;
 
     al_clear_to_color(NOIR);
     al_draw_bitmap(jeu->ImageFondDeJeu, 0, 0, 0);

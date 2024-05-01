@@ -13,7 +13,6 @@ add_executable(EScooked main.c
         jeu/jeu.h
         images/FichierTexte
         jeu+joueur/jeu+joueur.h)
-
 IF(WIN32)
     target_link_libraries(EScooked -lmingw32 -lallegro-5.0.10-monolith-md-debug)
 ELSE()

@@ -18,7 +18,10 @@ typedef struct {
 typedef struct {
     int type, x, y;
 } Element;
-
+typedef struct{
+    float x,y;
+    bool prendre ;
+}Ingredient;
 typedef struct {
     ALLEGRO_DISPLAY *fenetre;
     ALLEGRO_EVENT_QUEUE *file;
@@ -46,6 +49,16 @@ typedef struct {
     ALLEGRO_BITMAP *distributeurAssiette;
     ALLEGRO_BITMAP *poubelle;
     ALLEGRO_BITMAP *sortie;
+    ALLEGRO_BITMAP*cafe;
+    ALLEGRO_BITMAP*lait;
+    ALLEGRO_BITMAP*jusOrange;
+    ALLEGRO_BITMAP *jusRaisin;
+    ALLEGRO_BITMAP*Machinecafe;
+    ALLEGRO_BITMAP*sacCafe;
+    ALLEGRO_BITMAP*tasseCafe;
+    ALLEGRO_BITMAP*tasseCafeLait;
+    ALLEGRO_BITMAP*tasseVide;
+    ALLEGRO_BITMAP *jusKiwi;
     ALLEGRO_FONT *police;
     ALLEGRO_FONT *policeTitre;
     ALLEGRO_FONT *policePseudo;
@@ -53,8 +66,11 @@ typedef struct {
     ALLEGRO_SAMPLE *musiqueFond;
     ALLEGRO_SAMPLE_INSTANCE *instanceMusique;
     ALLEGRO_SAMPLE *sonBoutonClique;
+    Ingredient*ingredient;
     Element *element;
     int nbElement;
 } ComposantsJeu;
+
+
 
 #endif //ESCOOKED_JEU_JOUEUR_H

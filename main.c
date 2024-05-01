@@ -38,6 +38,16 @@ void ChargerImages(ComposantsJeu *jeu) {
     jeu->FlecheBas = al_load_bitmap("../images/DOWN.png");
     jeu->FlecheGauche = al_load_bitmap("../images/LEFT.png");
     jeu->FlecheDroite = al_load_bitmap("../images/RIGHT.png");
+    jeu->cafe =al_load_bitmap("../images/grain de café.png");
+    jeu->lait=al_load_bitmap("../images/brique de lait.png");
+    jeu->jusOrange=al_load_bitmap("../images/jus d'orange .png");
+    jeu->jusRaisin= al_load_bitmap("../images/jus de raisin .png");
+    jeu->Machinecafe= al_load_bitmap("../images/machine a café .png");
+    jeu->sacCafe= al_load_bitmap("../images/sac de café .png");
+    jeu->tasseCafe= al_load_bitmap("../images/tasse de café .png");
+    jeu->tasseCafeLait= al_load_bitmap("../images/tassecafelait.png");
+    jeu->tasseVide= al_load_bitmap("../images/tasse vide .png");
+    jeu->jusKiwi= al_load_bitmap("../images/jusdekiwi.png");
 }
 
 void ChargerPolices(ComposantsJeu *jeu) {
@@ -192,6 +202,47 @@ void LibererMemoire(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
         al_destroy_font(jeu->policeRegle);
         jeu->policeRegle = NULL;
     }
+    if(jeu->cafe!=NULL){
+        al_destroy_bitmap(jeu->cafe);
+        jeu->cafe=NULL;
+    }
+    if(jeu->lait!=NULL){
+        al_destroy_bitmap(jeu->lait);
+        jeu->lait=NULL;
+    }
+    if(jeu->jusOrange!=NULL){
+        al_destroy_bitmap(jeu->jusOrange);
+        jeu->jusOrange=NULL;
+    }
+    if(jeu->jusRaisin!=NULL){
+        al_destroy_bitmap(jeu->jusRaisin);
+        jeu->jusRaisin=NULL;
+    }
+    if(jeu->Machinecafe!=NULL){
+        al_destroy_bitmap(jeu->Machinecafe);
+        jeu->Machinecafe=NULL;
+    }
+    if(jeu->sacCafe!=NULL){
+        al_destroy_bitmap(jeu->sacCafe);
+        jeu->sacCafe=NULL;
+    }
+    if(jeu->tasseCafe!=NULL){
+        al_destroy_bitmap(jeu->tasseCafe);
+        jeu->tasseCafe=NULL;
+    }
+    if(jeu->tasseCafeLait!=NULL){
+        al_destroy_bitmap(jeu->tasseCafeLait);
+        jeu->tasseCafeLait=NULL;
+    }
+    if(jeu->tasseVide!=NULL){
+        al_destroy_bitmap(jeu->tasseVide);
+        jeu->tasseVide=NULL;
+    }
+    if(jeu->jusKiwi!=NULL){
+        al_destroy_bitmap(jeu->jusKiwi);
+        jeu->jusKiwi=NULL;
+    }
+
 
     // Arrêt et destruction du timer
     if (jeu->timer != NULL) {
