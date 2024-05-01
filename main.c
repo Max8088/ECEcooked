@@ -177,6 +177,10 @@ void LibererMemoire(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
         al_destroy_font(jeu->policePseudo);
         jeu->policePseudo = NULL;
     }
+    if (jeu->policeRegle != NULL) {
+        al_destroy_font(jeu->policeRegle);
+        jeu->policeRegle = NULL;
+    }
 
     // Arrêt et destruction du timer
     if (jeu->timer != NULL) {
