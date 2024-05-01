@@ -48,6 +48,7 @@ typedef struct {
     ALLEGRO_FONT *police;
     ALLEGRO_FONT *policeTitre;
     ALLEGRO_FONT *policePseudo;
+    ALLEGRO_FONT *policeRegle;
     ALLEGRO_SAMPLE *musiqueFond;
     ALLEGRO_SAMPLE_INSTANCE *instanceMusique;
     ALLEGRO_SAMPLE *sonBoutonClique;
