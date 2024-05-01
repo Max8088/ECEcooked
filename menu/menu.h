@@ -35,8 +35,6 @@ bool EstDansLeCurseurVolume(const Curseur *curseur, float mx, float my);
 
 void MenuVolume(Sons ***son, ComposantsJeu ***jeu);
 
-void MenuControls(ComposantsJeu ***jeu, Sons ***son);
-
 void MenuRules(ComposantsJeu ***jeu);
 
 void MenuOptions(ComposantsJeu **jeu, Sons **son);

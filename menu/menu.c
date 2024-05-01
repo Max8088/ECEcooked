@@ -187,65 +187,6 @@ void JouerMusiqueFondDeMenu(Sons *son) {
     }
 }
 
-void MenuControls(ComposantsJeu ***jeu, Sons ***son) {
-    ALLEGRO_EVENT event;
-    bool fini = false;
-    Bouton boutonRetour = {-10, 612, 130, 70, "<-"};
-    const char *controlsInfoJoueur1[] = {
-            "-Déplacements: Z, Q, S, D",
-            "-Prender/Lâcher: C",
-            "-Découper: V"
-    };
-    const char *controlsInfoJoueur2[] = {
-            "-Déplacements: ^, <, v, >",
-            "-Prender/Lâcher: L",
-            "-Découper: M"
-    };
-    int nbControlsJoueur1 = sizeof(controlsInfoJoueur1) / sizeof(controlsInfoJoueur1[0]);
-    int nbControlsJoueur2 = sizeof(controlsInfoJoueur2) / sizeof(controlsInfoJoueur2[0]);
-    float mouseX = 0, mouseY = 0;
-
-    al_clear_to_color(NOIR);
-    al_draw_bitmap((**jeu)->ImageMenu, 0, 0, 0);
-    DessinerBouton1(boutonRetour, (**jeu)->police, NOIR, GRIS_CLAIR);
-    al_draw_text((**jeu)->police, NOIR, 300, 200, ALLEGRO_ALIGN_LEFT, "Contrôles Joueur 1:");
-    al_draw_text((**jeu)->police, NOIR, 300, 400, ALLEGRO_ALIGN_LEFT, "Contrôles Joueur 2:");
-    for (int i = 0; i < nbControlsJoueur1; ++i) {
-        al_draw_text((**jeu)->police, NOIR, 320, 250 + 50 * i, ALLEGRO_ALIGN_LEFT, controlsInfoJoueur1[i]);
-    }
-    for (int i = 0; i < nbControlsJoueur2; ++i) {
-        al_draw_text((**jeu)->police, NOIR, 320, 450 + 50 * i, ALLEGRO_ALIGN_LEFT, controlsInfoJoueur2[i]);
-    }
-    al_flip_display();
-
-    while (!fini) {
-        al_wait_for_event((**jeu)->file, &event);
-        switch (event.type) {
-            case ALLEGRO_EVENT_DISPLAY_CLOSE:
-                fini = true;
-                break;
-            case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
-                if (EstDansLeBouton(boutonRetour, mouseX, mouseY)) {
-                    SonBoutonClique(**son);
-                    fini = true;
-                }
-                break;
-            case ALLEGRO_EVENT_MOUSE_AXES:
-                mouseX = event.mouse.x;
-                mouseY = event.mouse.y;
-                break;
-            case ALLEGRO_EVENT_TIMER:
-                if (EstDansLeBouton(boutonRetour, mouseX, mouseY)) {
-                    DessinerBouton2(boutonRetour, (**jeu)->police, NOIR, BLANC);
-                } else {
-                    DessinerBouton1(boutonRetour, (**jeu)->police, NOIR, GRIS_CLAIR_TRANSPARENT);
-                }
-                al_flip_display();
-                break;
-        }
-    }
-}
-
 void MenuRules(ComposantsJeu ***jeu) {
     ALLEGRO_EVENT event;
     bool fini = false;
@@ -304,10 +245,9 @@ void MenuOptions(ComposantsJeu **jeu, Sons **son) {
             {-10, 612, 130, 70, "<-"}
     };
     Bouton boutonsSousMenu[] = {
-            {425, 335, 400, 70, "Controls"},
             {425, 435, 400, 70, "Credits"},
             {425, 235, 400, 70, "Volume"},
-            {425, 535, 400, 70, "Rules"}
+            {425, 335, 400, 70, "Rules"}
 
     };
     int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
@@ -342,10 +282,6 @@ void MenuOptions(ComposantsJeu **jeu, Sons **son) {
                 }
                 for (int i = 0; i < nbBoutonsSousMenu; ++i) {
                     if (EstDansLeBouton(boutonsSousMenu[i], mouseX, mouseY)) {
-                        if (!(strcmp(boutonsSousMenu[i].texte, "Controls"))) {
-                            SonBoutonClique(*son);
-                            MenuControls(&jeu, &son);
-                        }
                         if (!(strcmp(boutonsSousMenu[i].texte, "Volume"))) {
                             SonBoutonClique(*son);
                             MenuVolume(&son, &jeu);
