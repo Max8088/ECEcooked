@@ -93,7 +93,7 @@ void DessinerCurseur(const Curseur *curseur, ComposantsJeu ***jeu, float volume)
     float curseurPos = (volume - curseur->min) / (curseur->max - curseur->min) * curseur->width;
     al_draw_filled_circle(curseur->x + curseurPos, curseur->y + curseur->height / 2, curseur->height / 2, NOIR);
     char volText[50];
-    sprintf(volText, "Volume: %.0f%%", volume * 100);
+    sprintf(volText, "Music Volume: %.0f%%", volume * 100);
     al_draw_text((**jeu)->police, NOIR, 624, curseur->y + 30, ALLEGRO_ALIGN_CENTER, volText);
 }
 
@@ -111,14 +111,14 @@ void MenuVolume(Sons ***son, ComposantsJeu ***jeu) {
             {-10, 612, 130, 70, "<-"}
     };
     int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
-    Curseur curseurVolume = {300, 400, 648, 30, 0.0, 1.0, al_get_sample_instance_gain((**son)->instanceDeMusqiue)};
+    Curseur curseurVolumeMusique = {300, 300, 648, 30, 0.0, 1.0, al_get_sample_instance_gain((**son)->instanceDeMusqiue)};
 
     al_clear_to_color(NOIR);
     al_draw_bitmap((**jeu)->ImageMenu, 0, 0, 0);
     for (int i = 0; i < nbBoutons; ++i) {
         DessinerBouton1(boutons[i], (**jeu)->police, NOIR, GRIS_CLAIR);
     }
-    DessinerCurseur(&curseurVolume, jeu, curseurVolume.value);
+    DessinerCurseur(&curseurVolumeMusique, jeu, curseurVolumeMusique.value);
     al_flip_display();
 
     while (!fini) {
@@ -128,7 +128,7 @@ void MenuVolume(Sons ***son, ComposantsJeu ***jeu) {
                 fini = true;
                 break;
             case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
-                if (EstDansLeCurseurVolume(&curseurVolume, mouseX, mouseY)) {
+                if (EstDansLeCurseurVolume(&curseurVolumeMusique, mouseX, mouseY)) {
                     dragging = true;
                     dernierX = mouseX;
                 }
@@ -151,15 +151,15 @@ void MenuVolume(Sons ***son, ComposantsJeu ***jeu) {
             case ALLEGRO_EVENT_TIMER:
                 al_clear_to_color(NOIR);
                 al_draw_bitmap((**jeu)->ImageMenu, 0, 0, 0);
-                DessinerCurseur(&curseurVolume, jeu, curseurVolume.value);
+                DessinerCurseur(&curseurVolumeMusique, jeu, curseurVolumeMusique.value);
                 if (dragging) {
                     float dx = mouseX - dernierX;
                     dernierX = mouseX;
-                    float nouvVolume = curseurVolume.value + (dx / curseurVolume.width) * (curseurVolume.max - curseurVolume.min);
-                    if (nouvVolume < curseurVolume.min) { nouvVolume = curseurVolume.min; }
-                    if (nouvVolume > curseurVolume.max) { nouvVolume = curseurVolume.max; }
-                    curseurVolume.value = nouvVolume;
-                    al_set_sample_instance_gain((**son)->instanceDeMusqiue, curseurVolume.value);
+                    float nouvVolumeMusique = curseurVolumeMusique.value + (dx / curseurVolumeMusique.width) * (curseurVolumeMusique.max - curseurVolumeMusique.min);
+                    if (nouvVolumeMusique < curseurVolumeMusique.min) { nouvVolumeMusique = curseurVolumeMusique.min; }
+                    if (nouvVolumeMusique > curseurVolumeMusique.max) { nouvVolumeMusique = curseurVolumeMusique.max; }
+                    curseurVolumeMusique.value = nouvVolumeMusique;
+                    al_set_sample_instance_gain((**son)->instanceDeMusqiue, curseurVolumeMusique.value);
                 }
                 for (int i = 0; i < nbBoutons; ++i) {
                     if (EstDansLeBouton(boutons[i], mouseX, mouseY)) {
@@ -173,6 +173,18 @@ void MenuVolume(Sons ***son, ComposantsJeu ***jeu) {
         }
     }
 
+}
+
+void ArreterMusiqueFondDeMenu(Sons *son) {
+    if (son->instanceDeMusqiue != NULL) {
+        al_stop_sample_instance(son->instanceDeMusqiue);
+    }
+}
+
+void JouerMusiqueFondDeMenu(Sons *son) {
+    if (son->instanceDeMusqiue != NULL) {
+        al_play_sample_instance(son->instanceDeMusqiue);
+    }
 }
 
 void MenuControls(ComposantsJeu ***jeu, Sons ***son) {
@@ -405,9 +417,12 @@ void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son) {
                             SonBoutonClique(son);
                             ChoisirPseudos(jeu, joueur1, joueur2, &lancerJeu, son);
                             if (lancerJeu) {
+                                ArreterMusiqueFondDeMenu(son);
                                 AfficherControls(jeu, joueur1, joueur2);
                                 Jeu(jeu, joueur1, joueur2);
+                                JouerMusiqueFondDeMenu(son);
                                 lancerJeu = false;
+
                             }
                         }
                         if (!(strcmp(boutons[i].texte, "Options"))) {

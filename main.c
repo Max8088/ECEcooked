@@ -25,6 +25,7 @@ void ChargerImages(ComposantsJeu *jeu) {
     jeu->distributeurAssiette = al_load_bitmap("../images/distribassiettes.png");
     jeu->sortie = al_load_bitmap("../images/sortie(1).png");
     jeu->ImageMenu = al_load_bitmap("../images/fondmenuV2.jpg");
+    jeu->ImageFondDeJeu = al_load_bitmap("../images/ImageFondDeJeu.png");
     jeu->Z = al_load_bitmap("../images/Z.png");
     jeu->Q = al_load_bitmap("../images/Q.png");
     jeu->S = al_load_bitmap("../images/S.png");
@@ -46,17 +47,23 @@ void ChargerPolices(ComposantsJeu *jeu) {
 }
 
 void InitialiserSon(Sons *son) {
-    if (!al_reserve_samples(2)) {
+    if (!al_reserve_samples(4)) {
         fprintf(stderr, "Erreur lors de la reservation des echantillons.\n");
     }
     son->mixer = al_get_default_mixer();
-    son->musiqueDeFond = al_load_sample("../soundeffect/Elevator-music.wav");
+    son->musiqueDeFondDeMenu = al_load_sample("../soundeffect/MusiqueFondDeMenu.wav");
     son->sonBoutonClique = al_load_sample("../soundeffect/click-sound.wav");
-    son->instanceDeMusqiue = al_create_sample_instance(son->musiqueDeFond);
+
+    son->instanceDeMusqiue = al_create_sample_instance(son->musiqueDeFondDeMenu);
     al_set_sample_instance_playmode(son->instanceDeMusqiue, ALLEGRO_PLAYMODE_LOOP);
     al_set_sample_instance_gain(son->instanceDeMusqiue, 0.5);
     al_attach_sample_instance_to_mixer(son->instanceDeMusqiue, son->mixer);
     al_play_sample_instance(son->instanceDeMusqiue);
+
+    son->instanceEffetsSonores = al_create_sample_instance(son->sonBoutonClique);
+    al_set_sample_instance_playmode(son->instanceEffetsSonores, ALLEGRO_PLAYMODE_ONCE);
+    al_set_sample_instance_gain(son->instanceEffetsSonores, 0.5);
+    al_attach_sample_instance_to_mixer(son->instanceEffetsSonores, son->mixer);
 }
 
 void PremierAffichageFenetre(ComposantsJeu *jeu) {
@@ -73,6 +80,10 @@ void LibererMemoire(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
     if (jeu->ImageMenu != NULL) {
         al_destroy_bitmap(jeu->ImageMenu);
         jeu->ImageMenu = NULL;
+    }
+    if (jeu->ImageFondDeJeu != NULL) {
+        al_destroy_bitmap(jeu->ImageFondDeJeu);
+        jeu->ImageFondDeJeu = NULL;
     }
     if (jeu->decor != NULL) {
         al_destroy_bitmap(jeu->decor);

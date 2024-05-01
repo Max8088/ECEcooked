@@ -26,8 +26,10 @@
 #define ROUGE al_map_rgb(250, 50, 50)
 
 typedef struct {
-    ALLEGRO_SAMPLE *musiqueDeFond;
+    ALLEGRO_SAMPLE *musiqueDeFondDeMenu;
+    ALLEGRO_SAMPLE *musiqueDeFondDeJeu;
     ALLEGRO_SAMPLE_INSTANCE *instanceDeMusqiue;
+    ALLEGRO_SAMPLE_INSTANCE *instanceEffetsSonores;
     ALLEGRO_SAMPLE *sonBoutonClique;
     ALLEGRO_MIXER *mixer;
 } Sons;

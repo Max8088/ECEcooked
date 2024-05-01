@@ -212,6 +212,7 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
     bool fini = false, maj = false;
 
     al_clear_to_color(NOIR);
+    al_draw_bitmap(jeu->ImageFondDeJeu, 0, 0, 0);
     ChargerFichierTxt(jeu);
     DessinerElements(jeu);
     DessinerJoueur(joueur1, jeu);
@@ -234,6 +235,7 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
                 MAJPosJoueurs(joueur1, joueur2, jeu, &maj);
                 if (maj) {
                     al_clear_to_color(NOIR);
+                    al_draw_bitmap(jeu->ImageFondDeJeu, 0, 0, 0);
                     DessinerElements(jeu);
                     DessinerJoueur(joueur1, jeu);
                     DessinerJoueur(joueur2, jeu);

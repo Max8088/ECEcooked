@@ -36,6 +36,7 @@ typedef struct {
     ALLEGRO_BITMAP *FlecheBas;
     ALLEGRO_BITMAP *FlecheDroite;
     ALLEGRO_BITMAP *ImageMenu;
+    ALLEGRO_BITMAP *ImageFondDeJeu;
     ALLEGRO_BITMAP *decor;
     ALLEGRO_BITMAP *sol1;
     ALLEGRO_BITMAP *sol2;

@@ -8,11 +8,11 @@
 #include "../constantes.h"
 #include "../jeu+joueur/jeu+joueur.h"
 
-#define NB_LIGNES 7
-#define NB_COLONNES 13
+#define NB_LIGNES 9
+#define NB_COLONNES 17
 #define TAILLE_CASE 60
-#define MARGE_GAUCHE_DROITE 234
-#define MARGE_HAUT_BAS 141
+#define MARGE_GAUCHE_DROITE 114
+#define MARGE_HAUT_BAS 81
 #define TYPE_SOL1 0
 #define TYPE_SOL2 1
 
