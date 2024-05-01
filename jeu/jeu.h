@@ -23,6 +23,20 @@ void ChargerFichierTxt(ComposantsJeu *jeu);
 
 void DessinerElements(const ComposantsJeu *jeu);
 
-void Jeu(ComposantsJeu *jeu,Joueur *joueur1,Joueur *joueur2);
+void VerifierPosJoueur(Joueur *joueur);
+
+bool VerifierCollisionJoueur(Joueur *joueur, ComposantsJeu *jeu);
+
+void MAJAngleJoueur(Joueur *joueur);
+
+void MAJPosJoueurs(Joueur *joueur1, Joueur *joueur2, ComposantsJeu *jeu, bool *maj);
+
+void DessinerJoueur(Joueur *joueur, ComposantsJeu *jeu);
+
+void GestionKeyDown(Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool *maj);
+
+void GestionKeyUP(Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool *maj);
+
+void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2);
 
 #endif //ESCOOKED_JEU_H

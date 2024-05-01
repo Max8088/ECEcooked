@@ -88,6 +88,7 @@ void PremierAffichageFenetre(ComposantsJeu *jeu) {
 }
 
 void LibererMemoire(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
+    //Destruction des bitmaps
     if (jeu->ImageMenu != NULL) {
         al_destroy_bitmap(jeu->ImageMenu);
         jeu->ImageMenu = NULL;

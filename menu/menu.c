@@ -27,7 +27,7 @@ bool EstDansLeBouton(Bouton bouton, float x, float y) {
 }
 
 void SonBoutonClique(Sons *son) {
-    al_play_sample(son->sonBoutonClique, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, NULL);
+    al_play_sample_instance(son->instanceEffetsSonores);
 }
 
 void MenuCredits(ComposantsJeu ***jeu, Sons ***son) {
@@ -92,9 +92,6 @@ void DessinerCurseur(const Curseur *curseur, ComposantsJeu ***jeu, float volume)
                                      curseur->y + curseur->height, 10, 10, GRIS_CLAIR_TRANSPARENT);
     float curseurPos = (volume - curseur->min) / (curseur->max - curseur->min) * curseur->width;
     al_draw_filled_circle(curseur->x + curseurPos, curseur->y + curseur->height / 2, curseur->height / 2, NOIR);
-    char volText[50];
-    sprintf(volText, "Music Volume: %.0f%%", volume * 100);
-    al_draw_text((**jeu)->police, NOIR, 624, curseur->y + 30, ALLEGRO_ALIGN_CENTER, volText);
 }
 
 bool EstDansLeCurseurVolume(const Curseur *curseur, float mx, float my) {
@@ -104,14 +101,19 @@ bool EstDansLeCurseurVolume(const Curseur *curseur, float mx, float my) {
 
 void MenuVolume(Sons ***son, ComposantsJeu ***jeu) {
     ALLEGRO_EVENT event;
-    bool fini = false, dragging = false;
+    bool fini = false, draggingMusique = false, draggingEffetsSonores = false;
     float dernierX = 0;
     float mouseX = 0, mouseY = 0;
+    char volMusiqueText[50];
+    char volEffetsSonoresText[50];
     Bouton boutons[] = {
             {-10, 612, 130, 70, "<-"}
     };
     int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
-    Curseur curseurVolumeMusique = {300, 300, 648, 30, 0.0, 1.0, al_get_sample_instance_gain((**son)->instanceDeMusqiue)};
+    Curseur curseurVolumeMusique = {300, 300, 648, 30, 0.0, 1.0,
+                                    al_get_sample_instance_gain((**son)->instanceDeMusqiue)};
+    Curseur curseurEffetsSonores = {300, 400, 648, 30, 0.0, 1.0,
+                                    al_get_sample_instance_gain((**son)->instanceEffetsSonores)};
 
     al_clear_to_color(NOIR);
     al_draw_bitmap((**jeu)->ImageMenu, 0, 0, 0);
@@ -119,6 +121,13 @@ void MenuVolume(Sons ***son, ComposantsJeu ***jeu) {
         DessinerBouton1(boutons[i], (**jeu)->police, NOIR, GRIS_CLAIR);
     }
     DessinerCurseur(&curseurVolumeMusique, jeu, curseurVolumeMusique.value);
+    sprintf(volMusiqueText, "Music Volume: %.0f%%", curseurVolumeMusique.value * 100);
+    al_draw_text((**jeu)->police, NOIR, 624, curseurVolumeMusique.y + 30, ALLEGRO_ALIGN_CENTER, volMusiqueText);
+    DessinerCurseur(&curseurEffetsSonores, jeu, curseurEffetsSonores.value);
+    sprintf(volEffetsSonoresText, "Sound Effects Volume: %.0f%%", curseurEffetsSonores.value * 100);
+    al_draw_text((**jeu)->police, NOIR, 624, curseurEffetsSonores.y + 30, ALLEGRO_ALIGN_CENTER, volEffetsSonoresText);
+
+
     al_flip_display();
 
     while (!fini) {
@@ -129,7 +138,10 @@ void MenuVolume(Sons ***son, ComposantsJeu ***jeu) {
                 break;
             case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
                 if (EstDansLeCurseurVolume(&curseurVolumeMusique, mouseX, mouseY)) {
-                    dragging = true;
+                    draggingMusique = true;
+                    dernierX = mouseX;
+                } else if (EstDansLeCurseurVolume(&curseurEffetsSonores, mouseX, mouseY)) {
+                    draggingEffetsSonores = true;
                     dernierX = mouseX;
                 }
                 break;
@@ -142,7 +154,8 @@ void MenuVolume(Sons ***son, ComposantsJeu ***jeu) {
                         }
                     }
                 }
-                dragging = false;
+                draggingMusique = false;
+                draggingEffetsSonores = false;
                 break;
             case ALLEGRO_EVENT_MOUSE_AXES:
                 mouseX = event.mouse.x;
@@ -152,14 +165,36 @@ void MenuVolume(Sons ***son, ComposantsJeu ***jeu) {
                 al_clear_to_color(NOIR);
                 al_draw_bitmap((**jeu)->ImageMenu, 0, 0, 0);
                 DessinerCurseur(&curseurVolumeMusique, jeu, curseurVolumeMusique.value);
-                if (dragging) {
+                sprintf(volMusiqueText, "Music: %.0f%%", curseurVolumeMusique.value * 100);
+                al_draw_text((**jeu)->police, NOIR, 624, curseurVolumeMusique.y + 30, ALLEGRO_ALIGN_CENTER,
+                             volMusiqueText);
+                DessinerCurseur(&curseurEffetsSonores, jeu, curseurEffetsSonores.value);
+                sprintf(volEffetsSonoresText, "Sound Effects: %.0f%%", curseurEffetsSonores.value * 100);
+                al_draw_text((**jeu)->police, NOIR, 624, curseurEffetsSonores.y + 30, ALLEGRO_ALIGN_CENTER,
+                             volEffetsSonoresText);
+
+                if (draggingMusique) {
                     float dx = mouseX - dernierX;
                     dernierX = mouseX;
-                    float nouvVolumeMusique = curseurVolumeMusique.value + (dx / curseurVolumeMusique.width) * (curseurVolumeMusique.max - curseurVolumeMusique.min);
+                    float nouvVolumeMusique = curseurVolumeMusique.value + (dx / curseurVolumeMusique.width) *
+                                                                           (curseurVolumeMusique.max -
+                                                                            curseurVolumeMusique.min);
                     if (nouvVolumeMusique < curseurVolumeMusique.min) { nouvVolumeMusique = curseurVolumeMusique.min; }
                     if (nouvVolumeMusique > curseurVolumeMusique.max) { nouvVolumeMusique = curseurVolumeMusique.max; }
                     curseurVolumeMusique.value = nouvVolumeMusique;
                     al_set_sample_instance_gain((**son)->instanceDeMusqiue, curseurVolumeMusique.value);
+                } else if (draggingEffetsSonores) {
+                    float dx = mouseX - dernierX;
+                    dernierX = mouseX;
+                    float nouvVolumeEffetsSonores = curseurEffetsSonores.value + (dx / curseurEffetsSonores.width) *
+                                                                                 (curseurEffetsSonores.max -
+                                                                                  curseurEffetsSonores.min);
+                    if (nouvVolumeEffetsSonores <
+                        curseurEffetsSonores.min) { nouvVolumeEffetsSonores = curseurEffetsSonores.min; }
+                    if (nouvVolumeEffetsSonores >
+                        curseurEffetsSonores.max) { nouvVolumeEffetsSonores = curseurEffetsSonores.max; }
+                    curseurEffetsSonores.value = nouvVolumeEffetsSonores;
+                    al_set_sample_instance_gain((**son)->instanceEffetsSonores, curseurEffetsSonores.value);
                 }
                 for (int i = 0; i < nbBoutons; ++i) {
                     if (EstDansLeBouton(boutons[i], mouseX, mouseY)) {
@@ -187,7 +222,7 @@ void JouerMusiqueFondDeMenu(Sons *son) {
     }
 }
 
-void MenuRules(ComposantsJeu ***jeu) {
+void MenuRules(ComposantsJeu ***jeu, Sons **son) {
     ALLEGRO_EVENT event;
     bool fini = false;
     Bouton boutonRetour = {-10, 612, 130, 70, "<-"};
@@ -198,17 +233,22 @@ void MenuRules(ComposantsJeu ***jeu) {
     al_draw_bitmap((**jeu)->ImageMenu, 0, 0, 0);
     DessinerBouton1(boutonRetour, (**jeu)->police, NOIR, GRIS_CLAIR);
     al_draw_text((**jeu)->police, BLANC, 450, 200, ALLEGRO_ALIGN_LEFT, "Regles du jeu:");
-    al_draw_text((**jeu)->policeRegle, NOIR, 290, 280, ALLEGRO_ALIGN_LEFT, "Deux cuisiniers travaillent ensemble pour  ");
-    al_draw_text((**jeu)->policeRegle, NOIR, 290, 320, ALLEGRO_ALIGN_LEFT, "cuisiner des commmandes le plus rapidement    ");
-    al_draw_text((**jeu)->policeRegle, NOIR, 290, 360, ALLEGRO_ALIGN_LEFT, "possible dans un lieu qui peux rendre la tâche  ");
-    al_draw_text((**jeu)->policeRegle, NOIR, 290, 400, ALLEGRO_ALIGN_LEFT, "plus difficile que prévu. En binome ou seul  ");
-    al_draw_text((**jeu)->policeRegle, NOIR, 290, 440, ALLEGRO_ALIGN_LEFT, "vous devez récupérer les bon ingrédients,  ");
-    al_draw_text((**jeu)->policeRegle, NOIR, 290, 480, ALLEGRO_ALIGN_LEFT, "les préparer(decoupe/cuisson), les assembler  ");
-    al_draw_text((**jeu)->policeRegle, NOIR, 290, 520, ALLEGRO_ALIGN_LEFT, "et les faire sortir de cuisine avant le temps  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 280, ALLEGRO_ALIGN_LEFT,
+                 "Deux cuisiniers travaillent ensemble pour  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 320, ALLEGRO_ALIGN_LEFT,
+                 "cuisiner des commmandes le plus rapidement    ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 360, ALLEGRO_ALIGN_LEFT,
+                 "possible dans un lieu qui peux rendre la tâche  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 400, ALLEGRO_ALIGN_LEFT,
+                 "plus difficile que prévu. En binome ou seul  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 440, ALLEGRO_ALIGN_LEFT,
+                 "vous devez récupérer les bon ingrédients,  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 480, ALLEGRO_ALIGN_LEFT,
+                 "les préparer(decoupe/cuisson), les assembler  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 520, ALLEGRO_ALIGN_LEFT,
+                 "et les faire sortir de cuisine avant le temps  ");
     al_draw_text((**jeu)->policeRegle, NOIR, 290, 560, ALLEGRO_ALIGN_LEFT, "imparti. Le décor oblige les joueurs à  ");
     al_draw_text((**jeu)->policeRegle, NOIR, 290, 600, ALLEGRO_ALIGN_LEFT, "communiquer. ");
-
-
 
     al_flip_display();
 
@@ -220,6 +260,7 @@ void MenuRules(ComposantsJeu ***jeu) {
                 break;
             case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
                 if (EstDansLeBouton(boutonRetour, mouseX, mouseY)) {
+                    SonBoutonClique(*son);
                     fini = true;
                 }
                 break;
@@ -238,6 +279,7 @@ void MenuRules(ComposantsJeu ***jeu) {
         }
     }
 }
+
 void MenuOptions(ComposantsJeu **jeu, Sons **son) {
     ALLEGRO_EVENT event;
     bool fini = false;
@@ -291,7 +333,8 @@ void MenuOptions(ComposantsJeu **jeu, Sons **son) {
                             MenuCredits(&jeu, &son);
                         }
                         if (!(strcmp(boutonsSousMenu[i].texte, "Rules"))) {
-                            MenuRules(&jeu);
+                            SonBoutonClique(*son);
+                            MenuRules(&jeu, son);
                         }
 
                     }
@@ -362,12 +405,13 @@ void PremierAffichageMenu(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, int n
     al_clear_to_color(NOIR);
     al_draw_bitmap(ImageMenu, 0, 0, 0);
     for (int i = 0; i < nbBoutons; ++i) {
-        DessinerBouton1(boutons[i],police, NOIR, BLANC);
+        DessinerBouton1(boutons[i], police, NOIR, BLANC);
     }
     al_flip_display();
 }
 
-void DessinerMenu(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, float mouseX, float mouseY, Bouton boutons[], int nbBoutons) {
+void DessinerMenu(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, float mouseX, float mouseY, Bouton boutons[],
+                  int nbBoutons) {
     al_clear_to_color(NOIR);
     al_draw_bitmap(ImageMenu, 0, 0, 0);
     for (int i = 0; i < nbBoutons; ++i) {

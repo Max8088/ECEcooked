@@ -20,7 +20,8 @@ void ChargerFichierTxt(ComposantsJeu *jeu) {
         fprintf(stderr, "Erreur lors de l'ouverture du fichier.\n");
         exit(EXIT_FAILURE);
     }
-    if (!jeu->decor || !jeu->sol1 || !jeu->plaqueDeCuisson || !jeu->planDeDecoupe || !jeu->planDeTravail ||
+    if (!jeu->decor || !jeu->sol1 || !jeu->sol2 || !jeu->plaqueDeCuisson || !jeu->planDeDecoupe ||
+        !jeu->planDeTravail ||
         !jeu->distributeurAssiette || !jeu->poubelle || !jeu->sortie) {
         fprintf(stderr, "Erreur lors du chargement des images.\n");
         exit(EXIT_FAILURE);
@@ -81,9 +82,14 @@ void VerifierPosJoueur(Joueur *joueur) {
     int joueur_height = al_get_bitmap_height(joueur->image);
 
     if (joueur->x < MARGE_GAUCHE_DROITE) { joueur->x = MARGE_GAUCHE_DROITE; }
-    if (joueur->x + joueur_width > DISPLAY_WIDTH - MARGE_GAUCHE_DROITE) { joueur->x = DISPLAY_WIDTH - MARGE_GAUCHE_DROITE - joueur_width; }
+    if (joueur->x + joueur_width > DISPLAY_WIDTH - MARGE_GAUCHE_DROITE) { joueur->x =
+                                                                                  DISPLAY_WIDTH - MARGE_GAUCHE_DROITE -
+                                                                                  joueur_width;
+    }
     if (joueur->y < MARGE_HAUT_BAS) { joueur->y = MARGE_HAUT_BAS; }
-    if (joueur->y + joueur_height > DISPLAY_HEIGHT - MARGE_HAUT_BAS) { joueur->y = DISPLAY_HEIGHT - MARGE_HAUT_BAS - joueur_height; }
+    if (joueur->y + joueur_height > DISPLAY_HEIGHT - MARGE_HAUT_BAS) { joueur->y = DISPLAY_HEIGHT - MARGE_HAUT_BAS -
+                                                                                   joueur_height;
+    }
 }
 
 bool VerifierCollisionJoueur(Joueur *joueur, ComposantsJeu *jeu) {

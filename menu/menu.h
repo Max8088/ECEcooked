@@ -35,15 +35,21 @@ bool EstDansLeCurseurVolume(const Curseur *curseur, float mx, float my);
 
 void MenuVolume(Sons ***son, ComposantsJeu ***jeu);
 
-void MenuRules(ComposantsJeu ***jeu);
+void ArreterMusiqueFondDeMenu(Sons *son);
+
+void JouerMusiqueFondDeMenu(Sons *son);
+
+void MenuRules(ComposantsJeu ***jeu, Sons **son);
 
 void MenuOptions(ComposantsJeu **jeu, Sons **son);
 
+void AfficherControls(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2);
+
 void PremierAffichageMenu(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, int nbBoutons, Bouton *boutons);
 
-void DessinerMenu(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, float mouseX, float mouseY, Bouton boutons[], int nbBoutons);
+void DessinerMenu(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, float mouseX, float mouseY, Bouton boutons[],
+                  int nbBoutons);
 
 void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son);
-
 
 #endif //ESCOOKED_MENU_H
