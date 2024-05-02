@@ -14,7 +14,7 @@ void InitialiserJoueur(Joueur *joueur, const char *cheminVersImage, float x, flo
     strcpy(joueur->pseudo, "");
     assert(joueur->image);
 }
-void MAJpositionobjettenu(Joueur*joueur,ingredient*ing) {
+void MAJpositionobjettenu(Joueur*joueur,Ingredient*ing) {
     ing->x=joueur->x;
     ing->y=joueur->y;
 }
