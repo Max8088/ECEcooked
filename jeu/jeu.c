@@ -82,13 +82,15 @@ void VerifierPosJoueur(Joueur *joueur) {
     int joueur_height = al_get_bitmap_height(joueur->image);
 
     if (joueur->x < MARGE_GAUCHE_DROITE) { joueur->x = MARGE_GAUCHE_DROITE; }
-    if (joueur->x + joueur_width > DISPLAY_WIDTH - MARGE_GAUCHE_DROITE) { joueur->x =
-                                                                                  DISPLAY_WIDTH - MARGE_GAUCHE_DROITE -
-                                                                                  joueur_width;
+    if (joueur->x + joueur_width > DISPLAY_WIDTH - MARGE_GAUCHE_DROITE) {
+        joueur->x =
+                DISPLAY_WIDTH - MARGE_GAUCHE_DROITE -
+                joueur_width;
     }
     if (joueur->y < MARGE_HAUT_BAS) { joueur->y = MARGE_HAUT_BAS; }
-    if (joueur->y + joueur_height > DISPLAY_HEIGHT - MARGE_HAUT_BAS) { joueur->y = DISPLAY_HEIGHT - MARGE_HAUT_BAS -
-                                                                                   joueur_height;
+    if (joueur->y + joueur_height > DISPLAY_HEIGHT - MARGE_HAUT_BAS) {
+        joueur->y = DISPLAY_HEIGHT - MARGE_HAUT_BAS -
+                    joueur_height;
     }
 }
 
@@ -109,9 +111,7 @@ bool VerifierCollisionJoueur(Joueur *joueur, ComposantsJeu *jeu) {
     return false;
 }
 
-
-
-    void MAJAngleJoueur(Joueur *joueur) {
+void MAJAngleJoueur(Joueur *joueur) {
     if (joueur->vx != 0 || joueur->vy != 0) {
         joueur->angle = atan2(joueur->vy, joueur->vx) + M_PI / 2;
     }
@@ -227,7 +227,7 @@ void GestionKeyUP(Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool *
 
 void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
     ALLEGRO_EVENT event;
-    bool fini = false, maj = false,prendre=false;
+    bool fini = false, maj = false, prendre = false;
 
     al_clear_to_color(NOIR);
     al_draw_bitmap(jeu->ImageFondDeJeu, 0, 0, 0);
