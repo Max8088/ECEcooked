@@ -226,10 +226,6 @@ void GestionKeyDown(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, ALLEGR
                 joueur2->vx = 2;
                 *maj = true;
                 break;
-            case ALLEGRO_KEY_P:
-                jeu->enPause = !jeu->enPause;
-                *maj = true;
-                break;
             case ALLEGRO_KEY_C:
             case ALLEGRO_KEY_L:
                 //bool vérifie la collision entre objet et joeur si true prendre
@@ -267,8 +263,10 @@ void GestionKeyUP(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, ALLEGRO_
                 joueur2->vx = 0;
                 *maj = true;
                 break;
-
-
+            case ALLEGRO_KEY_P:
+                jeu->enPause = !jeu->enPause;
+                *maj = true;
+                break;
         }
     }
 }
