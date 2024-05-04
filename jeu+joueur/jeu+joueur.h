@@ -8,12 +8,16 @@
 #include "../constantes.h"
 
 typedef struct {
+    int x, y, width, height;
+    char *texte;
+} BoutonJeu;
+
+typedef struct {
     char pseudo[13];
     ALLEGRO_BITMAP *image;
     int score, x, y, vx, vy;
     float angle;
 } Joueur;
-
 
 typedef struct {
     int type, x, y;

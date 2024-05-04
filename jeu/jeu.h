@@ -19,7 +19,12 @@
 
 void InitialiserFenetreFileTimer(ComposantsJeu *jeu);
 
-void DessinerMenuPause(ComposantsJeu *jeu);
+void DessinerBoutonMenuPause(BoutonJeu boutonJeu, ComposantsJeu *jeu, ALLEGRO_COLOR couleurRectangle,
+                             ALLEGRO_COLOR couleurTexte);
+
+bool EstDansLeBoutonMenuPause(BoutonJeu boutonJeu, float x, float y);
+
+void DessinerMenuPause(ComposantsJeu *jeu, BoutonJeu *bouton);
 
 void ChargerFichierTxt(ComposantsJeu *jeu);
 

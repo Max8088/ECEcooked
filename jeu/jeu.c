@@ -15,20 +15,27 @@ void InitialiserFenetreFileTimer(ComposantsJeu *jeu) {
     jeu->enPause = false;
 }
 
-void DessinerMenuPause(ComposantsJeu *jeu) {
+void DessinerBoutonMenuPause(BoutonJeu boutonJeu, ComposantsJeu *jeu, ALLEGRO_COLOR couleurRectangle,
+                             ALLEGRO_COLOR couleurTexte) {
+    al_draw_filled_rounded_rectangle(boutonJeu.x, boutonJeu.y, boutonJeu.x + boutonJeu.width,
+                                     boutonJeu.y + boutonJeu.height, 10, 10, couleurRectangle);
+    int text_x = boutonJeu.x + (boutonJeu.width - al_get_text_width(jeu->police, boutonJeu.texte)) / 2;
+    int text_y = boutonJeu.y + (boutonJeu.height - al_get_font_ascent(jeu->police)) / 2;
+    al_draw_text(jeu->police, couleurTexte, text_x, text_y, 0, boutonJeu.texte);
+}
+
+bool EstDansLeBoutonMenuPause(BoutonJeu boutonJeu, float x, float y) {
+    return (x >= boutonJeu.y && x <= boutonJeu.x + boutonJeu.width && y >= boutonJeu.y &&
+            y <= boutonJeu.y + boutonJeu.height);
+}
+
+void DessinerMenuPause(ComposantsJeu *jeu, BoutonJeu *bouton) {
     al_draw_filled_rectangle(DISPLAY_WIDTH / 4, DISPLAY_HEIGHT / 4, 3 * DISPLAY_WIDTH / 4, 3 * DISPLAY_HEIGHT / 4,
                              al_map_rgba(0, 0, 0, 200));
 
-    float bouton_x = DISPLAY_WIDTH / 3;
-    float bouton_y = DISPLAY_HEIGHT / 4 + DISPLAY_HEIGHT / 12;
-    float bouton_width = DISPLAY_WIDTH / 3;
-    float bouton_height = DISPLAY_HEIGHT / 6;
-    al_draw_filled_rectangle(bouton_x, bouton_y, bouton_x + bouton_width, bouton_y + bouton_height,
-                             al_map_rgba(139, 71, 3, 200));
-
-    float text_x = DISPLAY_WIDTH / 2;
-    float text_y = bouton_y + bouton_height / 2 - al_get_font_ascent(jeu->policePseudo);
-    al_draw_text(jeu->police, NOIR, text_x, text_y, ALLEGRO_ALIGN_CENTER, "Reprendre le jeu");
+    for (int i = 0; i < 2; i++) {
+        DessinerBoutonMenuPause(bouton[i], jeu, al_map_rgba(139, 71, 3, 255), NOIR);
+    }
 }
 
 void ChargerFichierTxt(ComposantsJeu *jeu) {
@@ -268,6 +275,13 @@ void GestionKeyUP(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, ALLEGRO_
                 *maj = true;
                 break;
         }
+    } else {
+        switch (event->keyboard.keycode) {
+            case ALLEGRO_KEY_P:
+                jeu->enPause = !jeu->enPause;
+                *maj = true;
+                break;
+        }
     }
 }
 
@@ -276,6 +290,12 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
     bool fini = false, maj = false;
     int tempsRestant = jeu->DureePartie;
     int compteurTickDuTimer = 0;
+    BoutonJeu boutons[] = {
+            {DISPLAY_WIDTH / 3, DISPLAY_HEIGHT / 4 + DISPLAY_HEIGHT / 12,                           DISPLAY_WIDTH / 3,
+                    DISPLAY_HEIGHT / 6, "Back to the game"},
+            {DISPLAY_WIDTH / 3, DISPLAY_HEIGHT / 4 + DISPLAY_HEIGHT / 12 + DISPLAY_HEIGHT / 6 + 30, DISPLAY_WIDTH / 3,
+                    DISPLAY_HEIGHT / 6, "Back to menu"}
+    };
 
     al_clear_to_color(NOIR);
     al_draw_bitmap(jeu->ImageFondDeJeu, 0, 0, 0);
@@ -304,27 +324,29 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
                 if (jeu->enPause && event.mouse.button == 1) {
                     float mouse_x = event.mouse.x;
                     float mouse_y = event.mouse.y;
-                    float bouton_x = DISPLAY_WIDTH / 3;
-                    float bouton_y = DISPLAY_HEIGHT / 4 + DISPLAY_HEIGHT / 12;
-                    float bouton_width = DISPLAY_WIDTH / 3;
-                    float bouton_height = DISPLAY_HEIGHT / 6;
-
-                    if (mouse_x >= bouton_x && mouse_x <= bouton_x + bouton_width &&
-                        mouse_y >= bouton_y && mouse_y <= bouton_y + bouton_height) {
-                        jeu->enPause = false;
-                        maj = true;
+                    for (int i = 0; i < 2; ++i) {
+                        if (EstDansLeBoutonMenuPause(boutons[i], mouse_x, mouse_y)) {
+                            if (i == 0) {
+                                jeu->enPause = false;
+                            } else if (i == 1) {
+                                jeu->enPause = false;
+                                fini = true;
+                            }
+                        }
                     }
                 }
                 break;
             case ALLEGRO_EVENT_TIMER:
-                if (++compteurTickDuTimer >= 60) {
-                    tempsRestant--;
-                    compteurTickDuTimer = 0;
+                if (!jeu->enPause) {
+                    if (++compteurTickDuTimer >= 60) {
+                        tempsRestant--;
+                        compteurTickDuTimer = 0;
+                    }
+                    if (tempsRestant < 0) {
+                        fini = true;
+                    }
+                    MAJPosJoueurs(joueur1, joueur2, jeu, &maj);
                 }
-                if (tempsRestant < 0) {
-                    fini = true;
-                }
-                MAJPosJoueurs(joueur1, joueur2, jeu, &maj);
                 if (maj || compteurTickDuTimer == 0) {
                     al_clear_to_color(NOIR);
                     al_draw_bitmap(jeu->ImageFondDeJeu, 0, 0, 0);
@@ -333,7 +355,7 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
                     DessinerJoueur(joueur1, jeu);
                     DessinerJoueur(joueur2, jeu);
                     if (jeu->enPause) {
-                        DessinerMenuPause(jeu);
+                        DessinerMenuPause(jeu, boutons);
                     }
                     al_flip_display();
                     maj = false;
