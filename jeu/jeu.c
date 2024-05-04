@@ -7,7 +7,8 @@
 void InitialiserFenetreFileTimer(ComposantsJeu *jeu) {
     jeu->fenetre = al_create_display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
     jeu->file = al_create_event_queue();
-    jeu->timer = al_create_timer(1.0 / 120.0);
+    jeu->timer = al_create_timer(1.0 / 60.0);
+    jeu->DureePartie = 90;
     al_register_event_source(jeu->file, al_get_display_event_source(jeu->fenetre));
     al_register_event_source(jeu->file, al_get_keyboard_event_source());
     al_register_event_source(jeu->file, al_get_mouse_event_source());
@@ -74,6 +75,26 @@ void DessinerElements(const ComposantsJeu *jeu) {
         if (bitmap) {
             al_draw_bitmap(bitmap, jeu->element[i].x, jeu->element[i].y, 0);
         }
+    }
+}
+
+void DessinerTempsRestant(int tempsRestant, ComposantsJeu *jeu) {
+    char text[10];
+    sprintf(text, "%02d:%02d", tempsRestant / 60, tempsRestant % 60);
+
+    float cx = al_get_bitmap_width(jeu->sablier) / 2.0;
+    float cy = al_get_bitmap_height(jeu->sablier) / 2.0;
+    float x = 1090 + cx;
+    float y = 10 + cy;
+
+    int secondesEcoulees = jeu->DureePartie - tempsRestant;
+    float angle = (secondesEcoulees % 2) * M_PI;
+
+    al_draw_rotated_bitmap(jeu->sablier, cx, cy, x, y, angle, 0);
+    if (tempsRestant > 30) {
+        al_draw_text(jeu->policeRegle, NOIR, 1050, 20, ALLEGRO_ALIGN_CENTER, text);
+    } else {
+        al_draw_text(jeu->policeRegle, ROUGE, 1050, 20, ALLEGRO_ALIGN_CENTER, text);
     }
 }
 
@@ -157,35 +178,35 @@ void DessinerJoueur(Joueur *joueur, ComposantsJeu *jeu) {
 void GestionKeyDown(Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool *maj) {
     switch (event->keyboard.keycode) {
         case ALLEGRO_KEY_Z:
-            joueur1->vy = -1;
+            joueur1->vy = -2;
             *maj = true;
             break;
         case ALLEGRO_KEY_S:
-            joueur1->vy = 1;
+            joueur1->vy = 2;
             *maj = true;
             break;
         case ALLEGRO_KEY_Q:
-            joueur1->vx = -1;
+            joueur1->vx = -2;
             *maj = true;
             break;
         case ALLEGRO_KEY_D:
-            joueur1->vx = 1;
+            joueur1->vx = 2;
             *maj = true;
             break;
         case ALLEGRO_KEY_UP:
-            joueur2->vy = -1;
+            joueur2->vy = -2;
             *maj = true;
             break;
         case ALLEGRO_KEY_DOWN:
-            joueur2->vy = 1;
+            joueur2->vy = 2;
             *maj = true;
             break;
         case ALLEGRO_KEY_LEFT:
-            joueur2->vx = -1;
+            joueur2->vx = -2;
             *maj = true;
             break;
         case ALLEGRO_KEY_RIGHT:
-            joueur2->vx = 1;
+            joueur2->vx = 2;
             *maj = true;
             break;
         case ALLEGRO_KEY_C:
@@ -227,7 +248,9 @@ void GestionKeyUP(Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool *
 
 void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
     ALLEGRO_EVENT event;
-    bool fini = false, maj = false, prendre = false;
+    bool fini = false, maj = false;
+    int tempsRestant = jeu->DureePartie;
+    int compteurTickDuTimer = 0;
 
     al_clear_to_color(NOIR);
     al_draw_bitmap(jeu->ImageFondDeJeu, 0, 0, 0);
@@ -235,6 +258,7 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
     DessinerElements(jeu);
     DessinerJoueur(joueur1, jeu);
     DessinerJoueur(joueur2, jeu);
+    DessinerTempsRestant(tempsRestant, jeu);
     al_flip_display();
 
     while (!fini) {
@@ -250,13 +274,21 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
                 GestionKeyUP(joueur1, joueur2, &event, &maj);
                 break;
             case ALLEGRO_EVENT_TIMER:
+                if (++compteurTickDuTimer >= 60) {
+                    tempsRestant--;
+                    compteurTickDuTimer = 0;
+                }
+                if (tempsRestant < 0) {
+                    fini = true;
+                }
                 MAJPosJoueurs(joueur1, joueur2, jeu, &maj);
-                if (maj) {
+                if (maj || compteurTickDuTimer == 0) {
                     al_clear_to_color(NOIR);
                     al_draw_bitmap(jeu->ImageFondDeJeu, 0, 0, 0);
                     DessinerElements(jeu);
                     DessinerJoueur(joueur1, jeu);
                     DessinerJoueur(joueur2, jeu);
+                    DessinerTempsRestant(tempsRestant, jeu);
                     al_flip_display();
                     maj = false;
                 }

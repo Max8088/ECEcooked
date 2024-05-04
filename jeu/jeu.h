@@ -23,6 +23,8 @@ void ChargerFichierTxt(ComposantsJeu *jeu);
 
 void DessinerElements(const ComposantsJeu *jeu);
 
+void DessinerTempsRestant(int tempsRestant, ComposantsJeu *jeu);
+
 void VerifierPosJoueur(Joueur *joueur);
 
 bool VerifierCollisionJoueur(Joueur *joueur, ComposantsJeu *jeu);

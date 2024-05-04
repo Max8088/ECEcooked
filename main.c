@@ -48,6 +48,7 @@ void ChargerImages(ComposantsJeu *jeu) {
     jeu->tasseCafeLait = al_load_bitmap("../images/tassecafelait.png");
     jeu->tasseVide = al_load_bitmap("../images/tasse vide .png");
     jeu->jusKiwi = al_load_bitmap("../images/jusdekiwi.png");
+    jeu->sablier = al_load_bitmap("../images/MACARON TEMPS (1).png");
 }
 
 void ChargerPolices(ComposantsJeu *jeu) {
@@ -184,6 +185,10 @@ void LibererMemoire(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
     if (joueur2->image != NULL) {
         al_destroy_bitmap(joueur2->image);
         joueur2->image = NULL;
+    }
+    if (jeu->sablier != NULL) {
+        al_destroy_bitmap(jeu->sablier);
+        jeu->sablier = NULL;
     }
 
     // Libération des polices

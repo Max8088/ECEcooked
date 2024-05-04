@@ -26,6 +26,7 @@ typedef struct {
     ALLEGRO_DISPLAY *fenetre;
     ALLEGRO_EVENT_QUEUE *file;
     ALLEGRO_TIMER *timer;
+    int DureePartie;
     ALLEGRO_BITMAP *Z;
     ALLEGRO_BITMAP *Q;
     ALLEGRO_BITMAP *S;
@@ -59,6 +60,7 @@ typedef struct {
     ALLEGRO_BITMAP*tasseCafeLait;
     ALLEGRO_BITMAP*tasseVide;
     ALLEGRO_BITMAP *jusKiwi;
+    ALLEGRO_BITMAP *sablier;
     ALLEGRO_FONT *police;
     ALLEGRO_FONT *policeTitre;
     ALLEGRO_FONT *policePseudo;
