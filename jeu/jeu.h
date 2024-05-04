@@ -19,6 +19,8 @@
 
 void InitialiserFenetreFileTimer(ComposantsJeu *jeu);
 
+void DessinerMenuPause(ComposantsJeu *jeu);
+
 void ChargerFichierTxt(ComposantsJeu *jeu);
 
 void DessinerElements(const ComposantsJeu *jeu);
@@ -35,10 +37,11 @@ void MAJPosJoueurs(Joueur *joueur1, Joueur *joueur2, ComposantsJeu *jeu, bool *m
 
 void DessinerJoueur(Joueur *joueur, ComposantsJeu *jeu);
 
-void GestionKeyDown(Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool *maj);
+void GestionKeyDown(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool *maj);
 
-void GestionKeyUP(Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool *maj);
+void GestionKeyUP(ComposantsJeu *jeu,Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool *maj);
 
 void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2);
 
 #endif //ESCOOKED_JEU_H
+

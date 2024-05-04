@@ -3,6 +3,9 @@
 #include "../jeu/jeu.h"
 #include "menu.h"
 
+
+
+
 void DessinerBouton1(Bouton bouton, ALLEGRO_FONT *police, ALLEGRO_COLOR couleurRectangle, ALLEGRO_COLOR couleurTexte) {
     al_draw_filled_rounded_rectangle(bouton.x, bouton.y, bouton.x + bouton.width, bouton.y + bouton.height, 10, 10,
                                      couleurRectangle);
@@ -472,6 +475,7 @@ void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son) {
                                 AfficherControls(jeu, joueur1, joueur2);
                                 Jeu(jeu, joueur1, joueur2);
                                 JouerMusiqueFondDeMenu(son);
+
                                 lancerJeu = false;
 
                             }

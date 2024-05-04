@@ -52,7 +52,7 @@ void ChargerImages(ComposantsJeu *jeu) {
 }
 
 void ChargerPolices(ComposantsJeu *jeu) {
-    jeu->police = al_load_ttf_font("../police/RubikDoodleShadow-Regular.ttf", 50, 0);
+    jeu->police = al_load_ttf_font("../police/RubikDoodleShadow-Regular.ttf", 40, 0);
     jeu->policeTitre = al_load_ttf_font("../police/BungeeShade-Regular.ttf", 90, 0);
     jeu->policePseudo = al_load_ttf_font("../police/RubikDoodleShadow-Regular.ttf", 20, 0);
     jeu->policeRegle = al_load_ttf_font("../police/Kanit-Bold.ttf", 30, 0);

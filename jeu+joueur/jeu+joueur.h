@@ -71,6 +71,7 @@ typedef struct {
     Ingredient*ingredient;
     Element *element;
     int nbElement;
+    bool enPause;
 } ComposantsJeu;
 
 

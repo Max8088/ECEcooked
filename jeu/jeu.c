@@ -3,7 +3,6 @@
 #include "jeu.h"
 #include "math.h"
 
-
 void InitialiserFenetreFileTimer(ComposantsJeu *jeu) {
     jeu->fenetre = al_create_display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
     jeu->file = al_create_event_queue();
@@ -13,7 +12,28 @@ void InitialiserFenetreFileTimer(ComposantsJeu *jeu) {
     al_register_event_source(jeu->file, al_get_keyboard_event_source());
     al_register_event_source(jeu->file, al_get_mouse_event_source());
     al_register_event_source(jeu->file, al_get_timer_event_source(jeu->timer));
+    jeu->enPause= false;
 }
+void DessinerMenuPause(ComposantsJeu *jeu) {
+    // Dessine un rectangle semi-transparent pour le fond du menu pause
+    al_draw_filled_rectangle(DISPLAY_WIDTH / 4, DISPLAY_HEIGHT / 4, 3 * DISPLAY_WIDTH / 4, 3 * DISPLAY_HEIGHT / 4, al_map_rgba(0, 0, 0, 200));
+
+
+
+    // Dessine le rectangle du bouton de reprise du jeu
+    float bouton_x = DISPLAY_WIDTH / 3;
+    float bouton_y = DISPLAY_HEIGHT / 4 + DISPLAY_HEIGHT / 12; // Déplacement vers le haut
+    float bouton_width = DISPLAY_WIDTH / 3;
+    float bouton_height = DISPLAY_HEIGHT / 6;
+    al_draw_filled_rectangle(bouton_x, bouton_y, bouton_x + bouton_width, bouton_y + bouton_height, al_map_rgba(139, 71, 3, 200));
+
+    // Dessine le texte "Reprendre le jeu" au centre du bouton
+    float text_x = DISPLAY_WIDTH / 2;
+    float text_y = bouton_y + bouton_height / 2 - al_get_font_ascent(jeu->policePseudo);
+    al_draw_text(jeu->police, NOIR, text_x, text_y, ALLEGRO_ALIGN_CENTER, "Reprendre le jeu");
+}
+
+
 
 void ChargerFichierTxt(ComposantsJeu *jeu) {
     FILE *fichier = fopen("../images/FichierTexte", "r");
@@ -175,7 +195,8 @@ void DessinerJoueur(Joueur *joueur, ComposantsJeu *jeu) {
     al_draw_text(jeu->policePseudo, BLANC, text_x, text_y, ALLEGRO_ALIGN_CENTER, joueur->pseudo);
 }
 
-void GestionKeyDown(Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool *maj) {
+void GestionKeyDown(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool *maj) {
+    if (!jeu->enPause) {
     switch (event->keyboard.keycode) {
         case ALLEGRO_KEY_Z:
             joueur1->vy = -2;
@@ -209,6 +230,11 @@ void GestionKeyDown(Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool
             joueur2->vx = 2;
             *maj = true;
             break;
+        case ALLEGRO_KEY_P:
+            jeu->enPause = !jeu->enPause;
+
+            *maj = true;
+            break;
         case ALLEGRO_KEY_C:
         case ALLEGRO_KEY_L:
             //bool vérifie la collision entre objet et joeur si true prendre
@@ -219,9 +245,12 @@ void GestionKeyDown(Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool
             //bool vérifie la collision entre objet et joeur si true lacher
             break;
     }
+    }
 }
 
-void GestionKeyUP(Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool *maj) {
+void GestionKeyUP(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool *maj) {
+    if (!jeu->enPause) {
+
     switch (event->keyboard.keycode) {
         case ALLEGRO_KEY_Z:
         case ALLEGRO_KEY_S:
@@ -243,6 +272,9 @@ void GestionKeyUP(Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool *
             joueur2->vx = 0;
             *maj = true;
             break;
+
+
+    }
     }
 }
 
@@ -263,16 +295,41 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
 
     while (!fini) {
         al_wait_for_event(jeu->file, &event);
+
         switch (event.type) {
+
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
                 fini = true;
                 break;
+
             case ALLEGRO_EVENT_KEY_DOWN:
-                GestionKeyDown(joueur1, joueur2, &event, &maj);
+                GestionKeyDown(jeu, joueur1, joueur2, &event, &maj);
                 break;
             case ALLEGRO_EVENT_KEY_UP:
-                GestionKeyUP(joueur1, joueur2, &event, &maj);
+                GestionKeyUP(jeu,joueur1, joueur2, &event, &maj);
                 break;
+
+            case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
+                if (jeu->enPause && event.mouse.button == 1) {
+                    // Vérifie si les coordonnées du clic sont à l'intérieur du rectangle du bouton
+                    float mouse_x = event.mouse.x;
+                    float mouse_y = event.mouse.y;
+                    float bouton_x = DISPLAY_WIDTH / 3;
+                    float bouton_y = DISPLAY_HEIGHT / 4 + DISPLAY_HEIGHT / 12; // Position du bouton
+                    float bouton_width = DISPLAY_WIDTH / 3;
+                    float bouton_height = DISPLAY_HEIGHT / 6;
+
+                    if (mouse_x >= bouton_x && mouse_x <= bouton_x + bouton_width &&
+                        mouse_y >= bouton_y && mouse_y <= bouton_y + bouton_height) {
+                        // Si le clic est à l'intérieur du rectangle, reprendre le jeu
+                        jeu->enPause = false;
+                        maj = true;
+                    }
+                }
+                break;
+
+
+
             case ALLEGRO_EVENT_TIMER:
                 if (++compteurTickDuTimer >= 60) {
                     tempsRestant--;
@@ -282,18 +339,27 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
                     fini = true;
                 }
                 MAJPosJoueurs(joueur1, joueur2, jeu, &maj);
-                if (maj || compteurTickDuTimer == 0) {
+                if (maj) {
                     al_clear_to_color(NOIR);
                     al_draw_bitmap(jeu->ImageFondDeJeu, 0, 0, 0);
                     DessinerElements(jeu);
+                    DessinerTempsRestant(tempsRestant, jeu);
                     DessinerJoueur(joueur1, jeu);
                     DessinerJoueur(joueur2, jeu);
-                    DessinerTempsRestant(tempsRestant, jeu);
+
+                    if (jeu->enPause) {
+                        DessinerMenuPause(jeu);
+                    }
                     al_flip_display();
                     maj = false;
                 }
                 break;
+
+
         }
+
     }
+
+
 }
 
