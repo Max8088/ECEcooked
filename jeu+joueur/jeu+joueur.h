@@ -18,10 +18,12 @@ typedef struct {
 typedef struct {
     int type, x, y;
 } Element;
+
 typedef struct{
     float x,y;
     bool prendre ;
 }Ingredient;
+
 typedef struct {
     ALLEGRO_DISPLAY *fenetre;
     ALLEGRO_EVENT_QUEUE *file;
