@@ -427,25 +427,37 @@ void PremierAffichageMenu(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, int n
     al_flip_display();
 }
 
+void DessinerNiveauApercu(Bouton niveau, ComposantsJeu *jeu) {
+    al_draw_filled_rounded_rectangle(niveau.x, niveau.y, niveau.x + niveau.width, niveau.y + niveau.height, 10, 10, NOIR);
+    al_draw_bitmap(niveau.apercu, 375, 287, 0);
+    float text_x = niveau.x + (niveau.width - al_get_text_width(jeu->police, niveau.texte)) / 2;
+    float text_y = niveau.y + (niveau.height - al_get_font_ascent(jeu->police)) / 2;
+    al_draw_text(jeu->police, BLANC, text_x, text_y - 5, 0, niveau.texte);
+}
+
 void ChoisirNiveau(ComposantsJeu *jeu, Niveau *niveau, bool *niveauChoisi) {
     bool fini = false;
     ALLEGRO_EVENT event;
-    Bouton boutonsChoixNiveau[] = {
-            {425, 285, 400, 70, "Level 1"},
-            {425, 385, 400, 70, "Level 2"},
-            {425, 485, 400, 70, "Level 3"}
+    int niveauActuellementAffiche = 0;
+
+    Bouton boutonNiveaux[] = {
+            {425, 200, 400, 70, "Level 1", al_load_bitmap("../images/apercu map.png")},
+            {425, 200, 400, 70, "Level 2", al_load_bitmap("../images/apercu map.png")},
+            {425, 200, 400, 70, "Level 3", al_load_bitmap("../images/apercu map.png")}
     };
-    int nbBoutonsChoixNiveau = sizeof(boutonsChoixNiveau) / sizeof(boutonsChoixNiveau[0]);
+    int nbNiveaux = sizeof(boutonNiveaux) / sizeof(boutonNiveaux[0]);
+
     Bouton boutonRetour = {-10, 612, 130, 70, "<-"};
+    Bouton flecheGauche = {300, 370, 50, 50, "<"};
+    Bouton flecheDroite = {900, 370, 50, 50, ">"};
     float mouseX = 0, mouseY = 0;
 
     al_clear_to_color(NOIR);
     al_draw_bitmap(jeu->ImageMenu, 0, 0, 0);
-    al_draw_text(jeu->police, BLANC, 625, 200, ALLEGRO_ALIGN_CENTRE, "Please select a level :");
-    for (int i = 0; i < nbBoutonsChoixNiveau; ++i) {
-        DessinerBouton1(boutonsChoixNiveau[i], jeu->police, NOIR, BLANC);
-    }
+    DessinerNiveauApercu(boutonNiveaux[niveauActuellementAffiche], jeu);
     DessinerBouton1(boutonRetour, jeu->police, NOIR, GRIS_CLAIR);
+    DessinerBouton1(flecheGauche, jeu->police, NOIR, BLANC);
+    DessinerBouton1(flecheDroite, jeu->police, NOIR, BLANC);
     al_flip_display();
 
     while (!fini) {
@@ -462,31 +474,41 @@ void ChoisirNiveau(ComposantsJeu *jeu, Niveau *niveau, bool *niveauChoisi) {
                 if (EstDansLeBouton(boutonRetour, mouseX, mouseY)) {
                     *niveauChoisi = false;
                     fini = true;
+                } else if (EstDansLeBouton(flecheGauche, event.mouse.x, event.mouse.y)) {
+                    if (niveauActuellementAffiche > 0) niveauActuellementAffiche--;
+                } else if (EstDansLeBouton(flecheDroite, event.mouse.x, event.mouse.y)) {
+                    if (niveauActuellementAffiche < nbNiveaux - 1) niveauActuellementAffiche++;
+                } else if (EstDansLeBouton(boutonNiveaux[niveauActuellementAffiche], event.mouse.x, event.mouse.y)) {
+                    *niveau = niveauActuellementAffiche + 1;
+                    *niveauChoisi = true;
+                    fini = true;
                 }
-                for (int i = 0; i < nbBoutonsChoixNiveau; ++i) {
-                    if (EstDansLeBouton(boutonsChoixNiveau[i], mouseX, mouseY)) {
-                        *niveau = i + 1;
-                        *niveauChoisi = true;
-                        fini = true;
-                    }
+                break;
+            case ALLEGRO_EVENT_KEY_DOWN:
+                if (event.keyboard.keycode == ALLEGRO_KEY_LEFT) {
+                    if (niveauActuellementAffiche > 0) niveauActuellementAffiche--;
+                } else if (event.keyboard.keycode == ALLEGRO_KEY_RIGHT) {
+                    if (niveauActuellementAffiche < nbNiveaux - 1) niveauActuellementAffiche++;
+                } else if (event.keyboard.keycode == ALLEGRO_KEY_ENTER) {
+                    *niveau = niveauActuellementAffiche + 1;
+                    *niveauChoisi = true;
+                    fini = true;
+                } else if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
+                    *niveauChoisi = false;
+                    fini = true;
                 }
                 break;
             case ALLEGRO_EVENT_TIMER:
                 al_clear_to_color(NOIR);
                 al_draw_bitmap(jeu->ImageMenu, 0, 0, 0);
-                al_draw_text(jeu->police, BLANC, 625, 200, ALLEGRO_ALIGN_CENTRE, "Please select a level :");
-                for (int i = 0; i < nbBoutonsChoixNiveau; ++i) {
-                    if (EstDansLeBouton(boutonsChoixNiveau[i], mouseX, mouseY)) {
-                        DessinerBouton2(boutonsChoixNiveau[i], jeu->police, NOIR_TRANSPARENT, GRIS_CLAIR_TRANSPARENT);
-                    } else {
-                        DessinerBouton1(boutonsChoixNiveau[i], jeu->police, NOIR, BLANC);
-                    }
-                }
+                DessinerNiveauApercu(boutonNiveaux[niveauActuellementAffiche], jeu);
                 if (EstDansLeBouton(boutonRetour, mouseX, mouseY)) {
                     DessinerBouton2(boutonRetour, jeu->police, NOIR, BLANC);
                 } else {
                     DessinerBouton1(boutonRetour, jeu->police, NOIR, GRIS_CLAIR);
                 }
+                DessinerBouton1(flecheGauche, jeu->police, NOIR, BLANC);
+                DessinerBouton1(flecheDroite, jeu->police, NOIR, BLANC);
                 al_flip_display();
                 break;
         }

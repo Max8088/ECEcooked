@@ -13,6 +13,7 @@
 typedef struct {
     float x, y, width, height;
     char *texte;
+    ALLEGRO_BITMAP *apercu;
 } Bouton;
 
 typedef struct {
