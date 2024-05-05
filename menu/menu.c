@@ -233,7 +233,23 @@ void MenuRules(ComposantsJeu ***jeu, Sons **son) {
     al_clear_to_color(NOIR);
     al_draw_bitmap((**jeu)->ImageMenu, 0, 0, 0);
     DessinerBouton1(boutonRetour, (**jeu)->police, NOIR, GRIS_CLAIR);
-
+    al_draw_text((**jeu)->police, BLANC, 450, 200, ALLEGRO_ALIGN_LEFT, "Regles du jeu:");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 280, ALLEGRO_ALIGN_LEFT,
+                 "Deux cuisiniers travaillent ensemble pour  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 320, ALLEGRO_ALIGN_LEFT,
+                 "cuisiner des commmandes le plus rapidement    ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 360, ALLEGRO_ALIGN_LEFT,
+                 "possible dans un lieu qui peux rendre la tâche  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 400, ALLEGRO_ALIGN_LEFT,
+                 "plus difficile que prévu. En binome ou seul  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 440, ALLEGRO_ALIGN_LEFT,
+                 "vous devez récupérer les bon ingrédients,  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 480, ALLEGRO_ALIGN_LEFT,
+                 "les préparer(decoupe/cuisson), les assembler  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 520, ALLEGRO_ALIGN_LEFT,
+                 "et les faire sortir de cuisine avant le temps  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 560, ALLEGRO_ALIGN_LEFT, "imparti. Le décor oblige les joueurs à  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 600, ALLEGRO_ALIGN_LEFT, "communiquer. ");
 
     al_flip_display();
 
