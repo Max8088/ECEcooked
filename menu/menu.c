@@ -406,6 +406,8 @@ void AfficherControls(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
                 al_draw_bitmap(jeu->L, 922, 280, 0);
                 al_draw_bitmap(jeu->M, 1018, 280, 0);
                 al_draw_text(jeu->police, BLANC, 1020, 400, ALLEGRO_ALIGN_CENTER, "Moving Keys");
+                al_draw_text(jeu->police, BLANC, 614, 480, ALLEGRO_ALIGN_CENTER, "Pause mode");
+                al_draw_bitmap(jeu->P, 560, 560, 0);
                 al_draw_bitmap(jeu->FlecheHaut, 972, 480, 0);
                 al_draw_bitmap(jeu->FlecheBas, 972, 580, 0);
                 al_draw_bitmap(jeu->FlecheGauche, 872, 570, 0);

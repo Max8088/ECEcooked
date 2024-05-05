@@ -41,6 +41,7 @@ typedef struct {
     ALLEGRO_BITMAP *V;
     ALLEGRO_BITMAP *L;
     ALLEGRO_BITMAP *M;
+    ALLEGRO_BITMAP *P;
     ALLEGRO_BITMAP *FlecheHaut;
     ALLEGRO_BITMAP *FlecheGauche;
     ALLEGRO_BITMAP *FlecheBas;
