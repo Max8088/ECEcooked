@@ -7,6 +7,13 @@
 
 #include "../constantes.h"
 
+typedef enum {
+    NIVEAU_INCONNU = 0,
+    NIVEAU_1,
+    NIVEAU_2,
+    NIVEAU_3
+} Niveau;
+
 typedef struct {
     int x, y, width, height;
     char *texte;

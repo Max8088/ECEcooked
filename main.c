@@ -287,8 +287,8 @@ int main(void) {
     InitialiserFenetreFileTimer(&jeu);
     ChargerImages(&jeu);
     ChargerPolices(&jeu);
-    InitialiserJoueur(&joueur1, "../images/PERSO 1.png", 450, 300);
-    InitialiserJoueur(&joueur2, "../images/PERSO 2.png", 300, 300);
+    InitialiserJoueur(&joueur1, "../images/PERSO 1.png");
+    InitialiserJoueur(&joueur2, "../images/PERSO 2.png");
     PremierAffichageFenetre(&jeu);
     InitialiserSon(&son);
 

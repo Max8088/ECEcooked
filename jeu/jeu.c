@@ -100,6 +100,7 @@ void DessinerElements(const ComposantsJeu *jeu) {
         }
     }
 }
+
 void DessinerTempsRestant(int tempsRestant, ComposantsJeu *jeu) {
     char text[10];
     sprintf(text, "%02d:%02d", tempsRestant / 60, tempsRestant % 60);
@@ -132,6 +133,13 @@ void DessinerTempsRestant(int tempsRestant, ComposantsJeu *jeu) {
     }
 }
 
+
+void InitialiserPosJoueurs(Joueur *joueur1, Joueur *joueur2, int x1, int y1, int x2, int y2) {
+    joueur1->x = x1;
+    joueur1->y = y1;
+    joueur2->x = x2;
+    joueur2->y = y2;
+}
 
 void VerifierPosJoueur(Joueur *joueur) {
     int joueur_width = al_get_bitmap_width(joueur->image);
@@ -313,6 +321,7 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
     al_draw_bitmap(jeu->ImageFondDeJeu, 0, 0, 0);
     ChargerFichierTxt(jeu);
     DessinerElements(jeu);
+    InitialiserPosJoueurs(joueur1, joueur2, 850, 300, 300, 300);
     DessinerJoueur(joueur1, jeu);
     DessinerJoueur(joueur2, jeu);
     DessinerTempsRestant(tempsRestant, jeu);

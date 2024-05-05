@@ -11,7 +11,7 @@
 #include "../jeu+joueur/jeu+joueur.h"
 
 
-void InitialiserJoueur(Joueur *joueur, const char *cheminVersImage, float x, float y);
+void InitialiserJoueur(Joueur *joueur, const char *cheminVersImage);
 
 void ChoisirPseudos(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, bool *lancerJeu, Sons *sons);
 
