@@ -4,9 +4,7 @@
 #include "joueur.h"
 
 
-void InitialiserJoueur(Joueur *joueur, const char *cheminVersImage, float x, float y) {
-    joueur->x = x;
-    joueur->y = y;
+void InitialiserJoueur(Joueur *joueur, const char *cheminVersImage) {
     joueur->vx = 0;
     joueur->vy = 0;
     joueur->angle = 0;
