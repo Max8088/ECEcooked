@@ -32,6 +32,7 @@ void ChargerImages(ComposantsJeu *jeu) {
     jeu->D = al_load_bitmap("../images/D.png");
     jeu->C = al_load_bitmap("../images/C.png");
     jeu->V = al_load_bitmap("../images/V.png");
+    jeu->P = al_load_bitmap("../images/P.png");
     jeu->L = al_load_bitmap("../images/L.png");
     jeu->M = al_load_bitmap("../images/M.png");
     jeu->FlecheHaut = al_load_bitmap("../images/UP.png");
@@ -161,6 +162,10 @@ void LibererMemoire(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
     if (jeu->M != NULL) {
         al_destroy_bitmap(jeu->M);
         jeu->M = NULL;
+    }
+    if (jeu->P != NULL) {
+        al_destroy_bitmap(jeu->M);
+        jeu->P = NULL;
     }
     if (jeu->FlecheHaut != NULL) {
         al_destroy_bitmap(jeu->FlecheHaut);
