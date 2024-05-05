@@ -1,4 +1,3 @@
-
 #include "../constantes.h"
 #include "jeu.h"
 #include "math.h"
@@ -114,25 +113,21 @@ void DessinerTempsRestant(int tempsRestant, ComposantsJeu *jeu) {
     float angle = (secondesEcoulees % 2) * M_PI;
 
     al_draw_rotated_bitmap(jeu->sablier, cx, cy, x, y, angle, 0);
-
-    // Variable pour suivre l'état de l'affichage de la couleur du texte
     static bool couleurRouge = false;
+    static int derniereSeconde = -1;
 
-    // Alternance entre rouge et noir lorsque le temps restant est inférieur à 30 secondes
     if (tempsRestant > 30) {
         al_draw_text(jeu->policeRegle, NOIR, 1050, 20, ALLEGRO_ALIGN_CENTER, text);
         couleurRouge = false;
     } else {
-        if (couleurRouge) {
-            al_draw_text(jeu->policeRegle, ROUGE, 1050, 20, ALLEGRO_ALIGN_CENTER, text);
-        } else {
-            al_draw_text(jeu->policeRegle, NOIR, 1050, 20, ALLEGRO_ALIGN_CENTER, text);
+        if (derniereSeconde != secondesEcoulees) {
+            couleurRouge = !couleurRouge;
+            derniereSeconde = secondesEcoulees;
         }
-        // Inverser l'état de la couleur pour la prochaine itération
-        couleurRouge = !couleurRouge;
+        ALLEGRO_COLOR couleurTexte = couleurRouge ? ROUGE : NOIR;
+        al_draw_text(jeu->policeRegle, couleurTexte, 1050, 20, ALLEGRO_ALIGN_CENTER, text);
     }
 }
-
 
 void InitialiserPosJoueurs(Joueur *joueur1, Joueur *joueur2, int x1, int y1, int x2, int y2) {
     joueur1->x = x1;

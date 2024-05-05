@@ -555,7 +555,7 @@ void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son) {
                             SonBoutonClique(son);
                             do {
                                 ChoisirNiveau(jeu, &niveau, &niveauChoisi);
-                                if (!niveauChoisi) break; // Break if niveauChoisi is false
+                                if (!niveauChoisi) { break; }
                                 ChoisirPseudos(jeu, joueur1, joueur2, &lancerJeu, son);
                             } while (!lancerJeu && niveauChoisi);
 
@@ -564,7 +564,7 @@ void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son) {
                                 AfficherControls(jeu, joueur1, joueur2);
                                 lancerNiveau(jeu, joueur1, joueur2, niveau);
                                 JouerMusiqueFondDeMenu(son);
-                                lancerJeu = false;  // Reset the launch game flag
+                                lancerJeu = false;
                             }
                         }
                         if (!(strcmp(boutons[i].texte, "Options"))) {
