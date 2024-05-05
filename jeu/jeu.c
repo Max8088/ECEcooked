@@ -100,7 +100,6 @@ void DessinerElements(const ComposantsJeu *jeu) {
         }
     }
 }
-
 void DessinerTempsRestant(int tempsRestant, ComposantsJeu *jeu) {
     char text[10];
     sprintf(text, "%02d:%02d", tempsRestant / 60, tempsRestant % 60);
@@ -114,12 +113,25 @@ void DessinerTempsRestant(int tempsRestant, ComposantsJeu *jeu) {
     float angle = (secondesEcoulees % 2) * M_PI;
 
     al_draw_rotated_bitmap(jeu->sablier, cx, cy, x, y, angle, 0);
+
+    // Variable pour suivre l'état de l'affichage de la couleur du texte
+    static bool couleurRouge = false;
+
+    // Alternance entre rouge et noir lorsque le temps restant est inférieur à 30 secondes
     if (tempsRestant > 30) {
         al_draw_text(jeu->policeRegle, NOIR, 1050, 20, ALLEGRO_ALIGN_CENTER, text);
+        couleurRouge = false;
     } else {
-        al_draw_text(jeu->policeRegle, ROUGE, 1050, 20, ALLEGRO_ALIGN_CENTER, text);
+        if (couleurRouge) {
+            al_draw_text(jeu->policeRegle, ROUGE, 1050, 20, ALLEGRO_ALIGN_CENTER, text);
+        } else {
+            al_draw_text(jeu->policeRegle, NOIR, 1050, 20, ALLEGRO_ALIGN_CENTER, text);
+        }
+        // Inverser l'état de la couleur pour la prochaine itération
+        couleurRouge = !couleurRouge;
     }
 }
+
 
 void VerifierPosJoueur(Joueur *joueur) {
     int joueur_width = al_get_bitmap_width(joueur->image);
