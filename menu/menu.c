@@ -450,6 +450,7 @@ void ChoisirNiveau(ComposantsJeu *jeu, Niveau *niveau, bool *niveauChoisi) {
     Bouton boutonRetour = {-10, 612, 130, 70, "<-"};
     Bouton flecheGauche = {300, 370, 50, 50, "<"};
     Bouton flecheDroite = {900, 370, 50, 50, ">"};
+    Bouton Go = {425, 560, 400, 70, "GO !"};
     float mouseX = 0, mouseY = 0;
 
     al_clear_to_color(NOIR);
@@ -458,6 +459,7 @@ void ChoisirNiveau(ComposantsJeu *jeu, Niveau *niveau, bool *niveauChoisi) {
     DessinerBouton1(boutonRetour, jeu->police, NOIR, GRIS_CLAIR);
     DessinerBouton1(flecheGauche, jeu->police, NOIR, BLANC);
     DessinerBouton1(flecheDroite, jeu->police, NOIR, BLANC);
+    DessinerBouton1(Go, jeu->police, NOIR, BLANC);
     al_flip_display();
 
     while (!fini) {
@@ -478,7 +480,7 @@ void ChoisirNiveau(ComposantsJeu *jeu, Niveau *niveau, bool *niveauChoisi) {
                     if (niveauActuellementAffiche > 0) niveauActuellementAffiche--;
                 } else if (EstDansLeBouton(flecheDroite, event.mouse.x, event.mouse.y)) {
                     if (niveauActuellementAffiche < nbNiveaux - 1) niveauActuellementAffiche++;
-                } else if (EstDansLeBouton(boutonNiveaux[niveauActuellementAffiche], event.mouse.x, event.mouse.y)) {
+                } else if (EstDansLeBouton(Go, event.mouse.x, event.mouse.y)) {
                     *niveau = niveauActuellementAffiche + 1;
                     *niveauChoisi = true;
                     fini = true;
@@ -509,6 +511,7 @@ void ChoisirNiveau(ComposantsJeu *jeu, Niveau *niveau, bool *niveauChoisi) {
                 }
                 DessinerBouton1(flecheGauche, jeu->police, NOIR, BLANC);
                 DessinerBouton1(flecheDroite, jeu->police, NOIR, BLANC);
+                DessinerBouton1(Go, jeu->police, NOIR, BLANC);
                 al_flip_display();
                 break;
         }
@@ -527,7 +530,6 @@ void lancerNiveau(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Niveau n
             Jeu(jeu, joueur1, joueur2);
             break;
         default:
-            Jeu(jeu, joueur1, joueur2);
             break;
     }
 }
