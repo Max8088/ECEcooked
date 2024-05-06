@@ -39,16 +39,16 @@ void ChargerImages(ComposantsJeu *jeu) {
     jeu->FlecheBas = al_load_bitmap("../images/DOWN.png");
     jeu->FlecheGauche = al_load_bitmap("../images/LEFT.png");
     jeu->FlecheDroite = al_load_bitmap("../images/RIGHT.png");
-    jeu->cafe = al_load_bitmap("../images/grain de café.png");
-    jeu->lait = al_load_bitmap("../images/brique de lait.png");
-    jeu->jusOrange = al_load_bitmap("../images/jus d'orange .png");
-    jeu->jusRaisin = al_load_bitmap("../images/jus de raisin .png");
-    jeu->Machinecafe = al_load_bitmap("../images/machine a café .png");
-    jeu->sacCafe = al_load_bitmap("../images/sac de café .png");
-    jeu->tasseCafe = al_load_bitmap("../images/tasse de café .png");
-    jeu->tasseCafeLait = al_load_bitmap("../images/tassecafelait.png");
-    jeu->tasseVide = al_load_bitmap("../images/tasse vide .png");
-    jeu->jusKiwi = al_load_bitmap("../images/jusdekiwi.png");
+    jeu->cafe = al_load_bitmap("../images/grain de café(1).png");
+    jeu->lait = al_load_bitmap("../images/brique de lait(1).png");
+    jeu->jusOrange = al_load_bitmap("../images/jus d'orange (1).png");
+    jeu->jusRaisin = al_load_bitmap("../images/jus de raisin(1) .png");
+    jeu->Machinecafe = al_load_bitmap("../images/machinecaféplandetravail .png");
+    jeu->sacCafe = al_load_bitmap("../images/sac de café(1).png");
+    jeu->tasseCafe = al_load_bitmap("../images/tasse de café(1).png");
+    jeu->tasseCafeLait = al_load_bitmap("../images/tassecafelait(1).png");
+    jeu->tasseVide = al_load_bitmap("../images/tasse vide (1).png");
+    jeu->jusKiwi = al_load_bitmap("../images/jusdekiwi(1).png");
     jeu->sablier = al_load_bitmap("../images/MACARON TEMPS (1).png");
 }
 

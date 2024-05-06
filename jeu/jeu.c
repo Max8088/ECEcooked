@@ -14,6 +14,7 @@ void InitialiserFenetreFileTimer(ComposantsJeu *jeu) {
     jeu->enPause = false;
 }
 
+
 void DessinerBoutonMenuPause(BoutonJeu boutonJeu, ComposantsJeu *jeu, ALLEGRO_COLOR couleurRectangle,
                              ALLEGRO_COLOR couleurTexte) {
     al_draw_filled_rounded_rectangle(boutonJeu.x, boutonJeu.y, boutonJeu.x + boutonJeu.width,
@@ -93,6 +94,10 @@ void DessinerElements(const ComposantsJeu *jeu) {
             case 6:
                 bitmap = jeu->sortie;
                 break;
+            case 7:
+                bitmap = jeu->Machinecafe;
+                break;
+
         }
         if (bitmap) {
             al_draw_bitmap(bitmap, jeu->element[i].x, jeu->element[i].y, 0);
