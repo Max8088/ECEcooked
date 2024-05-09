@@ -224,7 +224,61 @@ void JouerMusiqueFondDeMenu(Sons *son) {
 }
 
 void MenuRules(ComposantsJeu ***jeu, Sons **son) {
+    ALLEGRO_EVENT event;
+    bool fini = false;
+    Bouton boutonRetour = {-10, 612, 130, 70, "<-"};
+    float mouseX = 0, mouseY = 0;
+    al_clear_to_color(NOIR);
+    al_draw_bitmap((**jeu)->ImageMenu, 0, 0, 0);
+    DessinerBouton1(boutonRetour, (**jeu)->police, NOIR, GRIS_CLAIR);
 
+    al_draw_text((**jeu)->police, BLANC, 450, 200, ALLEGRO_ALIGN_LEFT, "Regles du jeu:");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 280, ALLEGRO_ALIGN_LEFT,
+                 "Deux cuisiniers travaillent ensemble pour  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 320, ALLEGRO_ALIGN_LEFT,
+                 "cuisiner des commmandes le plus rapidement    ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 360, ALLEGRO_ALIGN_LEFT,
+                 "possible dans un lieu qui peux rendre la tâche  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 400, ALLEGRO_ALIGN_LEFT,
+                 "plus difficile que prévu. En binome ou seul  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 440, ALLEGRO_ALIGN_LEFT,
+                 "vous devez récupérer les bon ingrédients,  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 480, ALLEGRO_ALIGN_LEFT,
+                 "les préparer(decoupe/cuisson), les assembler  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 520, ALLEGRO_ALIGN_LEFT,
+                 "et les faire sortir de cuisine avant le temps  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 560, ALLEGRO_ALIGN_LEFT, "imparti. Le décor oblige les joueurs à  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 600, ALLEGRO_ALIGN_LEFT, "communiquer. ");
+
+
+    al_flip_display();
+
+    while (!fini) {
+        al_wait_for_event((**jeu)->file, &event);
+        switch (event.type) {
+            case ALLEGRO_EVENT_DISPLAY_CLOSE:
+                fini = true;
+                break;
+            case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
+                if (EstDansLeBouton(boutonRetour, mouseX, mouseY)) {
+                    SonBoutonClique(*son);
+                    fini = true;
+                }
+                break;
+            case ALLEGRO_EVENT_MOUSE_AXES:
+                mouseX = event.mouse.x;
+                mouseY = event.mouse.y;
+                break;
+            case ALLEGRO_EVENT_TIMER:
+                if (EstDansLeBouton(boutonRetour, mouseX, mouseY)) {
+                    DessinerBouton2(boutonRetour, (**jeu)->police, NOIR, BLANC);
+                } else {
+                    DessinerBouton1(boutonRetour, (**jeu)->police, NOIR, GRIS_CLAIR_TRANSPARENT);
+                }
+                al_flip_display();
+                break;
+        }
+    }
 }
 
 void MenuOptions(ComposantsJeu **jeu, Sons **son) {
