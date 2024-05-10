@@ -13,11 +13,19 @@ typedef enum {
 
 typedef enum {
     CITRON_PRESSE,
-    ALCOOL_CUIT,
     MENTHE_DECOUPE,
     LIMONADE,
+    ALCOOL_CUIT,
     INGREDIENT_NULL
 } Ingredients;
+
+typedef enum {
+    MOJITO,
+    CAIPIRINHA,
+    HINTZY,
+    PLAZA,
+    RECETTE_NULL
+} RecetteID;
 
 typedef struct {
     int x, y, width, height;
@@ -27,14 +35,16 @@ typedef struct {
 typedef struct {
     int x, y;
     ALLEGRO_BITMAP *image;
-    //Ingredients id;
     bool estVisible;
+    Ingredients ingredientID;
+    RecetteID recetteID;
 } ElementsLaches;
 
 typedef struct {
     int type, x, y;
     ALLEGRO_BITMAP *image;
-    //Ingredients id;
+    Ingredients ingredientID;
+    RecetteID recetteID;
 } Element;
 
 typedef struct {
@@ -44,13 +54,6 @@ typedef struct {
     float angle;
     Element *element;
 } Joueur;
-
-typedef enum {
-    MOJITO,
-    CAIPIRINHA,
-    HINTZY,
-    PLAZA
-} RecetteID;
 
 typedef struct {
     RecetteID id;

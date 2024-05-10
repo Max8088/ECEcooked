@@ -124,12 +124,13 @@ void DessinerElementsLaches(ComposantsJeu *jeu) {
     }
 }
 
-Element *CreerElement(int type, ALLEGRO_BITMAP *image, int id) {
+Element *CreerElement(int type, ALLEGRO_BITMAP *image, int ingredientID, int recetteID) {
     Element *nouvElement = malloc(sizeof(Element));
     if (nouvElement != NULL) {
         nouvElement->type = type;
         nouvElement->image = image;
-        //nouvElement->id = id;
+        nouvElement->ingredientID = ingredientID;
+        nouvElement->recetteID = recetteID;
     }
     return nouvElement;
 }
@@ -190,7 +191,8 @@ void PrendreOuLacherElement(Joueur *joueur, ComposantsJeu *jeu) {
                 joueur->element->x = elementProche->x;
                 joueur->element->y = elementProche->y;
                 joueur->element->image = elementProche->image;
-                //joueur->element->id = elementProche->id;
+                joueur->element->ingredientID = elementProche->ingredientID;
+                joueur->element->recetteID = elementProche->recetteID;
                 elementProche->estVisible = false;
                 int index = elementProche - jeu->elementsLaches;
                 for (int i = index; i < jeu->nbElementsLaches - 1; i++) {
@@ -215,7 +217,7 @@ void PrendreOuLacherElement(Joueur *joueur, ComposantsJeu *jeu) {
             jeu->elementsLaches[jeu->nbElementsLaches++] = (ElementsLaches) {
                     joueur->element->x - al_get_bitmap_width(joueur->element->image) / 2,
                     joueur->element->y - al_get_bitmap_height(joueur->element->image) / 2,
-                    joueur->element->image, true};
+                    joueur->element->image, true, joueur->element->ingredientID, joueur->element->recetteID};
             free(joueur->element);
             joueur->element = NULL;
 
@@ -254,19 +256,84 @@ void PrendreDansLeCoffre(Joueur *joueur, ComposantsJeu *jeu) {
     if (joueur->element == NULL || typeCoffre == 6) {
         switch (typeCoffre) {
             case 2:
-                joueur->element = CreerElement(TYPE_FRIGOCITRON, jeu->citron, CITRON_PRESSE);
+                joueur->element = CreerElement(TYPE_FRIGOCITRON, jeu->citron, CITRON_PRESSE, RECETTE_NULL);
                 break;
             case 4:
-                joueur->element = CreerElement(TYPE_FRIGOMENTHE, jeu->menthe, MENTHE_DECOUPE);
+                joueur->element = CreerElement(TYPE_FRIGOMENTHE, jeu->menthe, MENTHE_DECOUPE, RECETTE_NULL);
                 break;
             case 5:
-                joueur->element = CreerElement(TYPE_FRIGOLIMONADE, jeu->limonade, LIMONADE);
+                joueur->element = CreerElement(TYPE_FRIGOLIMONADE, jeu->limonade, LIMONADE, RECETTE_NULL);
                 break;
             case 6:
                 LibererElement(joueur);
                 break;
             default:
                 break;
+        }
+    }
+}
+
+bool sontProches(ElementsLaches a, ElementsLaches b) {
+    float distance = sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
+    return distance <= RAYON_PROXIMITE;
+}
+
+void CombinaisonElementsRecette(ComposantsJeu *jeu, Recette recettes[], int nbRecettes) {
+    bool combine[100] = {false};
+
+    for (int i = 0; i < jeu->nbElementsLaches; i++) {
+        if (!jeu->elementsLaches[i].estVisible || combine[i]) continue;
+
+        for (int r = 0; r < nbRecettes; r++) {
+            Recette *recette = &recettes[r];
+            int count[5] = {0};
+            int idxCombinables[100];
+            int nbCombinables = 0;
+
+            for (int j = 0; j < jeu->nbElementsLaches; j++) {
+                if (jeu->elementsLaches[j].estVisible && !combine[j] && sontProches(jeu->elementsLaches[i], jeu->elementsLaches[j])) {
+                    for (int ing = 0; ing < 5; ing++) {
+                        if (recette->ingredients[ing] == jeu->elementsLaches[j].ingredientID && count[ing] < 1) {
+                            count[ing]++;
+                            idxCombinables[nbCombinables++] = j;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Vérifier si tous les ingrédients nécessaires ont été trouvés
+            bool tousIngredientsTrouves = true;
+            for (int ing = 0; ing < 5; ing++) {
+                if (recette->ingredients[ing] != INGREDIENT_NULL && count[ing] < 1) {
+                    tousIngredientsTrouves = false;
+                    break;
+                }
+            }
+
+            if (tousIngredientsTrouves) {
+                for (int k = 0; k < nbCombinables; k++) {
+                    combine[idxCombinables[k]] = true;
+                    jeu->elementsLaches[idxCombinables[k]].estVisible = false;
+                    for (int j = idxCombinables[k]; j < jeu->nbElementsLaches - 1; j++) {
+                        jeu->elementsLaches[j] = jeu->elementsLaches[j + 1];
+                    }
+                    jeu->nbElementsLaches--;
+                }
+
+                ElementsLaches nouvelElement = {
+                        .x = jeu->elementsLaches[i].x,
+                        .y = jeu->elementsLaches[i].y,
+                        .image = recette->image,
+                        .estVisible = true,
+                        .ingredientID = INGREDIENT_NULL,
+                        .recetteID = recette->id
+                };
+                if (jeu->nbElementsLaches < 100) {
+                    jeu->elementsLaches[jeu->nbElementsLaches++] = nouvelElement;
+                }
+                break;
+            }
         }
     }
 }
@@ -723,7 +790,7 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
                     DISPLAY_HEIGHT / 6, "Back to menu"}
     };
     Commande *listeDeCommandes = NULL;
-    Recette recette[4];
+    Recette recette[NOMBRE_RECETTES];
     InitialiserRecettes(recette);
     InitialiserCommandes(&listeDeCommandes, recette);
     ImagesCommandes imagesCommandes;
@@ -755,6 +822,8 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
                 break;
             case ALLEGRO_EVENT_KEY_UP:
                 GestionKeyUP(jeu, joueur1, joueur2, &event, &maj);
+                CombinaisonElementsRecette(jeu, recette, NOMBRE_RECETTES);
+
                 break;
             case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
                 if (jeu->enPause && event.mouse.button == 1) {
