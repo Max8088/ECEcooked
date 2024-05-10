@@ -25,6 +25,7 @@
 #define TYPE_FRIGOLIMONADE 5
 #define TYPE_POUBELLE 6
 #define TYPE_PLAQUEDECUISSON 7
+#define TYPE_SORTIE 8
 #define TYPE_STATIONDEDECOUPE 9
 #define TYPE_FRIGOCANNEASUCRE 11
 #define NOMBRE_RECETTES 3
@@ -64,7 +65,7 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2);
 
 void ChargerImagesCommandes(ImagesCommandes *images);
 
-void InitialiserRecettes(Recette recettes[]);
+void InitialiserRecettes(Recette recettes[], ComposantsJeu *jeu);
 
 void InitialiserCommandes(Commande **listeDeCommandes, Recette recettes[]);
 

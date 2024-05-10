@@ -115,12 +115,11 @@ void InitialiserComposantsJeu(ComposantsJeu *jeu) {
 }
 
 void DessinerElementsLaches(ComposantsJeu *jeu) {
-    printf("Nombre d'elements a dessiner: %d\n", jeu->nbElementsLaches);
+    //printf("Nombre d'elements a dessiner: %d\n", jeu->nbElementsLaches);
 
     if (jeu->nbElementsLaches > 0) {
         for (int i = 0; i < jeu->nbElementsLaches; i++) {
-            printf("element %d : x=%d, y=%d, visible=%d\n", i, jeu->elementsLaches[i].x, jeu->elementsLaches[i].y,
-                   jeu->elementsLaches[i].estVisible);
+            //printf("element %d : x=%d, y=%d, visible=%d\n", i, jeu->elementsLaches[i].x, jeu->elementsLaches[i].y, jeu->elementsLaches[i].estVisible);
             if (jeu->elementsLaches[i].estVisible) {
                 al_draw_bitmap(jeu->elementsLaches[i].image, jeu->elementsLaches[i].x, jeu->elementsLaches[i].y, 0);
             }
@@ -167,12 +166,47 @@ bool EstSurPoubelle(ComposantsJeu *jeu, float x, float y) {
     return false;
 }
 
+bool EstSurSortie(ComposantsJeu *jeu, float x, float y) {
+    for (int i = 0; i < jeu->nbElement; i++) {
+        if (jeu->element[i].type == TYPE_SORTIE &&
+            x >= jeu->element[i].x && x <= jeu->element[i].x + TAILLE_CASE &&
+            y >= jeu->element[i].y && y <= jeu->element[i].y + TAILLE_CASE) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool VerifierEtTraiterSortie(Commande **listeDeCommandes, Joueur *joueur, ComposantsJeu *jeu) {
+    if (joueur->element == NULL) {
+        return false;
+    }
+
+    // Utilisation de la fonction EstSurSortie pour vérifier si le joueur est sur la sortie
+    if (EstSurSortie(jeu, joueur->element->x, joueur->element->y)) {
+        Commande *current = *listeDeCommandes;
+        while (current) {
+            if (current->recette->id == joueur->element->recetteID && !current->estCompletee) {
+                // Marquer la commande comme complétée
+                current->estCompletee = true;
+                joueur->score += current->score; // Ajouter des points au score du joueur
+                free(joueur->element); // Libérer l'élément détenu par le joueur
+                joueur->element = NULL;
+                return true;
+            }
+            current = current->suivant;
+        }
+    }
+    return false;
+}
+
+
 void centrerObjetSurPlan(Element *element, ComposantsJeu *jeu) {
     int posX, posY;
 
     for (int i = 0; i < jeu->nbElement; i++) {
         if (jeu->element[i].type == TYPE_PLANDETRAVAIL || jeu->element[i].type == TYPE_STATIONDEDECOUPE ||
-            jeu->element[i].type == TYPE_PLAQUEDECUISSON) {
+            jeu->element[i].type == TYPE_PLAQUEDECUISSON || jeu->element[i].type == TYPE_SORTIE) {
             posX = jeu->element[i].x + TAILLE_CASE / 2;
             posY = jeu->element[i].y + TAILLE_CASE / 2;
 
@@ -229,11 +263,6 @@ void PrendreOuLacherElement(Joueur *joueur, ComposantsJeu *jeu) {
     }
 }
 
-void LibererElement(Joueur *joueur) {
-    free(joueur->element);
-    joueur->element = NULL;
-}
-
 int VerifierCoffreDevant(ComposantsJeu *jeu, Joueur *joueur) {
 
     float cx = al_get_bitmap_width(joueur->image) / 2 + joueur->x;
@@ -244,15 +273,16 @@ int VerifierCoffreDevant(ComposantsJeu *jeu, Joueur *joueur) {
     for (int i = 0; i < jeu->nbElement; ++i) {
         if ((jeu->element[i].type == TYPE_FRIGOCITRON || jeu->element[i].type == TYPE_FRIGOMENTHE ||
              jeu->element[i].type == TYPE_FRIGOLIMONADE ||
-             jeu->element[i].type == TYPE_POUBELLE || jeu->element[i].type == TYPE_FRIGOCANNEASUCRE) &&
+             jeu->element[i].type == TYPE_POUBELLE || jeu->element[i].type == TYPE_FRIGOCANNEASUCRE ||
+             jeu->element[i].type == TYPE_SORTIE) &&
             xCurseur >= jeu->element[i].x &&
             xCurseur <= jeu->element[i].x + TAILLE_CASE &&
             yCurseur >= jeu->element[i].y && yCurseur <= jeu->element[i].y + TAILLE_CASE) {
-            printf("Interaction avec un coffre de type %d\n", jeu->element[i].type);
+            //printf("Interaction avec un coffre de type %d\n", jeu->element[i].type);
             return jeu->element[i].type;
         }
     }
-    printf("Aucun coffre trouve\n");
+    //printf("Aucun coffre trouve\n");
     return -1;
 }
 
@@ -272,9 +302,6 @@ void PrendreDansLeCoffre(Joueur *joueur, ComposantsJeu *jeu) {
                 break;
             case 11:
                 joueur->element = CreerElement(TYPE_FRIGOCANNEASUCRE, jeu->canneASucre, CANNE_A_SUCRE, RECETTE_NULL);
-                break;
-            case 6:
-                LibererElement(joueur);
                 break;
             default:
                 break;
@@ -599,14 +626,14 @@ void ChargerImagesCommandes(ImagesCommandes *images) {
     images->imagesIngredients[INGREDIENT_NULL] = NULL;
 }
 
-void InitialiserRecettes(Recette recettes[]) {
+void InitialiserRecettes(Recette recettes[], ComposantsJeu *jeu) {
     recettes[MOJITO].id = MOJITO;
     recettes[MOJITO].ingredients[0] = CITRON_PRESSE;
     recettes[MOJITO].ingredients[1] = CANNE_A_SUCRE;
     recettes[MOJITO].ingredients[2] = MENTHE_DECOUPE;
     recettes[MOJITO].ingredients[3] = LIMONADE;
     recettes[MOJITO].ingredients[4] = INGREDIENT_NULL;
-    recettes[MOJITO].image = al_load_bitmap("../images/mojito.png");
+    recettes[MOJITO].image = jeu->mojito;
     strcpy(recettes[MOJITO].nom, "Mojito");
 
     recettes[CAIPIRINHA].id = CAIPIRINHA;
@@ -615,7 +642,7 @@ void InitialiserRecettes(Recette recettes[]) {
     recettes[CAIPIRINHA].ingredients[2] = INGREDIENT_NULL;
     recettes[CAIPIRINHA].ingredients[3] = INGREDIENT_NULL;
     recettes[CAIPIRINHA].ingredients[4] = INGREDIENT_NULL;
-    recettes[CAIPIRINHA].image = al_load_bitmap("../images/caipirinha.png");
+    recettes[CAIPIRINHA].image = jeu->caipirinha;
     strcpy(recettes[CAIPIRINHA].nom, "Caipirinha");
 
     recettes[HINTZY].id = HINTZY;
@@ -624,7 +651,7 @@ void InitialiserRecettes(Recette recettes[]) {
     recettes[HINTZY].ingredients[2] = CITRON_PRESSE;
     recettes[HINTZY].ingredients[3] = INGREDIENT_NULL;
     recettes[HINTZY].ingredients[4] = INGREDIENT_NULL;
-    recettes[HINTZY].image = al_load_bitmap("../images/hintzy.png");
+    recettes[HINTZY].image = jeu->hintzy;
     strcpy(recettes[CAIPIRINHA].nom, "Hintzy");
 
     /* recettes[PLAZA].id = PLAZA;
@@ -801,7 +828,7 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
     };
     Commande *listeDeCommandes = NULL;
     Recette recette[NOMBRE_RECETTES];
-    InitialiserRecettes(recette);
+    InitialiserRecettes(recette, jeu);
     InitialiserCommandes(&listeDeCommandes, recette);
     ImagesCommandes imagesCommandes;
     ChargerImagesCommandes(&imagesCommandes);
@@ -833,7 +860,6 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
             case ALLEGRO_EVENT_KEY_UP:
                 GestionKeyUP(jeu, joueur1, joueur2, &event, &maj);
                 CombinaisonElementsRecette(jeu, recette, NOMBRE_RECETTES);
-
                 break;
             case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
                 if (jeu->enPause && event.mouse.button == 1) {
@@ -857,6 +883,10 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
                         tempsRestant--;
                         TraiterCommandes(&listeDeCommandes, recette);
                         compteurTickDuTimer = 0;
+                        if (VerifierEtTraiterSortie(&listeDeCommandes, joueur1, jeu) ||
+                            VerifierEtTraiterSortie(&listeDeCommandes, joueur2, jeu)) {
+                            printf("Commande completee et envoye.\n");
+                        }
                     }
                     if (tempsRestant < 0) {
                         fini = true;

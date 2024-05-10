@@ -118,6 +118,9 @@ typedef struct {
     ALLEGRO_BITMAP *frigoLimonade;
     ALLEGRO_BITMAP *frigoMenthe;
     ALLEGRO_BITMAP *frigoCanneASucre;
+    ALLEGRO_BITMAP *mojito;
+    ALLEGRO_BITMAP *caipirinha;
+    ALLEGRO_BITMAP *hintzy;
     ALLEGRO_FONT *police;
     ALLEGRO_FONT *policeTitre;
     ALLEGRO_FONT *policePseudo;
