@@ -15,15 +15,16 @@ void InitialiserAllegro() {
     assert(al_init_acodec_addon());
 }
 
-void ChargerImages(ComposantsJeu *jeu) {
+void ChargerImagesJeu(ComposantsJeu *jeu) {
     jeu->decor = al_load_bitmap("../images/decor1.png");
     jeu->sol1 = al_load_bitmap("../images/SOL 1.png");
     jeu->sol2 = al_load_bitmap("../images/SOL 2.png");
     jeu->planDeTravail = al_load_bitmap("../images/PLAN DE TRAVAIL.png");
-    jeu->plaqueDeCuisson = al_load_bitmap("../images/cuisson(1).png");
-    jeu->poubelle = al_load_bitmap("../images/poubelle.png");
-    jeu->distributeurAssiette = al_load_bitmap("../images/distribassiettes.png");
-    jeu->sortie = al_load_bitmap("../images/sortie(1).png");
+    jeu->plaqueDeCuisson = al_load_bitmap("../images/PLAQUE DE CUISSON (2).png");
+    jeu->stationDeDecoupe = al_load_bitmap("../images/STATION DE DECOUPE (2).png");
+    jeu->presseAgrume = al_load_bitmap("../images/PRESSE-AGRUME (1).png");
+    jeu->poubelle = al_load_bitmap("../images/POUBELLE.png");
+    jeu->sortie = al_load_bitmap("../images/SORTIE.png");
     jeu->ImageMenu = al_load_bitmap("../images/fondmenuV2.jpg");
     jeu->ImageFondDeJeu = al_load_bitmap("../images/ImageFondDeJeu.png");
     jeu->Z = al_load_bitmap("../images/Z.png");
@@ -39,17 +40,14 @@ void ChargerImages(ComposantsJeu *jeu) {
     jeu->FlecheBas = al_load_bitmap("../images/DOWN.png");
     jeu->FlecheGauche = al_load_bitmap("../images/LEFT.png");
     jeu->FlecheDroite = al_load_bitmap("../images/RIGHT.png");
-    jeu->cafe = al_load_bitmap("../images/grain de café.png");
-    jeu->lait = al_load_bitmap("../images/brique de lait.png");
-    jeu->jusOrange = al_load_bitmap("../images/jus d'orange .png");
-    jeu->jusRaisin = al_load_bitmap("../images/jus de raisin .png");
-    jeu->Machinecafe = al_load_bitmap("../images/machine a café .png");
-    jeu->sacCafe = al_load_bitmap("../images/sac de café .png");
-    jeu->tasseCafe = al_load_bitmap("../images/tasse de café .png");
-    jeu->tasseCafeLait = al_load_bitmap("../images/tassecafelait.png");
-    jeu->tasseVide = al_load_bitmap("../images/tasse vide .png");
-    jeu->jusKiwi = al_load_bitmap("../images/jusdekiwi.png");
     jeu->sablier = al_load_bitmap("../images/MACARON TEMPS (1).png");
+    jeu->tomate = al_load_bitmap("../images/tomate(1).png");
+    jeu->citron = al_load_bitmap("../images/CITRON.png");
+    jeu->menthe = al_load_bitmap("../images/MENTHE.png");
+    jeu->limonade = al_load_bitmap("../images/LIMONADE.png");
+    jeu->frigoCitron = al_load_bitmap("../images/FRIGO _ CITRON (1).png");
+    jeu->frigoLimonade = al_load_bitmap("../images/FRIGO _ LIMONADE (1).png");
+    jeu->frigoMenthe = al_load_bitmap("../images/FRIGO _ MENTHE (1).png");
 }
 
 void ChargerPolices(ComposantsJeu *jeu) {
@@ -64,8 +62,9 @@ void InitialiserSon(Sons *son) {
         fprintf(stderr, "Erreur lors de la reservation des echantillons.\n");
     }
     son->mixer = al_get_default_mixer();
-    son->musiqueDeFondDeMenu = al_load_sample("../soundeffect/MusiqueFondDeMenu.wav");
+    son->musiqueDeFondDeMenu = al_load_sample("../soundeffect/Menu.wav");
     son->sonBoutonClique = al_load_sample("../soundeffect/click-sound.wav");
+    son->musiqueDeFondDeJeu = al_load_sample("../soundeffect/Jeu.wav");
 
     son->instanceDeMusqiue = al_create_sample_instance(son->musiqueDeFondDeMenu);
     al_set_sample_instance_playmode(son->instanceDeMusqiue, ALLEGRO_PLAYMODE_LOOP);
@@ -77,6 +76,11 @@ void InitialiserSon(Sons *son) {
     al_set_sample_instance_playmode(son->instanceEffetsSonores, ALLEGRO_PLAYMODE_ONCE);
     al_set_sample_instance_gain(son->instanceEffetsSonores, 0.5);
     al_attach_sample_instance_to_mixer(son->instanceEffetsSonores, son->mixer);
+
+    son->instanceMusiqueJeu = al_create_sample_instance(son->musiqueDeFondDeJeu);
+    al_set_sample_instance_playmode(son->instanceMusiqueJeu, ALLEGRO_PLAYMODE_LOOP);
+    al_set_sample_instance_gain(son->instanceMusiqueJeu, 0.5);
+    al_attach_sample_instance_to_mixer(son->instanceMusiqueJeu, son->mixer);
 }
 
 void PremierAffichageFenetre(ComposantsJeu *jeu) {
@@ -122,10 +126,6 @@ void LibererMemoire(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
     if (jeu->poubelle != NULL) {
         al_destroy_bitmap(jeu->poubelle);
         jeu->poubelle = NULL;
-    }
-    if (jeu->distributeurAssiette != NULL) {
-        al_destroy_bitmap(jeu->distributeurAssiette);
-        jeu->distributeurAssiette = NULL;
     }
     if (jeu->sortie != NULL) {
         al_destroy_bitmap(jeu->sortie);
@@ -195,6 +195,10 @@ void LibererMemoire(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
         al_destroy_bitmap(jeu->sablier);
         jeu->sablier = NULL;
     }
+    if (jeu->frigoCitron != NULL) {
+        al_destroy_bitmap(jeu->frigoCitron);
+        jeu->frigoCitron = NULL;
+    }
 
     // Libération des polices
     if (jeu->police != NULL) {
@@ -212,46 +216,6 @@ void LibererMemoire(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
     if (jeu->policeRegle != NULL) {
         al_destroy_font(jeu->policeRegle);
         jeu->policeRegle = NULL;
-    }
-    if (jeu->cafe != NULL) {
-        al_destroy_bitmap(jeu->cafe);
-        jeu->cafe = NULL;
-    }
-    if (jeu->lait != NULL) {
-        al_destroy_bitmap(jeu->lait);
-        jeu->lait = NULL;
-    }
-    if (jeu->jusOrange != NULL) {
-        al_destroy_bitmap(jeu->jusOrange);
-        jeu->jusOrange = NULL;
-    }
-    if (jeu->jusRaisin != NULL) {
-        al_destroy_bitmap(jeu->jusRaisin);
-        jeu->jusRaisin = NULL;
-    }
-    if (jeu->Machinecafe != NULL) {
-        al_destroy_bitmap(jeu->Machinecafe);
-        jeu->Machinecafe = NULL;
-    }
-    if (jeu->sacCafe != NULL) {
-        al_destroy_bitmap(jeu->sacCafe);
-        jeu->sacCafe = NULL;
-    }
-    if (jeu->tasseCafe != NULL) {
-        al_destroy_bitmap(jeu->tasseCafe);
-        jeu->tasseCafe = NULL;
-    }
-    if (jeu->tasseCafeLait != NULL) {
-        al_destroy_bitmap(jeu->tasseCafeLait);
-        jeu->tasseCafeLait = NULL;
-    }
-    if (jeu->tasseVide != NULL) {
-        al_destroy_bitmap(jeu->tasseVide);
-        jeu->tasseVide = NULL;
-    }
-    if (jeu->jusKiwi != NULL) {
-        al_destroy_bitmap(jeu->jusKiwi);
-        jeu->jusKiwi = NULL;
     }
 
 
@@ -285,7 +249,7 @@ int main(void) {
     ALLEGRO_EVENT event;
 
     InitialiserFenetreFileTimer(&jeu);
-    ChargerImages(&jeu);
+    ChargerImagesJeu(&jeu);
     ChargerPolices(&jeu);
     InitialiserJoueur(&joueur1, "../images/PERSO 1.png");
     InitialiserJoueur(&joueur2, "../images/PERSO 2.png");

@@ -11,7 +11,14 @@
 #include "../jeu+joueur/jeu+joueur.h"
 
 
+#include "../constantes.h"
+#include "../jeu/jeu.h"
+#include "../jeu+joueur/jeu+joueur.h"
+
+
 void InitialiserJoueur(Joueur *joueur, const char *cheminVersImage);
+
+Element* TrouverElementInteractif(ComposantsJeu *jeu, int x, int y);
 
 void ChoisirPseudos(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, bool *lancerJeu, Sons *sons);
 

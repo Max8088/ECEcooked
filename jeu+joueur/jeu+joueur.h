@@ -1,6 +1,3 @@
-//
-// Created by pierr on 25/04/2024.
-//
 
 #ifndef ESCOOKED_JEU_JOUEUR_H
 #define ESCOOKED_JEU_JOUEUR_H
@@ -14,26 +11,70 @@ typedef enum {
     NIVEAU_3
 } Niveau;
 
+typedef enum {
+    CITRON_PRESSE,
+    ALCOOL_CUIT,
+    MENTHE_DECOUPE,
+    LIMONADE,
+    INGREDIENT_NULL
+} Ingredients;
+
 typedef struct {
     int x, y, width, height;
     char *texte;
 } BoutonJeu;
 
 typedef struct {
+    int x, y;
+    ALLEGRO_BITMAP *image;
+    //Ingredients id;
+    bool estVisible;
+} ElementsLaches;
+
+typedef struct {
+    int type, x, y;
+    ALLEGRO_BITMAP *image;
+    //Ingredients id;
+} Element;
+
+typedef struct {
     char pseudo[13];
     ALLEGRO_BITMAP *image;
     int score, x, y, vx, vy;
     float angle;
+    Element *element;
 } Joueur;
 
-typedef struct {
-    int type, x, y;
-} Element;
+typedef enum {
+    MOJITO,
+    CAIPIRINHA,
+    HINTZY,
+    PLAZA
+} RecetteID;
 
-typedef struct{
-    float x,y;
-    bool prendre ;
-}Ingredient;
+typedef struct {
+    RecetteID id;
+    int ingredients[5];
+    ALLEGRO_BITMAP *image;
+    char nom[20];
+} Recette;
+
+typedef struct {
+    ALLEGRO_BITMAP *imagesVerres[10];
+    ALLEGRO_BITMAP *imagesIngredients[5];
+    ALLEGRO_BITMAP *imageFondCommande;
+} ImagesCommandes;
+
+typedef struct Commande {
+    Recette *recette;
+    int *ingredients;
+    int nombre_ingredients;
+    int timer;
+    int timerInitial;
+    int score;
+    bool estCompletee;
+    struct Commande *suivant;
+} Commande;
 
 typedef struct {
     ALLEGRO_DISPLAY *fenetre;
@@ -59,22 +100,19 @@ typedef struct {
     ALLEGRO_BITMAP *sol1;
     ALLEGRO_BITMAP *sol2;
     ALLEGRO_BITMAP *plaqueDeCuisson;
-    ALLEGRO_BITMAP *planDeDecoupe;
+    ALLEGRO_BITMAP *stationDeDecoupe;
     ALLEGRO_BITMAP *planDeTravail;
-    ALLEGRO_BITMAP *distributeurAssiette;
+    ALLEGRO_BITMAP *presseAgrume;
     ALLEGRO_BITMAP *poubelle;
     ALLEGRO_BITMAP *sortie;
-    ALLEGRO_BITMAP*cafe;
-    ALLEGRO_BITMAP*lait;
-    ALLEGRO_BITMAP*jusOrange;
-    ALLEGRO_BITMAP *jusRaisin;
-    ALLEGRO_BITMAP*Machinecafe;
-    ALLEGRO_BITMAP*sacCafe;
-    ALLEGRO_BITMAP*tasseCafe;
-    ALLEGRO_BITMAP*tasseCafeLait;
-    ALLEGRO_BITMAP*tasseVide;
-    ALLEGRO_BITMAP *jusKiwi;
     ALLEGRO_BITMAP *sablier;
+    ALLEGRO_BITMAP *tomate;
+    ALLEGRO_BITMAP *citron;
+    ALLEGRO_BITMAP *menthe;
+    ALLEGRO_BITMAP *limonade;
+    ALLEGRO_BITMAP *frigoCitron;
+    ALLEGRO_BITMAP *frigoLimonade;
+    ALLEGRO_BITMAP *frigoMenthe;
     ALLEGRO_FONT *police;
     ALLEGRO_FONT *policeTitre;
     ALLEGRO_FONT *policePseudo;
@@ -82,12 +120,12 @@ typedef struct {
     ALLEGRO_SAMPLE *musiqueFond;
     ALLEGRO_SAMPLE_INSTANCE *instanceMusique;
     ALLEGRO_SAMPLE *sonBoutonClique;
-    Ingredient*ingredient;
     Element *element;
     int nbElement;
+    ElementsLaches elementsLaches[100];
+    int nbElementsLaches;
     bool enPause;
 } ComposantsJeu;
-
 
 
 #endif //ESCOOKED_JEU_JOUEUR_H

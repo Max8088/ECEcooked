@@ -1,12 +1,10 @@
-//
-// Created by pierr on 03/04/2024.
-//
 
 #ifndef ESCOOKED_CONSTANTES_H
 #define ESCOOKED_CONSTANTES_H
 
 #include <stdio.h>
 #include <time.h>
+#include "math.h"
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
@@ -30,6 +28,7 @@ typedef struct {
     ALLEGRO_SAMPLE *musiqueDeFondDeJeu;
     ALLEGRO_SAMPLE_INSTANCE *instanceDeMusqiue;
     ALLEGRO_SAMPLE_INSTANCE *instanceEffetsSonores;
+    ALLEGRO_SAMPLE_INSTANCE *instanceMusiqueJeu;
     ALLEGRO_SAMPLE *sonBoutonClique;
     ALLEGRO_MIXER *mixer;
 } Sons;

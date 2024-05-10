@@ -184,6 +184,8 @@ void MenuVolume(Sons ***son, ComposantsJeu ***jeu) {
                     if (nouvVolumeMusique > curseurVolumeMusique.max) { nouvVolumeMusique = curseurVolumeMusique.max; }
                     curseurVolumeMusique.value = nouvVolumeMusique;
                     al_set_sample_instance_gain((**son)->instanceDeMusqiue, curseurVolumeMusique.value);
+                    al_set_sample_instance_gain((**son)->instanceMusiqueJeu, curseurVolumeMusique.value);
+
                 } else if (draggingEffetsSonores) {
                     float dx = mouseX - dernierX;
                     dernierX = mouseX;
@@ -220,6 +222,18 @@ void ArreterMusiqueFondDeMenu(Sons *son) {
 void JouerMusiqueFondDeMenu(Sons *son) {
     if (son->instanceDeMusqiue != NULL) {
         al_play_sample_instance(son->instanceDeMusqiue);
+    }
+}
+
+void JouerMusiqueJeu(Sons *son) {
+    if (son->instanceMusiqueJeu != NULL) {
+        al_play_sample_instance(son->instanceMusiqueJeu);
+    }
+}
+
+void ArreterMusiqueJeu(Sons *son) {
+    if (son->instanceMusiqueJeu != NULL) {
+        al_stop_sample_instance(son->instanceMusiqueJeu);
     }
 }
 
@@ -384,7 +398,7 @@ void AfficherControls(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
                     countDown--;
                     compteurTickDuTimer = 0;
                 }
-                if (countDown < 0) {
+                if (countDown <= 0) {
                     fini = true;
                 }
                 al_clear_to_color(NOIR);
@@ -579,6 +593,7 @@ void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son) {
                             SonBoutonClique(son);
                             do {
                                 ChoisirNiveau(jeu, &niveau, &niveauChoisi);
+                                SonBoutonClique(son);
                                 if (!niveauChoisi) { break; }
                                 ChoisirPseudos(jeu, joueur1, joueur2, &lancerJeu, son);
                             } while (!lancerJeu && niveauChoisi);
@@ -586,7 +601,9 @@ void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son) {
                             if (lancerJeu) {
                                 ArreterMusiqueFondDeMenu(son);
                                 AfficherControls(jeu, joueur1, joueur2);
+                                JouerMusiqueJeu(son);
                                 lancerNiveau(jeu, joueur1, joueur2, niveau);
+                                ArreterMusiqueJeu(son);
                                 JouerMusiqueFondDeMenu(son);
                                 lancerJeu = false;
                             }

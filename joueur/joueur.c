@@ -7,15 +7,11 @@
 void InitialiserJoueur(Joueur *joueur, const char *cheminVersImage) {
     joueur->vx = 0;
     joueur->vy = 0;
-    joueur->angle = 0;
+    joueur->angle = 3.0 * M_PI_2 ;
     joueur->image = al_load_bitmap(cheminVersImage);
     strcpy(joueur->pseudo, "");
+    joueur->element = NULL;
     assert(joueur->image);
-}
-
-void MAJpositionobjettenu(Joueur *joueur, Ingredient *ing) {
-    ing->x = joueur->x;
-    ing->y = joueur->y;
 }
 
 void ChoisirPseudos(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, bool *lancerJeu, Sons *sons) {
@@ -77,6 +73,15 @@ void ChoisirPseudos(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, bool *
                         joueur2_saisi = true;
                     }
                 }
+                /*
+                if (joueur1_saisi && joueur2_saisi) {
+                    if (event.keyboard.keycode == ALLEGRO_KEY_ENTER) {
+                        *lancerJeu = true;
+                        SonBoutonClique(sons);
+                        fini = true;
+
+                    }
+                }*/
                 break;
             case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
                 for (int i = 0; i < nbBoutons; ++i) {
