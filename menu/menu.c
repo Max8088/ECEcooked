@@ -264,6 +264,7 @@ void MenuRules(ComposantsJeu ***jeu, Sons **son) {
     al_draw_text((**jeu)->policeRegle, NOIR, 290, 560, ALLEGRO_ALIGN_LEFT, "imparti. Le décor oblige les joueurs à  ");
     al_draw_text((**jeu)->policeRegle, NOIR, 290, 600, ALLEGRO_ALIGN_LEFT, "communiquer. ");
 
+
     al_flip_display();
 
     while (!fini) {
