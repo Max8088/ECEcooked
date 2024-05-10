@@ -15,7 +15,7 @@ typedef enum {
     CITRON_PRESSE,
     MENTHE_DECOUPE,
     LIMONADE,
-    ALCOOL_CUIT,
+    CANNE_A_SUCRE,
     INGREDIENT_NULL
 } Ingredients;
 
@@ -113,9 +113,11 @@ typedef struct {
     ALLEGRO_BITMAP *citron;
     ALLEGRO_BITMAP *menthe;
     ALLEGRO_BITMAP *limonade;
+    ALLEGRO_BITMAP *canneASucre;
     ALLEGRO_BITMAP *frigoCitron;
     ALLEGRO_BITMAP *frigoLimonade;
     ALLEGRO_BITMAP *frigoMenthe;
+    ALLEGRO_BITMAP *frigoCanneASucre;
     ALLEGRO_FONT *police;
     ALLEGRO_FONT *policeTitre;
     ALLEGRO_FONT *policePseudo;

@@ -99,6 +99,9 @@ void AfficherFichierTxt(const ComposantsJeu *jeu) {
             case 10:
                 bitmap = jeu->presseAgrume;
                 break;
+            case 11:
+                bitmap = jeu->frigoCanneASucre;
+                break;
         }
         if (bitmap) {
             al_draw_bitmap(bitmap, jeu->element[i].x, jeu->element[i].y, 0);
@@ -116,7 +119,8 @@ void DessinerElementsLaches(ComposantsJeu *jeu) {
 
     if (jeu->nbElementsLaches > 0) {
         for (int i = 0; i < jeu->nbElementsLaches; i++) {
-            printf("element %d : x=%d, y=%d, visible=%d\n", i, jeu->elementsLaches[i].x, jeu->elementsLaches[i].y, jeu->elementsLaches[i].estVisible);
+            printf("element %d : x=%d, y=%d, visible=%d\n", i, jeu->elementsLaches[i].x, jeu->elementsLaches[i].y,
+                   jeu->elementsLaches[i].estVisible);
             if (jeu->elementsLaches[i].estVisible) {
                 al_draw_bitmap(jeu->elementsLaches[i].image, jeu->elementsLaches[i].x, jeu->elementsLaches[i].y, 0);
             }
@@ -238,8 +242,10 @@ int VerifierCoffreDevant(ComposantsJeu *jeu, Joueur *joueur) {
     float yCurseur = cy + sin(joueur->angle) * DISTANCEINTERACTION;
 
     for (int i = 0; i < jeu->nbElement; ++i) {
-        if ((jeu->element[i].type == 2 || jeu->element[i].type == 4 || jeu->element[i].type == 5 ||
-             jeu->element[i].type == 6) && xCurseur >= jeu->element[i].x &&
+        if ((jeu->element[i].type == TYPE_FRIGOCITRON || jeu->element[i].type == TYPE_FRIGOMENTHE ||
+             jeu->element[i].type == TYPE_FRIGOLIMONADE ||
+             jeu->element[i].type == TYPE_POUBELLE || jeu->element[i].type == TYPE_FRIGOCANNEASUCRE) &&
+            xCurseur >= jeu->element[i].x &&
             xCurseur <= jeu->element[i].x + TAILLE_CASE &&
             yCurseur >= jeu->element[i].y && yCurseur <= jeu->element[i].y + TAILLE_CASE) {
             printf("Interaction avec un coffre de type %d\n", jeu->element[i].type);
@@ -263,6 +269,9 @@ void PrendreDansLeCoffre(Joueur *joueur, ComposantsJeu *jeu) {
                 break;
             case 5:
                 joueur->element = CreerElement(TYPE_FRIGOLIMONADE, jeu->limonade, LIMONADE, RECETTE_NULL);
+                break;
+            case 11:
+                joueur->element = CreerElement(TYPE_FRIGOCANNEASUCRE, jeu->canneASucre, CANNE_A_SUCRE, RECETTE_NULL);
                 break;
             case 6:
                 LibererElement(joueur);
@@ -291,7 +300,8 @@ void CombinaisonElementsRecette(ComposantsJeu *jeu, Recette recettes[], int nbRe
             int nbCombinables = 0;
 
             for (int j = 0; j < jeu->nbElementsLaches; j++) {
-                if (jeu->elementsLaches[j].estVisible && !combine[j] && sontProches(jeu->elementsLaches[i], jeu->elementsLaches[j])) {
+                if (jeu->elementsLaches[j].estVisible && !combine[j] &&
+                    sontProches(jeu->elementsLaches[i], jeu->elementsLaches[j])) {
                     for (int ing = 0; ing < 5; ing++) {
                         if (recette->ingredients[ing] == jeu->elementsLaches[j].ingredientID && count[ing] < 1) {
                             count[ing]++;
@@ -592,7 +602,7 @@ void ChargerImagesCommandes(ImagesCommandes *images) {
 void InitialiserRecettes(Recette recettes[]) {
     recettes[MOJITO].id = MOJITO;
     recettes[MOJITO].ingredients[0] = CITRON_PRESSE;
-    recettes[MOJITO].ingredients[1] = ALCOOL_CUIT;
+    recettes[MOJITO].ingredients[1] = CANNE_A_SUCRE;
     recettes[MOJITO].ingredients[2] = MENTHE_DECOUPE;
     recettes[MOJITO].ingredients[3] = LIMONADE;
     recettes[MOJITO].ingredients[4] = INGREDIENT_NULL;
@@ -601,7 +611,7 @@ void InitialiserRecettes(Recette recettes[]) {
 
     recettes[CAIPIRINHA].id = CAIPIRINHA;
     recettes[CAIPIRINHA].ingredients[0] = CITRON_PRESSE;
-    recettes[CAIPIRINHA].ingredients[1] = ALCOOL_CUIT;
+    recettes[CAIPIRINHA].ingredients[1] = CANNE_A_SUCRE;
     recettes[CAIPIRINHA].ingredients[2] = INGREDIENT_NULL;
     recettes[CAIPIRINHA].ingredients[3] = INGREDIENT_NULL;
     recettes[CAIPIRINHA].ingredients[4] = INGREDIENT_NULL;
@@ -617,12 +627,12 @@ void InitialiserRecettes(Recette recettes[]) {
     recettes[HINTZY].image = al_load_bitmap("../images/hintzy.png");
     strcpy(recettes[CAIPIRINHA].nom, "Hintzy");
 
-    recettes[PLAZA].id = PLAZA;
-    recettes[PLAZA].ingredients[0] = CITRON_PRESSE;
-    recettes[PLAZA].ingredients[1] = LIMONADE;
-    recettes[PLAZA].ingredients[2] = INGREDIENT_NULL;
-    recettes[PLAZA].ingredients[3] = INGREDIENT_NULL;
-    recettes[PLAZA].ingredients[4] = INGREDIENT_NULL;
+    /* recettes[PLAZA].id = PLAZA;
+     recettes[PLAZA].ingredients[0] = CITRON_PRESSE;
+     recettes[PLAZA].ingredients[1] = LIMONADE;
+     recettes[PLAZA].ingredients[2] = INGREDIENT_NULL;
+     recettes[PLAZA].ingredients[3] = INGREDIENT_NULL;
+     recettes[PLAZA].ingredients[4] = INGREDIENT_NULL;*/
 }
 
 void InitialiserCommandes(Commande **listeDeCommandes, Recette recettes[]) {
@@ -631,8 +641,8 @@ void InitialiserCommandes(Commande **listeDeCommandes, Recette recettes[]) {
 
     premiereCommande->recette = &recettes[MOJITO];
     premiereCommande->nombre_ingredients = 4;
-    premiereCommande->timer = 10;
-    premiereCommande->timerInitial = 10;
+    premiereCommande->timer = 45;
+    premiereCommande->timerInitial = 45;
     premiereCommande->score = 150;
     premiereCommande->estCompletee = false;
     premiereCommande->suivant = NULL;
@@ -642,8 +652,8 @@ void InitialiserCommandes(Commande **listeDeCommandes, Recette recettes[]) {
 
     deuxiemeCommande->recette = &recettes[CAIPIRINHA];
     deuxiemeCommande->nombre_ingredients = 2;
-    deuxiemeCommande->timer = 15;
-    deuxiemeCommande->timerInitial = 15;
+    deuxiemeCommande->timer = 35;
+    deuxiemeCommande->timerInitial = 35;
     deuxiemeCommande->score = 120;
     deuxiemeCommande->estCompletee = false;
     deuxiemeCommande->suivant = NULL;
@@ -653,8 +663,8 @@ void InitialiserCommandes(Commande **listeDeCommandes, Recette recettes[]) {
 
     troisiemeCommande->recette = &recettes[HINTZY];
     troisiemeCommande->nombre_ingredients = 3; // Supposons qu'il y a 3 ingrédients pour simplifier
-    troisiemeCommande->timer = 20;
-    troisiemeCommande->timerInitial = 20;
+    troisiemeCommande->timer = 45;
+    troisiemeCommande->timerInitial = 45;
     troisiemeCommande->score = 130;
     troisiemeCommande->estCompletee = false;
     troisiemeCommande->suivant = NULL;
@@ -694,7 +704,7 @@ Commande *CreerCommandeAleatoire(Recette recettes[]) {
     }
 
     nouvelle->nombre_ingredients = count;
-    nouvelle->timer = (rand() % (20 - 10 + 1)) + 10;
+    nouvelle->timer = (rand() % (40 - 30 + 1)) + 10;
     nouvelle->timerInitial = nouvelle->timer;
     nouvelle->score = 10 + rand() % 31;
     nouvelle->estCompletee = false;
