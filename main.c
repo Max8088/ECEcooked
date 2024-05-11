@@ -50,6 +50,9 @@ void ChargerImagesJeu(ComposantsJeu *jeu) {
     jeu->frigoLimonade = al_load_bitmap("../images/FRIGO _ LIMONADE (1).png");
     jeu->frigoMenthe = al_load_bitmap("../images/FRIGO _ MENTHE (1).png");
     jeu->frigoCanneASucre = al_load_bitmap("../images/FRIGO _ CANNE A SUCRE (1).png");
+    jeu->mojito = al_load_bitmap("../images/mojito.png");
+    jeu->caipirinha = al_load_bitmap("../images/caipirinha.png");
+    jeu->hintzy = al_load_bitmap("../images/hintzy.png");
 }
 
 void ChargerPolices(ComposantsJeu *jeu) {
