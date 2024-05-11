@@ -6,7 +6,7 @@ void InitialiserFenetreFileTimer(ComposantsJeu *jeu) {
     jeu->fenetre = al_create_display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
     jeu->file = al_create_event_queue();
     jeu->timer = al_create_timer(1.0 / 60.0);
-    jeu->DureePartie = 300;
+    jeu->DureePartie = 30;
     al_register_event_source(jeu->file, al_get_display_event_source(jeu->fenetre));
     al_register_event_source(jeu->file, al_get_keyboard_event_source());
     al_register_event_source(jeu->file, al_get_mouse_event_source());
@@ -36,14 +36,47 @@ void DessinerMenuPause(ComposantsJeu *jeu, BoutonJeu *bouton) {
         DessinerBoutonMenuPause(bouton[i], jeu, al_map_rgba(139, 71, 3, 255), NOIR);
     }
 }
-void DessinerCadreScore(int score,ComposantsJeu *jeu ) {
+
+void DessinerScoresFin(ComposantsJeu *jeu, int scoreJoueur1, int scoreJoueur2, Joueur *joueur1, Joueur *joueur2) {
+    ALLEGRO_EVENT event;
+    bool fini = false;
+    int countDown = 7, compteurTickDuTimer = 0;
+    int scoreEquipe = scoreJoueur1 + scoreJoueur2;
+
     al_draw_filled_rectangle(DISPLAY_WIDTH / 4, DISPLAY_HEIGHT / 4, 3 * DISPLAY_WIDTH / 4, 3 * DISPLAY_HEIGHT / 4,
                              al_map_rgba(0, 0, 0, 200));
-
-    char scoreText[20];
-    sprintf(scoreText, "Score: %d", score);
-    al_draw_text(jeu->police, BLANC, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, ALLEGRO_ALIGN_CENTER, scoreText);
+    char text[100];
+    al_draw_text(jeu->policeTitre, BLANC, DISPLAY_WIDTH / 2, 200, ALLEGRO_ALIGN_CENTER, "SCORES");
+    sprintf(text, "%s : %d", joueur1->pseudo, scoreJoueur1);
+    al_draw_text(jeu->police, BLANC, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2 - 30,
+                 ALLEGRO_ALIGN_CENTER, text);
+    sprintf(text, "%s : %d", joueur2->pseudo, scoreJoueur2);
+    al_draw_text(jeu->police, BLANC, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2 + 30,
+                 ALLEGRO_ALIGN_CENTER, text);
+    sprintf(text, "Team : %d", scoreEquipe);
+    al_draw_text(jeu->police, BLANC, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2 + 90,
+                 ALLEGRO_ALIGN_CENTER, text);
+    al_flip_display();
+    while (!fini) {
+        al_wait_for_event(jeu->file, &event);
+        switch (event.type) {
+            case ALLEGRO_EVENT_DISPLAY_CLOSE:
+                fini = true;
+                break;
+            case ALLEGRO_EVENT_TIMER:
+                if (++compteurTickDuTimer >= 60) {
+                    countDown--;
+                    compteurTickDuTimer = 0;
+                }
+                if (countDown <= 0) {
+                    fini = true;
+                }
+                break;
+        }
+    }
 }
+
+
 void ChargerFichierTxt(ComposantsJeu *jeu) {
     FILE *fichier = fopen("../images/FichierTexte", "r");
     if (!fichier) {
@@ -122,11 +155,11 @@ void InitialiserComposantsJeu(ComposantsJeu *jeu) {
 }
 
 void DessinerElementsLaches(ComposantsJeu *jeu) {
-    //printf("Nombre d'elements a dessiner: %d\n", jeu->nbElementsLaches);
+    printf("Nombre d'elements a dessiner: %d\n", jeu->nbElementsLaches);
 
     if (jeu->nbElementsLaches > 0) {
         for (int i = 0; i < jeu->nbElementsLaches; i++) {
-            //printf("element %d : x=%d, y=%d, visible=%d\n", i, jeu->elementsLaches[i].x, jeu->elementsLaches[i].y, jeu->elementsLaches[i].estVisible);
+            printf("element %d : x=%d, y=%d, visible=%d\n", i, jeu->elementsLaches[i].x, jeu->elementsLaches[i].y, jeu->elementsLaches[i].estVisible);
             if (jeu->elementsLaches[i].estVisible) {
                 al_draw_bitmap(jeu->elementsLaches[i].image, jeu->elementsLaches[i].x, jeu->elementsLaches[i].y, 0);
             }
@@ -206,7 +239,6 @@ bool VerifierEtTraiterSortie(Commande **listeDeCommandes, Joueur *joueur, Compos
     }
     return false;
 }
-
 
 void centrerObjetSurPlan(Element *element, ComposantsJeu *jeu) {
     int posX, posY;
@@ -568,6 +600,7 @@ void GestionKeyDown(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, ALLEGR
         }
     }
 }
+
 void GestionKeyUP(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool *maj) {
     if (!jeu->enPause) {
 
@@ -825,7 +858,7 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
     ALLEGRO_EVENT event;
     bool fini = false, maj = false;
     int tempsRestant = jeu->DureePartie;
-    int score = 0;
+    int scoreEquipe = 0;
     int compteurTickDuTimer = 0;
     BoutonJeu boutons[] = {
             {DISPLAY_WIDTH / 3, DISPLAY_HEIGHT / 4 + DISPLAY_HEIGHT / 12,                           DISPLAY_WIDTH / 3,
@@ -890,17 +923,16 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
                         tempsRestant--;
                         TraiterCommandes(&listeDeCommandes, recette);
                         compteurTickDuTimer = 0;
-                        if (VerifierEtTraiterSortie(&listeDeCommandes, joueur1, jeu) ||
-                            VerifierEtTraiterSortie(&listeDeCommandes, joueur2, jeu)) {
-                            printf("Commande completee et envoye.\n");
-                        }
                     }
-                    if (tempsRestant < 0) {
-                        score = tempsRestant * 100;
-                        DessinerCadreScore(score,jeu);
+                    if (tempsRestant == 0) {
                         fini = true;
+                        maj = true;
                     }
                     MAJPosJoueurs(joueur1, joueur2, jeu, &maj);
+                    if (VerifierEtTraiterSortie(&listeDeCommandes, joueur1, jeu) ||
+                        VerifierEtTraiterSortie(&listeDeCommandes, joueur2, jeu)) {
+                        printf("Commande completee et envoye.\n");
+                    }
                 }
                 if (maj || compteurTickDuTimer == 0) {
                     al_clear_to_color(NOIR);
@@ -914,7 +946,9 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
                     if (jeu->enPause) {
                         DessinerMenuPause(jeu, boutons);
                     }
-
+                    if (fini) {
+                        DessinerScoresFin(jeu, joueur1->score, joueur2->score, joueur1, joueur2);
+                    }
                     al_flip_display();
                     maj = false;
                 }

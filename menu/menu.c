@@ -593,6 +593,8 @@ void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son) {
                         if (!(strcmp(boutons[i].texte, "Play"))) {
                             SonBoutonClique(son);
                             do {
+                                strcpy(joueur1->pseudo, "");
+                                strcpy(joueur2->pseudo, "");
                                 ChoisirNiveau(jeu, &niveau, &niveauChoisi);
                                 SonBoutonClique(son);
                                 if (!niveauChoisi) { break; }
@@ -607,6 +609,7 @@ void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son) {
                                 ArreterMusiqueJeu(son);
                                 JouerMusiqueFondDeMenu(son);
                                 lancerJeu = false;
+                                niveauChoisi = false;
                             }
                         }
                         if (!(strcmp(boutons[i].texte, "Options"))) {

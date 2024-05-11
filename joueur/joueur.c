@@ -8,6 +8,7 @@ void InitialiserJoueur(Joueur *joueur, const char *cheminVersImage) {
     joueur->vx = 0;
     joueur->vy = 0;
     joueur->angle = 3.0 * M_PI_2 ;
+    joueur->score = 0;
     joueur->image = al_load_bitmap(cheminVersImage);
     strcpy(joueur->pseudo, "");
     joueur->element = NULL;
@@ -87,10 +88,14 @@ void ChoisirPseudos(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, bool *
                 for (int i = 0; i < nbBoutons; ++i) {
                     if (EstDansLeBouton(boutons[i], event.mouse.x, event.mouse.y)) {
                         if (!(strcmp(boutons[i].texte, "<-"))) {
+                            strcpy(joueur1->pseudo, "");
+                            strcpy(joueur2->pseudo, "");
                             SonBoutonClique(sons);
                             fini = true;
                         }
                         if (!(strcmp(boutons[i].texte, "->")) && joueur1_saisi && joueur2_saisi) {
+                            joueur1_saisi = false;
+                            joueur2_saisi = false;
                             *lancerJeu = true;
                             SonBoutonClique(sons);
                             fini = true;
