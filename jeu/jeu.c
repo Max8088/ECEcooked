@@ -222,15 +222,16 @@ bool VerifierEtTraiterSortie(Commande **listeDeCommandes, Joueur *joueur, Compos
         return false;
     }
 
-    // Utilisation de la fonction EstSurSortie pour vérifier si le joueur est sur la sortie
     if (EstSurSortie(jeu, joueur->element->x, joueur->element->y)) {
         Commande *current = *listeDeCommandes;
         while (current) {
             if (current->recette->id == joueur->element->recetteID && !current->estCompletee) {
-                // Marquer la commande comme complétée
+
+                float tempsRestantRatio = (float)current->timer / (float)current->timerInitial;
+                int scoreAdditionnel = (int)(current->score * tempsRestantRatio);
                 current->estCompletee = true;
-                joueur->score += current->score; // Ajouter des points au score du joueur
-                free(joueur->element); // Libérer l'élément détenu par le joueur
+                joueur->score += scoreAdditionnel;
+                free(joueur->element);
                 joueur->element = NULL;
                 return true;
             }
@@ -709,7 +710,7 @@ void InitialiserCommandes(Commande **listeDeCommandes, Recette recettes[]) {
     premiereCommande->nombre_ingredients = 4;
     premiereCommande->timer = 45;
     premiereCommande->timerInitial = 45;
-    premiereCommande->score = 150;
+    premiereCommande->score = 20;
     premiereCommande->estCompletee = false;
     premiereCommande->suivant = NULL;
 
@@ -720,7 +721,7 @@ void InitialiserCommandes(Commande **listeDeCommandes, Recette recettes[]) {
     deuxiemeCommande->nombre_ingredients = 2;
     deuxiemeCommande->timer = 35;
     deuxiemeCommande->timerInitial = 35;
-    deuxiemeCommande->score = 120;
+    deuxiemeCommande->score = 15;
     deuxiemeCommande->estCompletee = false;
     deuxiemeCommande->suivant = NULL;
 
@@ -731,7 +732,7 @@ void InitialiserCommandes(Commande **listeDeCommandes, Recette recettes[]) {
     troisiemeCommande->nombre_ingredients = 3; // Supposons qu'il y a 3 ingrédients pour simplifier
     troisiemeCommande->timer = 45;
     troisiemeCommande->timerInitial = 45;
-    troisiemeCommande->score = 130;
+    troisiemeCommande->score = 25;
     troisiemeCommande->estCompletee = false;
     troisiemeCommande->suivant = NULL;
 
