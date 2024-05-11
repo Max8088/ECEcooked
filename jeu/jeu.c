@@ -1042,11 +1042,10 @@ void Niveau1(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *score
                     DessinerToutesLesCommandes(jeu, listeDeCommandes, &imagesCommandes);
                     if (jeu->enPause) {
                         DessinerMenuPause(jeu, boutons);
-                        VerifierEtMAJScores(scores, 1, joueur1, joueur2);
                     }
                     if (fini) {
                         DessinerScoresFin(jeu, joueur1->score, joueur2->score, joueur1, joueur2);
-
+                        VerifierEtMAJScores(scores, 1, joueur1, joueur2);
                     }
                     al_flip_display();
                     maj = false;
@@ -1147,11 +1146,10 @@ void Niveau2(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *score
                     DessinerToutesLesCommandes(jeu, listeDeCommandes, &imagesCommandes);
                     if (jeu->enPause) {
                         DessinerMenuPause(jeu, boutons);
-                        VerifierEtMAJScores(scores, 2, joueur1, joueur2);
                     }
                     if (fini) {
                         DessinerScoresFin(jeu, joueur1->score, joueur2->score, joueur1, joueur2);
-
+                        VerifierEtMAJScores(scores, 2, joueur1, joueur2);
                     }
                     al_flip_display();
                     maj = false;
@@ -1252,11 +1250,10 @@ void Niveau3(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *score
                     DessinerToutesLesCommandes(jeu, listeDeCommandes, &imagesCommandes);
                     if (jeu->enPause) {
                         DessinerMenuPause(jeu, boutons);
-                        VerifierEtMAJScores(scores, 3, joueur1, joueur2);
                     }
                     if (fini) {
                         DessinerScoresFin(jeu, joueur1->score, joueur2->score, joueur1, joueur2);
-
+                        VerifierEtMAJScores(scores, 3, joueur1, joueur2);
                     }
                     al_flip_display();
                     maj = false;
