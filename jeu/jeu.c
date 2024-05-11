@@ -2,48 +2,7 @@
 #include "jeu.h"
 #include "math.h"
 
-void InitialiserFenetreFileTimer(ComposantsJeu *jeu) {
-    jeu->fenetre = al_create_display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
-    jeu->file = al_create_event_queue();
-    jeu->timer = al_create_timer(1.0 / 60.0);
-    jeu->DureePartie = 300;
-    al_register_event_source(jeu->file, al_get_display_event_source(jeu->fenetre));
-    al_register_event_source(jeu->file, al_get_keyboard_event_source());
-    al_register_event_source(jeu->file, al_get_mouse_event_source());
-    al_register_event_source(jeu->file, al_get_timer_event_source(jeu->timer));
-    jeu->enPause = false;
-}
 
-void DessinerBoutonMenuPause(BoutonJeu boutonJeu, ComposantsJeu *jeu, ALLEGRO_COLOR couleurRectangle,
-                             ALLEGRO_COLOR couleurTexte) {
-    al_draw_filled_rounded_rectangle(boutonJeu.x, boutonJeu.y, boutonJeu.x + boutonJeu.width,
-                                     boutonJeu.y + boutonJeu.height, 10, 10, couleurRectangle);
-    int text_x = boutonJeu.x + (boutonJeu.width - al_get_text_width(jeu->police, boutonJeu.texte)) / 2;
-    int text_y = boutonJeu.y + (boutonJeu.height - al_get_font_ascent(jeu->police)) / 2;
-    al_draw_text(jeu->police, couleurTexte, text_x, text_y, 0, boutonJeu.texte);
-}
-
-bool EstDansLeBoutonMenuPause(BoutonJeu boutonJeu, float x, float y) {
-    return (x >= boutonJeu.y && x <= boutonJeu.x + boutonJeu.width && y >= boutonJeu.y &&
-            y <= boutonJeu.y + boutonJeu.height);
-}
-
-void DessinerMenuPause(ComposantsJeu *jeu, BoutonJeu *bouton) {
-    al_draw_filled_rectangle(DISPLAY_WIDTH / 4, DISPLAY_HEIGHT / 4, 3 * DISPLAY_WIDTH / 4, 3 * DISPLAY_HEIGHT / 4,
-                             al_map_rgba(0, 0, 0, 200));
-
-    for (int i = 0; i < 2; i++) {
-        DessinerBoutonMenuPause(bouton[i], jeu, al_map_rgba(139, 71, 3, 255), NOIR);
-    }
-}
-void DessinerCadreScore(int score,ComposantsJeu *jeu ) {
-    al_draw_filled_rectangle(DISPLAY_WIDTH / 4, DISPLAY_HEIGHT / 4, 3 * DISPLAY_WIDTH / 4, 3 * DISPLAY_HEIGHT / 4,
-                             al_map_rgba(0, 0, 0, 200));
-
-    char scoreText[20];
-    sprintf(scoreText, "Score: %d", score);
-    al_draw_text(jeu->police, BLANC, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, ALLEGRO_ALIGN_CENTER, scoreText);
-}
 void ChargerFichierTxt(ComposantsJeu *jeu) {
     FILE *fichier = fopen("../images/FichierTexte", "r");
     if (!fichier) {
