@@ -6,7 +6,7 @@ void InitialiserFenetreFileTimer(ComposantsJeu *jeu) {
     jeu->fenetre = al_create_display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
     jeu->file = al_create_event_queue();
     jeu->timer = al_create_timer(1.0 / 60.0);
-    jeu->DureePartie = 10;
+    jeu->DureePartie = 45;
     al_register_event_source(jeu->file, al_get_display_event_source(jeu->fenetre));
     al_register_event_source(jeu->file, al_get_keyboard_event_source());
     al_register_event_source(jeu->file, al_get_mouse_event_source());
@@ -1048,7 +1048,7 @@ void Niveau1(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *score
                     }
                     if (fini) {
                         DessinerScoresFin(jeu, joueur1->score, joueur2->score, joueur1, joueur2);
-                        VerifierEtMAJScores(scores, 1, joueur1, joueur2);
+                        VerifierEtMAJScores(scores, 0, joueur1, joueur2);
                     }
                     al_flip_display();
                     maj = false;
@@ -1152,7 +1152,7 @@ void Niveau2(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *score
                     }
                     if (fini) {
                         DessinerScoresFin(jeu, joueur1->score, joueur2->score, joueur1, joueur2);
-                        VerifierEtMAJScores(scores, 2, joueur1, joueur2);
+                        VerifierEtMAJScores(scores, 1, joueur1, joueur2);
                     }
                     al_flip_display();
                     maj = false;
@@ -1256,7 +1256,7 @@ void Niveau3(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *score
                     }
                     if (fini) {
                         DessinerScoresFin(jeu, joueur1->score, joueur2->score, joueur1, joueur2);
-                        VerifierEtMAJScores(scores, 3, joueur1, joueur2);
+                        VerifierEtMAJScores(scores, 2, joueur1, joueur2);
                     }
                     al_flip_display();
                     maj = false;
