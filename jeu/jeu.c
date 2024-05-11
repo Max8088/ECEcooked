@@ -36,7 +36,14 @@ void DessinerMenuPause(ComposantsJeu *jeu, BoutonJeu *bouton) {
         DessinerBoutonMenuPause(bouton[i], jeu, al_map_rgba(139, 71, 3, 255), NOIR);
     }
 }
+void DessinerCadreScore(int score,ComposantsJeu *jeu ) {
+    al_draw_filled_rectangle(DISPLAY_WIDTH / 4, DISPLAY_HEIGHT / 4, 3 * DISPLAY_WIDTH / 4, 3 * DISPLAY_HEIGHT / 4,
+                             al_map_rgba(0, 0, 0, 200));
 
+    char scoreText[20];
+    sprintf(scoreText, "Score: %d", score);
+    al_draw_text(jeu->police, BLANC, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, ALLEGRO_ALIGN_CENTER, scoreText);
+}
 void ChargerFichierTxt(ComposantsJeu *jeu) {
     FILE *fichier = fopen("../images/FichierTexte", "r");
     if (!fichier) {
@@ -534,7 +541,6 @@ void GestionKeyDown(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, ALLEGR
         }
     }
 }
-
 void GestionKeyUP(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool *maj) {
     if (!jeu->enPause) {
 
@@ -792,6 +798,7 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
     ALLEGRO_EVENT event;
     bool fini = false, maj = false;
     int tempsRestant = jeu->DureePartie;
+    int score = 0;
     int compteurTickDuTimer = 0;
     BoutonJeu boutons[] = {
             {DISPLAY_WIDTH / 3, DISPLAY_HEIGHT / 4 + DISPLAY_HEIGHT / 12,                           DISPLAY_WIDTH / 3,
@@ -859,6 +866,8 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
                         compteurTickDuTimer = 0;
                     }
                     if (tempsRestant < 0) {
+                        score = tempsRestant * 100;
+                        DessinerCadreScore(score,jeu);
                         fini = true;
                     }
                     MAJPosJoueurs(joueur1, joueur2, jeu, &maj);
@@ -875,6 +884,7 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
                     if (jeu->enPause) {
                         DessinerMenuPause(jeu, boutons);
                     }
+
                     al_flip_display();
                     maj = false;
                 }

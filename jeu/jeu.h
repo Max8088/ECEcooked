@@ -40,6 +40,8 @@ bool EstDansLeBoutonMenuPause(BoutonJeu boutonJeu, float x, float y);
 
 void DessinerMenuPause(ComposantsJeu *jeu, BoutonJeu *bouton);
 
+void DessinerCadreScore(int score,ComposantsJeu *jeu );
+
 void ChargerFichierTxt(ComposantsJeu *jeu);
 
 void AfficherFichierTxt(const ComposantsJeu *jeu);
@@ -81,4 +83,3 @@ void DessinerToutesLesCommandes(ComposantsJeu *jeu, Commande *listeDeCommandes, 
 void libererCommandes(Commande *liste);
 
 #endif //ESCOOKED_JEU_H
-
