@@ -51,6 +51,6 @@ void PremierAffichageMenu(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, int n
 void DessinerMenu(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, float mouseX, float mouseY, Bouton boutons[],
                   int nbBoutons);
 
-void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son);
+void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son, Scores *scores);
 
 #endif //ESCOOKED_MENU_H

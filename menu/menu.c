@@ -383,6 +383,52 @@ void MenuOptions(ComposantsJeu **jeu, Sons **son) {
     }
 }
 
+void MenuScores(ComposantsJeu *jeu, Sons *son, const Scores *scores) {
+    ALLEGRO_EVENT event;
+    bool fini = false;
+    Bouton boutonRetour = {-10, 612, 130, 70, "<-"};
+    float mouseX = 0, mouseY = 0;
+    al_clear_to_color(NOIR);
+    al_draw_bitmap(jeu->ImageMenu, 0, 0, 0);
+    DessinerBouton1(boutonRetour, jeu->police, NOIR, GRIS_CLAIR);
+    char scoreText[256];
+    for (int i = 0; i < NOMBRE_NIVEAUX; i++) {
+        sprintf(scoreText, "Level %d - Best Player Score: %d", i + 1, scores->niveaux[i].meilleurScoreJoueur);
+        al_draw_text(jeu->police, al_map_rgb(255, 255, 255), 400, 100 + i * 60, ALLEGRO_ALIGN_CENTER, scoreText);
+
+        sprintf(scoreText, "Level %d - Best Team Score: %d", i + 1, scores->niveaux[i].meilleurScoreEquipe);
+        al_draw_text(jeu->police, al_map_rgb(255, 255, 255), 400, 130 + i * 60, ALLEGRO_ALIGN_CENTER, scoreText);
+    }
+    al_flip_display();
+
+    while (!fini) {
+        al_wait_for_event(jeu->file, &event);
+        switch (event.type) {
+            case ALLEGRO_EVENT_DISPLAY_CLOSE:
+                fini = true;
+                break;
+            case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
+                if (EstDansLeBouton(boutonRetour, mouseX, mouseY)) {
+                    SonBoutonClique(son);
+                    fini = true;
+                }
+                break;
+            case ALLEGRO_EVENT_MOUSE_AXES:
+                mouseX = event.mouse.x;
+                mouseY = event.mouse.y;
+                break;
+            case ALLEGRO_EVENT_TIMER:
+                if (EstDansLeBouton(boutonRetour, mouseX, mouseY)) {
+                    DessinerBouton2(boutonRetour, jeu->police, NOIR, BLANC);
+                } else {
+                    DessinerBouton1(boutonRetour, jeu->police, NOIR, GRIS_CLAIR_TRANSPARENT);
+                }
+                al_flip_display();
+                break;
+        }
+    }
+}
+
 void AfficherControls(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
     ALLEGRO_EVENT event;
     bool fini = false;
@@ -533,21 +579,22 @@ void ChoisirNiveau(ComposantsJeu *jeu, Niveau *niveau, bool *niveauChoisi) {
     }
 }
 
-void lancerNiveau(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Niveau niveau) {
+void lancerNiveau(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Niveau niveau, Scores *scores) {
     switch (niveau) {
         case NIVEAU_1:
-            Jeu(jeu, joueur1, joueur2);
+            Jeu(jeu, joueur1, joueur2, scores);
             break;
         case NIVEAU_2:
-            Jeu(jeu, joueur1, joueur2);
+            Jeu(jeu, joueur1, joueur2, scores);
             break;
         case NIVEAU_3:
-            Jeu(jeu, joueur1, joueur2);
+            Jeu(jeu, joueur1, joueur2, scores);
             break;
         default:
             break;
     }
 }
+
 
 void DessinerMenu(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, float mouseX, float mouseY, Bouton boutons[],
                   int nbBoutons) {
@@ -563,7 +610,8 @@ void DessinerMenu(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, float mouseX,
     al_flip_display();
 }
 
-void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son) {
+
+void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son, Scores *scores) {
     SonBoutonClique(son);
     bool fini = false, lancerJeu = false, niveauChoisi = false;
     Niveau niveau = NIVEAU_INCONNU;
@@ -605,7 +653,7 @@ void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son) {
                                 ArreterMusiqueFondDeMenu(son);
                                 AfficherControls(jeu, joueur1, joueur2);
                                 JouerMusiqueJeu(son);
-                                lancerNiveau(jeu, joueur1, joueur2, niveau);
+                                lancerNiveau(jeu, joueur1, joueur2, niveau, scores);
                                 ArreterMusiqueJeu(son);
                                 JouerMusiqueFondDeMenu(son);
                                 lancerJeu = false;
@@ -618,6 +666,7 @@ void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son) {
                         }
                         if (!(strcmp(boutons[i].texte, "Scores"))) {
                             SonBoutonClique(son);
+                            MenuScores(jeu, son, scores);
                         }
                         if (!(strcmp(boutons[i].texte, "Exit"))) {
                             fini = true;

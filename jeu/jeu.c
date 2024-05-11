@@ -76,7 +76,6 @@ void DessinerScoresFin(ComposantsJeu *jeu, int scoreJoueur1, int scoreJoueur2, J
     }
 }
 
-
 void ChargerFichierTxt(ComposantsJeu *jeu) {
     FILE *fichier = fopen("../images/FichierTexte", "r");
     if (!fichier) {
@@ -846,6 +845,57 @@ void DessinerToutesLesCommandes(ComposantsJeu *jeu, Commande *listeDeCommandes, 
     }
 }
 
+void SauvegarderScores(const Scores *scores) {
+    FILE *f = fopen("scores", "w");
+    if (f == NULL) {
+        fprintf(stderr, "Erreur lors de l'ouverture du fichier de scores pour écriture.\n");
+        return;
+    }
+    fprintf(f, "# Scores pour le jeu XYZ\n");
+    fprintf(f, "# Format: Niveau, MeilleurScoreJoueur, MeilleurScoreEquipe\n");
+    for (int i = 0; i < NOMBRE_NIVEAUX; i++) {
+        fprintf(f, "%d, %d, %d\n", i + 1, scores->niveaux[i].meilleurScoreJoueur, scores->niveaux[i].meilleurScoreEquipe);
+    }
+    fclose(f);
+}
+
+void ChargerScores(Scores *scores) {
+    FILE *f = fopen("scores", "r");
+    if (f == NULL) {
+        fprintf(stderr, "Erreur lors de l'ouverture du fichier de scores.\n");
+        return;
+    }
+    int niveau, scoreJoueur, scoreEquipe;
+    while (fscanf(f, "%d, %d, %d", &niveau, &scoreJoueur, &scoreEquipe) == 3) {
+        if (niveau >= 1 && niveau <= NOMBRE_NIVEAUX) {
+            scores->niveaux[niveau - 1].meilleurScoreJoueur = scoreJoueur;
+            scores->niveaux[niveau - 1].meilleurScoreEquipe = scoreEquipe;
+        }
+    }
+
+    fclose(f);
+}
+
+void VerifierEtMAJScores(Scores *scores, int niveauIndex, Joueur *joueur1, Joueur *joueur2) {
+    bool doitSauvegarder = false;
+    int meilleurScoreJoueur = (joueur1->score > joueur2->score) ? joueur1->score : joueur2->score;
+
+    if (meilleurScoreJoueur > scores->niveaux[niveauIndex].meilleurScoreJoueur) {
+        scores->niveaux[niveauIndex].meilleurScoreJoueur = meilleurScoreJoueur;
+        doitSauvegarder = true;
+    }
+
+    int scoreEquipe = joueur1->score + joueur2->score;
+    if (scoreEquipe > scores->niveaux[niveauIndex].meilleurScoreEquipe) {
+        scores->niveaux[niveauIndex].meilleurScoreEquipe = scoreEquipe;
+        doitSauvegarder = true;
+    }
+
+    if (doitSauvegarder) {
+        SauvegarderScores(scores);
+    }
+}
+
 void libererCommandes(Commande *liste) {
     while (liste != NULL) {
         Commande *temp = liste;
@@ -855,11 +905,10 @@ void libererCommandes(Commande *liste) {
     }
 }
 
-void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
+void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *scores) {
     ALLEGRO_EVENT event;
     bool fini = false, maj = false;
     int tempsRestant = jeu->DureePartie;
-    int scoreEquipe = 0;
     int compteurTickDuTimer = 0;
     BoutonJeu boutons[] = {
             {DISPLAY_WIDTH / 3, DISPLAY_HEIGHT / 4 + DISPLAY_HEIGHT / 12,                           DISPLAY_WIDTH / 3,
@@ -946,9 +995,11 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
                     DessinerToutesLesCommandes(jeu, listeDeCommandes, &imagesCommandes);
                     if (jeu->enPause) {
                         DessinerMenuPause(jeu, boutons);
+                        VerifierEtMAJScores(scores, 1, joueur1, joueur2);
                     }
                     if (fini) {
                         DessinerScoresFin(jeu, joueur1->score, joueur2->score, joueur1, joueur2);
+
                     }
                     al_flip_display();
                     maj = false;

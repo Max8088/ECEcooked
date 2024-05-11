@@ -251,11 +251,13 @@ int main(void) {
     Joueur joueur1, joueur2;
     ComposantsJeu jeu;
     Sons son;
+    Scores scores;
     ALLEGRO_EVENT event;
 
     InitialiserFenetreFileTimer(&jeu);
     ChargerImagesJeu(&jeu);
     ChargerPolices(&jeu);
+    ChargerScores(&scores);
     InitialiserJoueur(&joueur1, "../images/PERSO 1.png");
     InitialiserJoueur(&joueur2, "../images/PERSO 2.png");
     PremierAffichageFenetre(&jeu);
@@ -270,7 +272,7 @@ int main(void) {
             case ALLEGRO_EVENT_KEY_UP:
                 switch (event.keyboard.keycode) {
                     case ALLEGRO_KEY_ENTER:
-                        Menu(&jeu, &joueur1, &joueur2, &son);
+                        Menu(&jeu, &joueur1, &joueur2, &son, &scores);
                         fini = true;
                         break;
                 }

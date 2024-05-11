@@ -29,8 +29,17 @@
 #define TYPE_STATIONDEDECOUPE 9
 #define TYPE_FRIGOCANNEASUCRE 11
 #define NOMBRE_RECETTES 3
+#define NOMBRE_NIVEAUX 3
 #define NOMBRE_MAX_INGREDIENTS 5
 #define MAX_ELEMENTS 100
+
+typedef struct {
+    int meilleurScoreJoueur, meilleurScoreEquipe;
+} ScoreNiveau;
+
+typedef struct {
+    ScoreNiveau niveaux[NOMBRE_NIVEAUX];
+} Scores;
 
 void InitialiserFenetreFileTimer(ComposantsJeu *jeu);
 
@@ -40,8 +49,6 @@ void DessinerBoutonMenuPause(BoutonJeu boutonJeu, ComposantsJeu *jeu, ALLEGRO_CO
 bool EstDansLeBoutonMenuPause(BoutonJeu boutonJeu, float x, float y);
 
 void DessinerMenuPause(ComposantsJeu *jeu, BoutonJeu *bouton);
-
-void DessinerCadreScore(int score,ComposantsJeu *jeu );
 
 void ChargerFichierTxt(ComposantsJeu *jeu);
 
@@ -63,7 +70,7 @@ void GestionKeyDown(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, ALLEGR
 
 void GestionKeyUP(ComposantsJeu *jeu,Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool *maj);
 
-void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2);
+void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *scores);
 
 void ChargerImagesCommandes(ImagesCommandes *images);
 
@@ -82,5 +89,7 @@ void DessinerCommande(ComposantsJeu *jeu, Commande *commande, ImagesCommandes *i
 void DessinerToutesLesCommandes(ComposantsJeu *jeu, Commande *listeDeCommandes, ImagesCommandes *images);
 
 void libererCommandes(Commande *liste);
+
+void ChargerScores(Scores *scores);
 
 #endif //ESCOOKED_JEU_H
