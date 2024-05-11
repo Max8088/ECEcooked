@@ -6,7 +6,7 @@ void InitialiserFenetreFileTimer(ComposantsJeu *jeu) {
     jeu->fenetre = al_create_display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
     jeu->file = al_create_event_queue();
     jeu->timer = al_create_timer(1.0 / 60.0);
-    jeu->DureePartie = 30;
+    jeu->DureePartie = 10;
     al_register_event_source(jeu->file, al_get_display_event_source(jeu->fenetre));
     al_register_event_source(jeu->file, al_get_keyboard_event_source());
     al_register_event_source(jeu->file, al_get_mouse_event_source());
@@ -45,6 +45,9 @@ void DessinerScoresFin(ComposantsJeu *jeu, int scoreJoueur1, int scoreJoueur2, J
 
     al_draw_filled_rectangle(DISPLAY_WIDTH / 4, DISPLAY_HEIGHT / 4, 3 * DISPLAY_WIDTH / 4, 3 * DISPLAY_HEIGHT / 4,
                              al_map_rgba(0, 0, 0, 200));
+    al_draw_bitmap(al_load_bitmap("../images/MACARON SCORE (2).png"), DISPLAY_WIDTH / 4 + 30, DISPLAY_HEIGHT / 4 + 50, 0);
+    al_draw_bitmap(al_load_bitmap("../images/MACARON SCORE (2).png"), DISPLAY_WIDTH / 4 + 530, DISPLAY_HEIGHT / 4 + 50, 0);
+
     char text[100];
     al_draw_text(jeu->policeTitre, BLANC, DISPLAY_WIDTH / 2, 200, ALLEGRO_ALIGN_CENTER, "SCORES");
     sprintf(text, "%s : %d", joueur1->pseudo, scoreJoueur1);
@@ -585,7 +588,7 @@ void DessinerJoueur(Joueur *joueur, ComposantsJeu *jeu) {
     float cy = al_get_bitmap_height(joueur->image) / 2;
     al_draw_rotated_bitmap(joueur->image, cx, cy, joueur->x + cx, joueur->y + cy, joueur->angle, 0);
 
-    DessinerCurseurP(joueur);
+    //DessinerCurseurP(joueur);
 
     if (joueur->element) {
         float xCurseur =
