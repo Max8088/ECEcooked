@@ -394,10 +394,10 @@ void MenuScores(ComposantsJeu *jeu, Sons *son, const Scores *scores) {
     char scoreText[256];
     for (int i = 0; i < NOMBRE_NIVEAUX; i++) {
         sprintf(scoreText, "Level %d - Best Player Score: %d", i + 1, scores->niveaux[i].meilleurScoreJoueur);
-        al_draw_text(jeu->police, al_map_rgb(255, 255, 255), 400, 100 + i * 60, ALLEGRO_ALIGN_CENTER, scoreText);
+        al_draw_text(jeu->police, NOIR, 624, 200 + i * 150, ALLEGRO_ALIGN_CENTER, scoreText);
 
         sprintf(scoreText, "Level %d - Best Team Score: %d", i + 1, scores->niveaux[i].meilleurScoreEquipe);
-        al_draw_text(jeu->police, al_map_rgb(255, 255, 255), 400, 130 + i * 60, ALLEGRO_ALIGN_CENTER, scoreText);
+        al_draw_text(jeu->police, NOIR, 624, 250 + i * 150, ALLEGRO_ALIGN_CENTER, scoreText);
     }
     al_flip_display();
 
@@ -582,13 +582,13 @@ void ChoisirNiveau(ComposantsJeu *jeu, Niveau *niveau, bool *niveauChoisi) {
 void lancerNiveau(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Niveau niveau, Scores *scores) {
     switch (niveau) {
         case NIVEAU_1:
-            Jeu(jeu, joueur1, joueur2, scores);
+            Niveau1(jeu, joueur1, joueur2, scores);
             break;
         case NIVEAU_2:
-            Jeu(jeu, joueur1, joueur2, scores);
+            Niveau2(jeu, joueur1, joueur2, scores);
             break;
         case NIVEAU_3:
-            Jeu(jeu, joueur1, joueur2, scores);
+            Niveau3(jeu, joueur1, joueur2, scores);
             break;
         default:
             break;

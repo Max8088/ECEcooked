@@ -50,7 +50,7 @@ bool EstDansLeBoutonMenuPause(BoutonJeu boutonJeu, float x, float y);
 
 void DessinerMenuPause(ComposantsJeu *jeu, BoutonJeu *bouton);
 
-void ChargerFichierTxt(ComposantsJeu *jeu);
+void ChargerFichierTxt1(ComposantsJeu *jeu);
 
 void AfficherFichierTxt(const ComposantsJeu *jeu);
 
@@ -70,7 +70,11 @@ void GestionKeyDown(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, ALLEGR
 
 void GestionKeyUP(ComposantsJeu *jeu,Joueur *joueur1, Joueur *joueur2, ALLEGRO_EVENT *event, bool *maj);
 
-void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *scores);
+void Niveau1(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *scores);
+
+void Niveau2(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *scores);
+
+void Niveau3(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *scores);
 
 void ChargerImagesCommandes(ImagesCommandes *images);
 

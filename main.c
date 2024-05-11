@@ -69,7 +69,7 @@ void InitialiserSon(Sons *son) {
     son->mixer = al_get_default_mixer();
     son->musiqueDeFondDeMenu = al_load_sample("../soundeffect/Menu.wav");
     son->sonBoutonClique = al_load_sample("../soundeffect/click-sound.wav");
-    son->musiqueDeFondDeJeu = al_load_sample("../soundeffect/Jeu.wav");
+    son->musiqueDeFondDeJeu = al_load_sample("../soundeffect/Niveau1.wav");
 
     son->instanceDeMusqiue = al_create_sample_instance(son->musiqueDeFondDeMenu);
     al_set_sample_instance_playmode(son->instanceDeMusqiue, ALLEGRO_PLAYMODE_LOOP);

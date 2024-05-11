@@ -76,8 +76,58 @@ void DessinerScoresFin(ComposantsJeu *jeu, int scoreJoueur1, int scoreJoueur2, J
     }
 }
 
-void ChargerFichierTxt(ComposantsJeu *jeu) {
-    FILE *fichier = fopen("../images/FichierTexte", "r");
+void ChargerFichierTxt1(ComposantsJeu *jeu) {
+    FILE *fichier = fopen("../images/FichierTexteNiveau1", "r");
+    if (!fichier) {
+        fprintf(stderr, "Erreur lors de l'ouverture du fichier.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    jeu->element = malloc(NB_LIGNES * NB_COLONNES * sizeof(Element));
+    jeu->nbElement = 0;
+    int TypeElement;
+
+    for (int i = 0; i < NB_LIGNES; ++i) {
+        for (int j = 0; j < NB_COLONNES; ++j) {
+            fscanf(fichier, "%d", &TypeElement);
+            if (TypeElement != -1) {
+                jeu->element[jeu->nbElement].type = TypeElement;
+                jeu->element[jeu->nbElement].x = MARGE_GAUCHE_DROITE + j * TAILLE_CASE;
+                jeu->element[jeu->nbElement].y = MARGE_HAUT_BAS + i * TAILLE_CASE;
+                jeu->nbElement++;
+            }
+        }
+    }
+    fclose(fichier);
+}
+
+void ChargerFichierTxt2(ComposantsJeu *jeu) {
+    FILE *fichier = fopen("../images/FichierTexteNiveau2", "r");
+    if (!fichier) {
+        fprintf(stderr, "Erreur lors de l'ouverture du fichier.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    jeu->element = malloc(NB_LIGNES * NB_COLONNES * sizeof(Element));
+    jeu->nbElement = 0;
+    int TypeElement;
+
+    for (int i = 0; i < NB_LIGNES; ++i) {
+        for (int j = 0; j < NB_COLONNES; ++j) {
+            fscanf(fichier, "%d", &TypeElement);
+            if (TypeElement != -1) {
+                jeu->element[jeu->nbElement].type = TypeElement;
+                jeu->element[jeu->nbElement].x = MARGE_GAUCHE_DROITE + j * TAILLE_CASE;
+                jeu->element[jeu->nbElement].y = MARGE_HAUT_BAS + i * TAILLE_CASE;
+                jeu->nbElement++;
+            }
+        }
+    }
+    fclose(fichier);
+}
+
+void ChargerFichierTxt3(ComposantsJeu *jeu) {
+    FILE *fichier = fopen("../images/FichierTexteNiveau3", "r");
     if (!fichier) {
         fprintf(stderr, "Erreur lors de l'ouverture du fichier.\n");
         exit(EXIT_FAILURE);
@@ -154,11 +204,11 @@ void InitialiserComposantsJeu(ComposantsJeu *jeu) {
 }
 
 void DessinerElementsLaches(ComposantsJeu *jeu) {
-    printf("Nombre d'elements a dessiner: %d\n", jeu->nbElementsLaches);
+    //printf("Nombre d'elements a dessiner: %d\n", jeu->nbElementsLaches);
 
     if (jeu->nbElementsLaches > 0) {
         for (int i = 0; i < jeu->nbElementsLaches; i++) {
-            printf("element %d : x=%d, y=%d, visible=%d\n", i, jeu->elementsLaches[i].x, jeu->elementsLaches[i].y, jeu->elementsLaches[i].estVisible);
+            //printf("element %d : x=%d, y=%d, visible=%d\n", i, jeu->elementsLaches[i].x, jeu->elementsLaches[i].y, jeu->elementsLaches[i].estVisible);
             if (jeu->elementsLaches[i].estVisible) {
                 al_draw_bitmap(jeu->elementsLaches[i].image, jeu->elementsLaches[i].x, jeu->elementsLaches[i].y, 0);
             }
@@ -378,7 +428,6 @@ void CombinaisonElementsRecette(ComposantsJeu *jeu, Recette recettes[], int nbRe
                 }
             }
 
-            // Vérifier si tous les ingrédients nécessaires ont été trouvés
             bool tousIngredientsTrouves = true;
             for (int ing = 0; ing < 5; ing++) {
                 if (recette->ingredients[ing] != INGREDIENT_NULL && count[ing] < 1) {
@@ -846,13 +895,11 @@ void DessinerToutesLesCommandes(ComposantsJeu *jeu, Commande *listeDeCommandes, 
 }
 
 void SauvegarderScores(const Scores *scores) {
-    FILE *f = fopen("scores", "w");
+    FILE *f = fopen("../images/scores", "w");
     if (f == NULL) {
         fprintf(stderr, "Erreur lors de l'ouverture du fichier de scores pour écriture.\n");
         return;
     }
-    fprintf(f, "# Scores pour le jeu XYZ\n");
-    fprintf(f, "# Format: Niveau, MeilleurScoreJoueur, MeilleurScoreEquipe\n");
     for (int i = 0; i < NOMBRE_NIVEAUX; i++) {
         fprintf(f, "%d, %d, %d\n", i + 1, scores->niveaux[i].meilleurScoreJoueur, scores->niveaux[i].meilleurScoreEquipe);
     }
@@ -860,7 +907,7 @@ void SauvegarderScores(const Scores *scores) {
 }
 
 void ChargerScores(Scores *scores) {
-    FILE *f = fopen("scores", "r");
+    FILE *f = fopen("../images/scores", "r");
     if (f == NULL) {
         fprintf(stderr, "Erreur lors de l'ouverture du fichier de scores.\n");
         return;
@@ -905,7 +952,7 @@ void libererCommandes(Commande *liste) {
     }
 }
 
-void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *scores) {
+void Niveau1(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *scores) {
     ALLEGRO_EVENT event;
     bool fini = false, maj = false;
     int tempsRestant = jeu->DureePartie;
@@ -926,7 +973,217 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *scores) {
 
     al_clear_to_color(NOIR);
     al_draw_bitmap(jeu->ImageFondDeJeu, 0, 0, 0);
-    ChargerFichierTxt(jeu);
+    ChargerFichierTxt1(jeu);
+    AfficherFichierTxt(jeu);
+    InitialiserPosJoueurs(joueur1, joueur2, 300, 300, 850, 300);
+    InitialiserComposantsJeu(jeu);
+    DessinerJoueur(joueur1, jeu);
+    DessinerJoueur(joueur2, jeu);
+    DessinerToutesLesCommandes(jeu, listeDeCommandes, &imagesCommandes);
+    DessinerTempsRestant(tempsRestant, jeu);
+    al_flip_display();
+
+    while (!fini) {
+        al_wait_for_event(jeu->file, &event);
+
+        switch (event.type) {
+
+            case ALLEGRO_EVENT_DISPLAY_CLOSE:
+                fini = true;
+                break;
+            case ALLEGRO_EVENT_KEY_DOWN:
+                GestionKeyDown(jeu, joueur1, joueur2, &event, &maj);
+                break;
+            case ALLEGRO_EVENT_KEY_UP:
+                GestionKeyUP(jeu, joueur1, joueur2, &event, &maj);
+                CombinaisonElementsRecette(jeu, recette, NOMBRE_RECETTES);
+                break;
+            case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
+                if (jeu->enPause && event.mouse.button == 1) {
+                    float mouse_x = event.mouse.x;
+                    float mouse_y = event.mouse.y;
+                    for (int i = 0; i < 2; ++i) {
+                        if (EstDansLeBoutonMenuPause(boutons[i], mouse_x, mouse_y)) {
+                            if (i == 0) {
+                                jeu->enPause = false;
+                            } else if (i == 1) {
+                                jeu->enPause = false;
+                                fini = true;
+                            }
+                        }
+                    }
+                }
+                break;
+            case ALLEGRO_EVENT_TIMER:
+                if (!jeu->enPause) {
+                    if (++compteurTickDuTimer >= 60) {
+                        tempsRestant--;
+                        TraiterCommandes(&listeDeCommandes, recette);
+                        compteurTickDuTimer = 0;
+                    }
+                    if (tempsRestant == 0) {
+                        fini = true;
+                        maj = true;
+                    }
+                    MAJPosJoueurs(joueur1, joueur2, jeu, &maj);
+                    if (VerifierEtTraiterSortie(&listeDeCommandes, joueur1, jeu) ||
+                        VerifierEtTraiterSortie(&listeDeCommandes, joueur2, jeu)) {
+                        printf("Commande completee et envoye.\n");
+                    }
+                }
+                if (maj || compteurTickDuTimer == 0) {
+                    al_clear_to_color(NOIR);
+                    al_draw_bitmap(jeu->ImageFondDeJeu, 0, 0, 0);
+                    AfficherFichierTxt(jeu);
+                    DessinerTempsRestant(tempsRestant, jeu);
+                    DessinerElementsLaches(jeu);
+                    DessinerJoueur(joueur1, jeu);
+                    DessinerJoueur(joueur2, jeu);
+                    DessinerToutesLesCommandes(jeu, listeDeCommandes, &imagesCommandes);
+                    if (jeu->enPause) {
+                        DessinerMenuPause(jeu, boutons);
+                        VerifierEtMAJScores(scores, 1, joueur1, joueur2);
+                    }
+                    if (fini) {
+                        DessinerScoresFin(jeu, joueur1->score, joueur2->score, joueur1, joueur2);
+
+                    }
+                    al_flip_display();
+                    maj = false;
+                }
+                break;
+        }
+    }
+    libererCommandes(listeDeCommandes);
+}
+
+void Niveau2(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *scores) {
+    ALLEGRO_EVENT event;
+    bool fini = false, maj = false;
+    int tempsRestant = jeu->DureePartie;
+    int compteurTickDuTimer = 0;
+    BoutonJeu boutons[] = {
+            {DISPLAY_WIDTH / 3, DISPLAY_HEIGHT / 4 + DISPLAY_HEIGHT / 12,                           DISPLAY_WIDTH / 3,
+                    DISPLAY_HEIGHT / 6, "Back to the game"},
+            {DISPLAY_WIDTH / 3, DISPLAY_HEIGHT / 4 + DISPLAY_HEIGHT / 12 + DISPLAY_HEIGHT / 6 + 30, DISPLAY_WIDTH / 3,
+                    DISPLAY_HEIGHT / 6, "Back to menu"}
+    };
+    Commande *listeDeCommandes = NULL;
+    Recette recette[NOMBRE_RECETTES];
+    InitialiserRecettes(recette, jeu);
+    InitialiserCommandes(&listeDeCommandes, recette);
+    ImagesCommandes imagesCommandes;
+    ChargerImagesCommandes(&imagesCommandes);
+
+
+    al_clear_to_color(NOIR);
+    al_draw_bitmap(jeu->ImageFondDeJeu, 0, 0, 0);
+    ChargerFichierTxt2(jeu);
+    AfficherFichierTxt(jeu);
+    InitialiserPosJoueurs(joueur1, joueur2, 250, 300, 950, 300);
+    InitialiserComposantsJeu(jeu);
+    DessinerJoueur(joueur1, jeu);
+    DessinerJoueur(joueur2, jeu);
+    DessinerToutesLesCommandes(jeu, listeDeCommandes, &imagesCommandes);
+    DessinerTempsRestant(tempsRestant, jeu);
+    al_flip_display();
+
+    while (!fini) {
+        al_wait_for_event(jeu->file, &event);
+
+        switch (event.type) {
+
+            case ALLEGRO_EVENT_DISPLAY_CLOSE:
+                fini = true;
+                break;
+            case ALLEGRO_EVENT_KEY_DOWN:
+                GestionKeyDown(jeu, joueur1, joueur2, &event, &maj);
+                break;
+            case ALLEGRO_EVENT_KEY_UP:
+                GestionKeyUP(jeu, joueur1, joueur2, &event, &maj);
+                CombinaisonElementsRecette(jeu, recette, NOMBRE_RECETTES);
+                break;
+            case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
+                if (jeu->enPause && event.mouse.button == 1) {
+                    float mouse_x = event.mouse.x;
+                    float mouse_y = event.mouse.y;
+                    for (int i = 0; i < 2; ++i) {
+                        if (EstDansLeBoutonMenuPause(boutons[i], mouse_x, mouse_y)) {
+                            if (i == 0) {
+                                jeu->enPause = false;
+                            } else if (i == 1) {
+                                jeu->enPause = false;
+                                fini = true;
+                            }
+                        }
+                    }
+                }
+                break;
+            case ALLEGRO_EVENT_TIMER:
+                if (!jeu->enPause) {
+                    if (++compteurTickDuTimer >= 60) {
+                        tempsRestant--;
+                        TraiterCommandes(&listeDeCommandes, recette);
+                        compteurTickDuTimer = 0;
+                    }
+                    if (tempsRestant == 0) {
+                        fini = true;
+                        maj = true;
+                    }
+                    MAJPosJoueurs(joueur1, joueur2, jeu, &maj);
+                    if (VerifierEtTraiterSortie(&listeDeCommandes, joueur1, jeu) ||
+                        VerifierEtTraiterSortie(&listeDeCommandes, joueur2, jeu)) {
+                        printf("Commande completee et envoye.\n");
+                    }
+                }
+                if (maj || compteurTickDuTimer == 0) {
+                    al_clear_to_color(NOIR);
+                    al_draw_bitmap(jeu->ImageFondDeJeu, 0, 0, 0);
+                    AfficherFichierTxt(jeu);
+                    DessinerTempsRestant(tempsRestant, jeu);
+                    DessinerElementsLaches(jeu);
+                    DessinerJoueur(joueur1, jeu);
+                    DessinerJoueur(joueur2, jeu);
+                    DessinerToutesLesCommandes(jeu, listeDeCommandes, &imagesCommandes);
+                    if (jeu->enPause) {
+                        DessinerMenuPause(jeu, boutons);
+                        VerifierEtMAJScores(scores, 2, joueur1, joueur2);
+                    }
+                    if (fini) {
+                        DessinerScoresFin(jeu, joueur1->score, joueur2->score, joueur1, joueur2);
+
+                    }
+                    al_flip_display();
+                    maj = false;
+                }
+                break;
+        }
+    }
+    libererCommandes(listeDeCommandes);
+}
+
+void Niveau3(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *scores) {
+    ALLEGRO_EVENT event;
+    bool fini = false, maj = false;
+    int tempsRestant = jeu->DureePartie;
+    int compteurTickDuTimer = 0;
+    BoutonJeu boutons[] = {
+            {DISPLAY_WIDTH / 3, DISPLAY_HEIGHT / 4 + DISPLAY_HEIGHT / 12,                           DISPLAY_WIDTH / 3,
+                    DISPLAY_HEIGHT / 6, "Back to the game"},
+            {DISPLAY_WIDTH / 3, DISPLAY_HEIGHT / 4 + DISPLAY_HEIGHT / 12 + DISPLAY_HEIGHT / 6 + 30, DISPLAY_WIDTH / 3,
+                    DISPLAY_HEIGHT / 6, "Back to menu"}
+    };
+    Commande *listeDeCommandes = NULL;
+    Recette recette[NOMBRE_RECETTES];
+    InitialiserRecettes(recette, jeu);
+    InitialiserCommandes(&listeDeCommandes, recette);
+    ImagesCommandes imagesCommandes;
+    ChargerImagesCommandes(&imagesCommandes);
+
+
+    al_clear_to_color(NOIR);
+    al_draw_bitmap(jeu->ImageFondDeJeu, 0, 0, 0);
+    ChargerFichierTxt3(jeu);
     AfficherFichierTxt(jeu);
     InitialiserPosJoueurs(joueur1, joueur2, 850, 300, 300, 300);
     InitialiserComposantsJeu(jeu);
@@ -995,7 +1252,7 @@ void Jeu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *scores) {
                     DessinerToutesLesCommandes(jeu, listeDeCommandes, &imagesCommandes);
                     if (jeu->enPause) {
                         DessinerMenuPause(jeu, boutons);
-                        VerifierEtMAJScores(scores, 1, joueur1, joueur2);
+                        VerifierEtMAJScores(scores, 3, joueur1, joueur2);
                     }
                     if (fini) {
                         DessinerScoresFin(jeu, joueur1->score, joueur2->score, joueur1, joueur2);
