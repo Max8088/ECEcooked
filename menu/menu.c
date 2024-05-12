@@ -258,11 +258,11 @@ void MenuRules(ComposantsJeu ***jeu, Sons **son) {
     al_draw_text((**jeu)->policeRegle, NOIR, 290, 440, ALLEGRO_ALIGN_LEFT,
                  "vous devez récupérer les bon ingrédients,  ");
     al_draw_text((**jeu)->policeRegle, NOIR, 290, 480, ALLEGRO_ALIGN_LEFT,
-                 "les préparer(decoupe/cuisson), les assembler  ");
+                 "les préparer, les assembler et les faire sortir ");
     al_draw_text((**jeu)->policeRegle, NOIR, 290, 520, ALLEGRO_ALIGN_LEFT,
-                 "et les faire sortir de cuisine avant le temps  ");
-    al_draw_text((**jeu)->policeRegle, NOIR, 290, 560, ALLEGRO_ALIGN_LEFT, "imparti. Le décor oblige les joueurs à  ");
-    al_draw_text((**jeu)->policeRegle, NOIR, 290, 600, ALLEGRO_ALIGN_LEFT, "communiquer. ");
+                 " de cuisine avant le temps imparti. Le décor ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 560, ALLEGRO_ALIGN_LEFT,
+                 " oblige les joueurs à communiquer. ");
 
 
     al_flip_display();
