@@ -504,7 +504,7 @@ void ChoisirNiveau(ComposantsJeu *jeu, Niveau *niveau, bool *niveauChoisi) {
     Bouton boutonNiveaux[] = {
             {425, 200, 400, 70, "Level 1", al_load_bitmap("../images/ApercuMapNiveau1.png")},
             {425, 200, 400, 70, "Level 2", al_load_bitmap("../images/ApercuMapNiveau2.png")},
-            {425, 200, 400, 70, "Level 3", al_load_bitmap("../images/apercu map.png")}
+            {425, 200, 400, 70, "Level 3", al_load_bitmap("../images/ApercuMapNiveau3.png")}
     };
     int nbNiveaux = sizeof(boutonNiveaux) / sizeof(boutonNiveaux[0]);
 
