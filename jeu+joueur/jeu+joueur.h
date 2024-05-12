@@ -16,6 +16,7 @@ typedef enum {
     MENTHE_DECOUPE,
     LIMONADE,
     CANNE_A_SUCRE,
+    VERRE,
     INGREDIENT_NULL
 } Ingredients;
 
@@ -38,6 +39,7 @@ typedef struct {
     bool estVisible;
     Ingredients ingredientID;
     RecetteID recetteID;
+    int directionTapisRoulant;
 } ElementsLaches;
 
 typedef struct {
@@ -57,7 +59,7 @@ typedef struct {
 
 typedef struct {
     RecetteID id;
-    int ingredients[5];
+    int ingredients[6];
     ALLEGRO_BITMAP *image;
     char nom[20];
 } Recette;
@@ -102,6 +104,10 @@ typedef struct {
     ALLEGRO_BITMAP *decor;
     ALLEGRO_BITMAP *sol1;
     ALLEGRO_BITMAP *sol2;
+    ALLEGRO_BITMAP *tapisRoulantDoite;
+    ALLEGRO_BITMAP *tapisRoulantBas;
+    ALLEGRO_BITMAP *tapisRoulantHaut;
+    ALLEGRO_BITMAP *tapisRoulantGauche;
     ALLEGRO_BITMAP *plaqueDeCuisson;
     ALLEGRO_BITMAP *stationDeDecoupe;
     ALLEGRO_BITMAP *planDeTravail;
@@ -114,10 +120,12 @@ typedef struct {
     ALLEGRO_BITMAP *menthe;
     ALLEGRO_BITMAP *limonade;
     ALLEGRO_BITMAP *canneASucre;
+    ALLEGRO_BITMAP *verres;
     ALLEGRO_BITMAP *frigoCitron;
     ALLEGRO_BITMAP *frigoLimonade;
     ALLEGRO_BITMAP *frigoMenthe;
     ALLEGRO_BITMAP *frigoCanneASucre;
+    ALLEGRO_BITMAP *distributeurVerres;
     ALLEGRO_BITMAP *mojito;
     ALLEGRO_BITMAP *caipirinha;
     ALLEGRO_BITMAP *hintzy;

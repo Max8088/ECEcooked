@@ -53,6 +53,12 @@ void ChargerImagesJeu(ComposantsJeu *jeu) {
     jeu->mojito = al_load_bitmap("../images/mojito.png");
     jeu->caipirinha = al_load_bitmap("../images/caipirinha.png");
     jeu->hintzy = al_load_bitmap("../images/hintzy.png");
+    jeu->tapisRoulantDoite = al_load_bitmap("../images/TAPIS_ROULANT_DROITE.png");
+    jeu->tapisRoulantBas = al_load_bitmap("../images/TAPIS_ROULANT_BAS.png");
+    jeu->tapisRoulantHaut = al_load_bitmap("../images/TAPIS_ROULANT_HAUT.png");
+    jeu->tapisRoulantGauche = al_load_bitmap("../images/TAPIS_ROULANT_GAUCHE.png");
+    jeu->distributeurVerres = al_load_bitmap("../images/DistributeurVerres.png");
+    jeu->verres = al_load_bitmap("../images/Verre.png");
 }
 
 void ChargerPolices(ComposantsJeu *jeu) {

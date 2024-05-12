@@ -45,8 +45,10 @@ void DessinerScoresFin(ComposantsJeu *jeu, int scoreJoueur1, int scoreJoueur2, J
 
     al_draw_filled_rectangle(DISPLAY_WIDTH / 4, DISPLAY_HEIGHT / 4, 3 * DISPLAY_WIDTH / 4, 3 * DISPLAY_HEIGHT / 4,
                              al_map_rgba(0, 0, 0, 200));
-    al_draw_bitmap(al_load_bitmap("../images/MACARON SCORE (2).png"), DISPLAY_WIDTH / 4 + 30, DISPLAY_HEIGHT / 4 + 50, 0);
-    al_draw_bitmap(al_load_bitmap("../images/MACARON SCORE (2).png"), DISPLAY_WIDTH / 4 + 530, DISPLAY_HEIGHT / 4 + 50, 0);
+    al_draw_bitmap(al_load_bitmap("../images/MACARON SCORE (2).png"), DISPLAY_WIDTH / 4 + 30, DISPLAY_HEIGHT / 4 + 50,
+                   0);
+    al_draw_bitmap(al_load_bitmap("../images/MACARON SCORE (2).png"), DISPLAY_WIDTH / 4 + 530, DISPLAY_HEIGHT / 4 + 50,
+                   0);
 
     char text[100];
     al_draw_text(jeu->policeTitre, BLANC, DISPLAY_WIDTH / 2, 200, ALLEGRO_ALIGN_CENTER, "SCORES");
@@ -194,6 +196,21 @@ void AfficherFichierTxt(const ComposantsJeu *jeu) {
             case 11:
                 bitmap = jeu->frigoCanneASucre;
                 break;
+            case 12:
+                bitmap = jeu->tapisRoulantDoite;
+                break;
+            case 13:
+                bitmap = jeu->tapisRoulantBas;
+                break;
+            case 14:
+                bitmap = jeu->tapisRoulantHaut;
+                break;
+            case 15:
+                bitmap = jeu->tapisRoulantGauche;
+                break;
+            case 16:
+                bitmap = jeu->distributeurVerres;
+                break;
         }
         if (bitmap) {
             al_draw_bitmap(bitmap, jeu->element[i].x, jeu->element[i].y, 0);
@@ -269,6 +286,57 @@ bool EstSurSortie(ComposantsJeu *jeu, float x, float y) {
     return false;
 }
 
+int EstSurTapisRoulant(ComposantsJeu *jeu, float x, float y) {
+    for (int i = 0; i < jeu->nbElement; i++) {
+        if ((jeu->element[i].type == 12 || jeu->element[i].type == 13 || jeu->element[i].type == 14 ||
+             jeu->element[i].type == 15) &&
+            x >= jeu->element[i].x && x <= jeu->element[i].x + TAILLE_CASE &&
+            y >= jeu->element[i].y && y <= jeu->element[i].y + TAILLE_CASE) {
+            if (jeu->element[i].type == 12) return DIRECTION_DROITE;
+            if (jeu->element[i].type == 13) return DIRECTION_BAS;
+            if (jeu->element[i].type == 14) return DIRECTION_HAUT;
+            if (jeu->element[i].type == 15) return DIRECTION_GAUCHE;
+        }
+    }
+    return -1;
+}
+
+void mettreAJourTapisRoulant(ComposantsJeu *jeu, bool *maj) {
+    for (int i = 0; i < jeu->nbElementsLaches; i++) {
+        ElementsLaches *elem = &jeu->elementsLaches[i];
+        int directionActuelle = EstSurTapisRoulant(jeu, elem->x, elem->y);
+        if (directionActuelle != -1 && elem->estVisible) {
+            float originalX = elem->x, originalY = elem->y;
+            switch (directionActuelle) {
+                case DIRECTION_HAUT:
+                    elem->y -= VITESSE_TAPIS_ROULANT;
+                    break;
+                case DIRECTION_BAS:
+                    elem->y += VITESSE_TAPIS_ROULANT;
+                    break;
+                case DIRECTION_GAUCHE:
+                    elem->x -= VITESSE_TAPIS_ROULANT;
+                    break;
+                case DIRECTION_DROITE:
+                    elem->x += VITESSE_TAPIS_ROULANT;
+                    break;
+                default:
+                    break;
+            }
+            *maj = true;
+            int nouvelleDirection = EstSurTapisRoulant(jeu, elem->x, elem->y);
+            if (nouvelleDirection == -1) {
+                if (EstSurPoubelle(jeu, elem->x, elem->y)) {
+                    elem->estVisible = false;
+                } else {
+                    elem->x = originalX;
+                    elem->y = originalY;
+                }
+            }
+        }
+    }
+}
+
 bool VerifierEtTraiterSortie(Commande **listeDeCommandes, Joueur *joueur, ComposantsJeu *jeu) {
     if (joueur->element == NULL) {
         return false;
@@ -279,8 +347,8 @@ bool VerifierEtTraiterSortie(Commande **listeDeCommandes, Joueur *joueur, Compos
         while (current) {
             if (current->recette->id == joueur->element->recetteID && !current->estCompletee) {
 
-                float tempsRestantRatio = (float)current->timer / (float)current->timerInitial;
-                int scoreAdditionnel = (int)(current->score * tempsRestantRatio);
+                float tempsRestantRatio = (float) current->timer / (float) current->timerInitial;
+                int scoreAdditionnel = (int) (current->score * tempsRestantRatio);
                 current->estCompletee = true;
                 joueur->score += scoreAdditionnel;
                 free(joueur->element);
@@ -366,7 +434,7 @@ int VerifierCoffreDevant(ComposantsJeu *jeu, Joueur *joueur) {
         if ((jeu->element[i].type == TYPE_FRIGOCITRON || jeu->element[i].type == TYPE_FRIGOMENTHE ||
              jeu->element[i].type == TYPE_FRIGOLIMONADE ||
              jeu->element[i].type == TYPE_POUBELLE || jeu->element[i].type == TYPE_FRIGOCANNEASUCRE ||
-             jeu->element[i].type == TYPE_SORTIE) &&
+             jeu->element[i].type == TYPE_SORTIE || jeu->element[i].type == 16) &&
             xCurseur >= jeu->element[i].x &&
             xCurseur <= jeu->element[i].x + TAILLE_CASE &&
             yCurseur >= jeu->element[i].y && yCurseur <= jeu->element[i].y + TAILLE_CASE) {
@@ -394,6 +462,9 @@ void PrendreDansLeCoffre(Joueur *joueur, ComposantsJeu *jeu) {
                 break;
             case 11:
                 joueur->element = CreerElement(TYPE_FRIGOCANNEASUCRE, jeu->canneASucre, CANNE_A_SUCRE, RECETTE_NULL);
+                break;
+            case 16:
+                joueur->element = CreerElement(16, jeu->verres, VERRE, RECETTE_NULL);
                 break;
             default:
                 break;
@@ -525,10 +596,10 @@ bool VerifierCollisionJoueur(Joueur *joueur, ComposantsJeu *jeu) {
 
     for (int i = 0; i < jeu->nbElement; i++) {
         if (jeu->element[i].type != TYPE_SOL1 && jeu->element[i].type != TYPE_SOL2) {
-            if (joueur->x < jeu->element[i].x + TAILLE_CASE &&
-                joueur->x + joueur_width > jeu->element[i].x &&
-                joueur->y < jeu->element[i].y + TAILLE_CASE &&
-                joueur->y + joueur_height > jeu->element[i].y) {
+            if (joueur->x <= jeu->element[i].x + TAILLE_CASE &&
+                joueur->x + joueur_width >= jeu->element[i].x &&
+                joueur->y <= jeu->element[i].y + TAILLE_CASE &&
+                joueur->y + joueur_height >= jeu->element[i].y) {
                 return true;
             }
         }
@@ -723,16 +794,18 @@ void InitialiserRecettes(Recette recettes[], ComposantsJeu *jeu) {
     recettes[MOJITO].ingredients[1] = CANNE_A_SUCRE;
     recettes[MOJITO].ingredients[2] = MENTHE_DECOUPE;
     recettes[MOJITO].ingredients[3] = LIMONADE;
-    recettes[MOJITO].ingredients[4] = INGREDIENT_NULL;
+    recettes[MOJITO].ingredients[4] = VERRE;
+    recettes[MOJITO].ingredients[5] = INGREDIENT_NULL;
     recettes[MOJITO].image = jeu->mojito;
     strcpy(recettes[MOJITO].nom, "Mojito");
 
     recettes[CAIPIRINHA].id = CAIPIRINHA;
     recettes[CAIPIRINHA].ingredients[0] = CITRON_PRESSE;
     recettes[CAIPIRINHA].ingredients[1] = CANNE_A_SUCRE;
-    recettes[CAIPIRINHA].ingredients[2] = INGREDIENT_NULL;
+    recettes[CAIPIRINHA].ingredients[2] = VERRE;
     recettes[CAIPIRINHA].ingredients[3] = INGREDIENT_NULL;
     recettes[CAIPIRINHA].ingredients[4] = INGREDIENT_NULL;
+    recettes[MOJITO].ingredients[5] = INGREDIENT_NULL;
     recettes[CAIPIRINHA].image = jeu->caipirinha;
     strcpy(recettes[CAIPIRINHA].nom, "Caipirinha");
 
@@ -740,17 +813,11 @@ void InitialiserRecettes(Recette recettes[], ComposantsJeu *jeu) {
     recettes[HINTZY].ingredients[0] = LIMONADE;
     recettes[HINTZY].ingredients[1] = MENTHE_DECOUPE;
     recettes[HINTZY].ingredients[2] = CITRON_PRESSE;
-    recettes[HINTZY].ingredients[3] = INGREDIENT_NULL;
+    recettes[HINTZY].ingredients[3] = VERRE;
     recettes[HINTZY].ingredients[4] = INGREDIENT_NULL;
+    recettes[MOJITO].ingredients[5] = INGREDIENT_NULL;
     recettes[HINTZY].image = jeu->hintzy;
     strcpy(recettes[CAIPIRINHA].nom, "Hintzy");
-
-    /* recettes[PLAZA].id = PLAZA;
-     recettes[PLAZA].ingredients[0] = CITRON_PRESSE;
-     recettes[PLAZA].ingredients[1] = LIMONADE;
-     recettes[PLAZA].ingredients[2] = INGREDIENT_NULL;
-     recettes[PLAZA].ingredients[3] = INGREDIENT_NULL;
-     recettes[PLAZA].ingredients[4] = INGREDIENT_NULL;*/
 }
 
 void InitialiserCommandes(Commande **listeDeCommandes, Recette recettes[]) {
@@ -904,7 +971,8 @@ void SauvegarderScores(const Scores *scores) {
         return;
     }
     for (int i = 0; i < NOMBRE_NIVEAUX; i++) {
-        fprintf(f, "%d, %d, %d\n", i + 1, scores->niveaux[i].meilleurScoreJoueur, scores->niveaux[i].meilleurScoreEquipe);
+        fprintf(f, "%d, %d, %d\n", i + 1, scores->niveaux[i].meilleurScoreJoueur,
+                scores->niveaux[i].meilleurScoreEquipe);
     }
     fclose(f);
 }
@@ -1186,7 +1254,7 @@ void Niveau3(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *score
     al_draw_bitmap(jeu->ImageFondDeJeu, 0, 0, 0);
     ChargerFichierTxt3(jeu);
     AfficherFichierTxt(jeu);
-    InitialiserPosJoueurs(joueur1, joueur2, 250, 300, 950, 300);
+    InitialiserPosJoueurs(joueur1, joueur2, 450, 200, 750, 200);
     InitialiserComposantsJeu(jeu);
     DessinerJoueur(joueur1, jeu);
     DessinerJoueur(joueur2, jeu);
@@ -1241,6 +1309,7 @@ void Niveau3(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *score
                         VerifierEtTraiterSortie(&listeDeCommandes, joueur2, jeu)) {
                         printf("Commande completee et envoye.\n");
                     }
+                    mettreAJourTapisRoulant(jeu, &maj);
                 }
                 if (maj || compteurTickDuTimer == 0) {
                     al_clear_to_color(NOIR);
