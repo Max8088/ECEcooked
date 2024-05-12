@@ -212,3 +212,473 @@ void MenuVolume(Sons ***son, ComposantsJeu ***jeu) {
     }
 
 }
+
+void ArreterMusiqueFondDeMenu(Sons *son) {
+    if (son->instanceDeMusqiue != NULL) {
+        al_stop_sample_instance(son->instanceDeMusqiue);
+    }
+}
+
+void JouerMusiqueFondDeMenu(Sons *son) {
+    if (son->instanceDeMusqiue != NULL) {
+        al_play_sample_instance(son->instanceDeMusqiue);
+    }
+}
+
+void JouerMusiqueJeu(Sons *son) {
+    if (son->instanceMusiqueJeu != NULL) {
+        al_play_sample_instance(son->instanceMusiqueJeu);
+    }
+}
+
+void ArreterMusiqueJeu(Sons *son) {
+    if (son->instanceMusiqueJeu != NULL) {
+        al_stop_sample_instance(son->instanceMusiqueJeu);
+    }
+}
+
+void MenuRules(ComposantsJeu ***jeu, Sons **son) {
+    ALLEGRO_EVENT event;
+    bool fini = false;
+    Bouton boutonRetour = {-10, 612, 130, 70, "<-"};
+    float mouseX = 0, mouseY = 0;
+    al_clear_to_color(NOIR);
+    al_draw_bitmap((**jeu)->ImageMenu, 0, 0, 0);
+    DessinerBouton1(boutonRetour, (**jeu)->police, NOIR, GRIS_CLAIR);
+
+    al_draw_text((**jeu)->police, BLANC, 450, 200, ALLEGRO_ALIGN_LEFT, "Regles du jeu:");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 280, ALLEGRO_ALIGN_LEFT,
+                 "Deux cuisiniers travaillent ensemble pour  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 320, ALLEGRO_ALIGN_LEFT,
+                 "cuisiner des commmandes le plus rapidement    ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 360, ALLEGRO_ALIGN_LEFT,
+                 "possible dans un lieu qui peux rendre la tâche  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 400, ALLEGRO_ALIGN_LEFT,
+                 "plus difficile que prévu. En binome ou seul  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 440, ALLEGRO_ALIGN_LEFT,
+                 "vous devez récupérer les bon ingrédients,  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 480, ALLEGRO_ALIGN_LEFT,
+                 "les préparer(decoupe/cuisson), les assembler  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 520, ALLEGRO_ALIGN_LEFT,
+                 "et les faire sortir de cuisine avant le temps  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 560, ALLEGRO_ALIGN_LEFT, "imparti. Le décor oblige les joueurs à  ");
+    al_draw_text((**jeu)->policeRegle, NOIR, 290, 600, ALLEGRO_ALIGN_LEFT, "communiquer. ");
+
+
+    al_flip_display();
+
+    while (!fini) {
+        al_wait_for_event((**jeu)->file, &event);
+        switch (event.type) {
+            case ALLEGRO_EVENT_DISPLAY_CLOSE:
+                fini = true;
+                break;
+            case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
+                if (EstDansLeBouton(boutonRetour, mouseX, mouseY)) {
+                    SonBoutonClique(*son);
+                    fini = true;
+                }
+                break;
+            case ALLEGRO_EVENT_MOUSE_AXES:
+                mouseX = event.mouse.x;
+                mouseY = event.mouse.y;
+                break;
+            case ALLEGRO_EVENT_TIMER:
+                if (EstDansLeBouton(boutonRetour, mouseX, mouseY)) {
+                    DessinerBouton2(boutonRetour, (**jeu)->police, NOIR, BLANC);
+                } else {
+                    DessinerBouton1(boutonRetour, (**jeu)->police, NOIR, GRIS_CLAIR_TRANSPARENT);
+                }
+                al_flip_display();
+                break;
+        }
+    }
+}
+
+void MenuOptions(ComposantsJeu **jeu, Sons **son) {
+    ALLEGRO_EVENT event;
+    bool fini = false;
+    Bouton boutons[] = {
+            {-10, 612, 130, 70, "<-"}
+    };
+    Bouton boutonsSousMenu[] = {
+            {425, 435, 400, 70, "Credits"},
+            {425, 235, 400, 70, "Volume"},
+            {425, 335, 400, 70, "Rules"}
+
+    };
+    int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
+    int nbBoutonsSousMenu = sizeof(boutonsSousMenu) / sizeof(boutonsSousMenu[0]);
+    float mouseX = 0, mouseY = 0;
+
+    al_clear_to_color(NOIR);
+    al_draw_bitmap((*jeu)->ImageMenu, 0, 0, 0);
+    for (int i = 0; i < nbBoutons; ++i) {
+        DessinerBouton2(boutons[i], (*jeu)->police, NOIR, GRIS_CLAIR);
+    }
+    for (int i = 0; i < nbBoutonsSousMenu; ++i) {
+        DessinerBouton1(boutonsSousMenu[i], (*jeu)->police, NOIR, BLANC);
+    }
+    al_flip_display();
+
+    while (!fini) {
+        al_wait_for_event((*jeu)->file, &event);
+        switch (event.type) {
+            case ALLEGRO_EVENT_DISPLAY_CLOSE:
+                fini = true;
+                break;
+            case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
+                for (int i = 0; i < nbBoutons; ++i) {
+                    if (EstDansLeBouton(boutons[i], mouseX, mouseY)) {
+                        if (!(strcmp(boutons[i].texte, "<-"))) {
+                            SonBoutonClique(*son);
+                            fini = true;
+                            break;
+                        }
+                    }
+                }
+                for (int i = 0; i < nbBoutonsSousMenu; ++i) {
+                    if (EstDansLeBouton(boutonsSousMenu[i], mouseX, mouseY)) {
+                        if (!(strcmp(boutonsSousMenu[i].texte, "Volume"))) {
+                            SonBoutonClique(*son);
+                            MenuVolume(&son, &jeu);
+                        }
+                        if (!(strcmp(boutonsSousMenu[i].texte, "Credits"))) {
+                            SonBoutonClique(*son);
+                            MenuCredits(&jeu, &son);
+                        }
+                        if (!(strcmp(boutonsSousMenu[i].texte, "Rules"))) {
+                            SonBoutonClique(*son);
+                            MenuRules(&jeu, son);
+                        }
+
+                    }
+                }
+                break;
+            case ALLEGRO_EVENT_MOUSE_AXES:
+                mouseX = event.mouse.x;
+                mouseY = event.mouse.y;
+                break;
+            case ALLEGRO_EVENT_TIMER:
+                al_clear_to_color(NOIR);
+                al_draw_bitmap((*jeu)->ImageMenu, 0, 0, 0);
+                for (int i = 0; i < nbBoutons; ++i) {
+                    if (EstDansLeBouton(boutons[i], mouseX, mouseY)) {
+                        DessinerBouton2(boutons[i], (*jeu)->police, NOIR, BLANC);
+                    } else {
+                        DessinerBouton1(boutons[i], (*jeu)->police, NOIR, GRIS_CLAIR);
+                    }
+                }
+                for (int i = 0; i < nbBoutonsSousMenu; ++i) {
+                    if (EstDansLeBouton(boutonsSousMenu[i], mouseX, mouseY)) {
+                        DessinerBouton2(boutonsSousMenu[i], (*jeu)->police, NOIR_TRANSPARENT, GRIS_CLAIR);
+                    } else {
+                        DessinerBouton1(boutonsSousMenu[i], (*jeu)->police, NOIR, BLANC);
+                    }
+                }
+                al_flip_display();
+                break;
+
+        }
+    }
+}
+
+void MenuScores(ComposantsJeu *jeu, Sons *son, const Scores *scores) {
+    ALLEGRO_EVENT event;
+    bool fini = false;
+    Bouton boutonRetour = {-10, 612, 130, 70, "<-"};
+    float mouseX = 0, mouseY = 0;
+    al_clear_to_color(NOIR);
+    al_draw_bitmap(jeu->ImageMenu, 0, 0, 0);
+    DessinerBouton1(boutonRetour, jeu->police, NOIR, GRIS_CLAIR);
+    char scoreText[256];
+    for (int i = 0; i < NOMBRE_NIVEAUX; i++) {
+        sprintf(scoreText, "Level %d - Best Player Score: %d", i + 1, scores->niveaux[i].meilleurScoreJoueur);
+        al_draw_text(jeu->police, NOIR, 624, 200 + i * 150, ALLEGRO_ALIGN_CENTER, scoreText);
+
+        sprintf(scoreText, "Level %d - Best Team Score: %d", i + 1, scores->niveaux[i].meilleurScoreEquipe);
+        al_draw_text(jeu->police, NOIR, 624, 250 + i * 150, ALLEGRO_ALIGN_CENTER, scoreText);
+    }
+    al_flip_display();
+
+    while (!fini) {
+        al_wait_for_event(jeu->file, &event);
+        switch (event.type) {
+            case ALLEGRO_EVENT_DISPLAY_CLOSE:
+                fini = true;
+                break;
+            case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
+                if (EstDansLeBouton(boutonRetour, mouseX, mouseY)) {
+                    SonBoutonClique(son);
+                    fini = true;
+                }
+                break;
+            case ALLEGRO_EVENT_MOUSE_AXES:
+                mouseX = event.mouse.x;
+                mouseY = event.mouse.y;
+                break;
+            case ALLEGRO_EVENT_TIMER:
+                if (EstDansLeBouton(boutonRetour, mouseX, mouseY)) {
+                    DessinerBouton2(boutonRetour, jeu->police, NOIR, BLANC);
+                } else {
+                    DessinerBouton1(boutonRetour, jeu->police, NOIR, GRIS_CLAIR_TRANSPARENT);
+                }
+                al_flip_display();
+                break;
+        }
+    }
+}
+
+void AfficherControls(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2) {
+    ALLEGRO_EVENT event;
+    bool fini = false;
+    int countDown = 5, compteurTickDuTimer = 0;
+
+    while (!fini) {
+        al_wait_for_event(jeu->file, &event);
+        switch (event.type) {
+            case ALLEGRO_EVENT_DISPLAY_CLOSE:
+                fini = true;
+                break;
+            case ALLEGRO_EVENT_TIMER:
+                if (++compteurTickDuTimer >= 60) {
+                    countDown--;
+                    compteurTickDuTimer = 0;
+                }
+                if (countDown <= 0) {
+                    fini = true;
+                }
+                al_clear_to_color(NOIR);
+                al_draw_text(jeu->police, BLANC, 228, 20, ALLEGRO_ALIGN_CENTER, joueur1->pseudo);
+                al_draw_bitmap(joueur1->image, 198, 100, 0);
+                al_draw_text(jeu->police, BLANC, 228, 180, ALLEGRO_ALIGN_CENTER, "Grab/Interact");
+                al_draw_bitmap(jeu->C, 134, 280, 0);
+                al_draw_bitmap(jeu->V, 230, 280, 0);
+                al_draw_text(jeu->police, BLANC, 228, 400, ALLEGRO_ALIGN_CENTER, "Moving");
+                al_draw_bitmap(jeu->Z, 180, 480, 0);
+                al_draw_bitmap(jeu->S, 180, 570, 0);
+                al_draw_bitmap(jeu->Q, 86, 570, 0);
+                al_draw_bitmap(jeu->D, 276, 570, 0);
+
+                al_draw_text(jeu->police, BLANC, 1020, 20, ALLEGRO_ALIGN_CENTER, joueur2->pseudo);
+                al_draw_bitmap(joueur2->image, 990, 100, 0);
+                al_draw_text(jeu->police, BLANC, 1020, 180, ALLEGRO_ALIGN_CENTER, "Grab/Interact");
+                al_draw_bitmap(jeu->L, 922, 280, 0);
+                al_draw_bitmap(jeu->M, 1018, 280, 0);
+                al_draw_text(jeu->police, BLANC, 1020, 400, ALLEGRO_ALIGN_CENTER, "Moving");
+                al_draw_text(jeu->police, BLANC, 614, 480, ALLEGRO_ALIGN_CENTER, "Pause mode");
+                al_draw_bitmap(jeu->P, 560, 560, 0);
+                al_draw_bitmap(jeu->FlecheHaut, 972, 480, 0);
+                al_draw_bitmap(jeu->FlecheBas, 972, 580, 0);
+                al_draw_bitmap(jeu->FlecheGauche, 872, 570, 0);
+                al_draw_bitmap(jeu->FlecheDroite, 1072, 570, 0);
+                al_draw_textf(jeu->police, BLANC, 624, 351, ALLEGRO_ALIGN_CENTER, "Starting in %d...", countDown);
+                al_flip_display();
+                break;
+        }
+    }
+}
+
+void PremierAffichageMenu(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, int nbBoutons, Bouton *boutons) {
+    al_clear_to_color(NOIR);
+    al_draw_bitmap(ImageMenu, 0, 0, 0);
+    for (int i = 0; i < nbBoutons; ++i) {
+        DessinerBouton1(boutons[i], police, NOIR, BLANC);
+    }
+    al_flip_display();
+}
+
+void DessinerNiveauApercu(Bouton niveau, ComposantsJeu *jeu) {
+    al_draw_filled_rounded_rectangle(niveau.x, niveau.y, niveau.x + niveau.width, niveau.y + niveau.height, 10, 10, NOIR);
+    al_draw_bitmap(niveau.apercu, 375, 287, 0);
+    float text_x = niveau.x + (niveau.width - al_get_text_width(jeu->police, niveau.texte)) / 2;
+    float text_y = niveau.y + (niveau.height - al_get_font_ascent(jeu->police)) / 2;
+    al_draw_text(jeu->police, BLANC, text_x, text_y - 5, 0, niveau.texte);
+}
+
+void ChoisirNiveau(ComposantsJeu *jeu, Niveau *niveau, bool *niveauChoisi) {
+    bool fini = false;
+    ALLEGRO_EVENT event;
+    int niveauActuellementAffiche = 0;
+
+    Bouton boutonNiveaux[] = {
+            {425, 200, 400, 70, "Level 1", al_load_bitmap("../images/ApercuMapNiveau1.png")},
+            {425, 200, 400, 70, "Level 2", al_load_bitmap("../images/ApercuMapNiveau2.png")},
+            {425, 200, 400, 70, "Level 3", al_load_bitmap("../images/apercu map.png")}
+    };
+    int nbNiveaux = sizeof(boutonNiveaux) / sizeof(boutonNiveaux[0]);
+
+    Bouton boutonRetour = {-10, 612, 130, 70, "<-"};
+    Bouton flecheGauche = {300, 370, 50, 50, "<"};
+    Bouton flecheDroite = {900, 370, 50, 50, ">"};
+    Bouton Go = {425, 560, 400, 70, "GO !"};
+    float mouseX = 0, mouseY = 0;
+
+    al_clear_to_color(NOIR);
+    al_draw_bitmap(jeu->ImageMenu, 0, 0, 0);
+    DessinerNiveauApercu(boutonNiveaux[niveauActuellementAffiche], jeu);
+    DessinerBouton1(boutonRetour, jeu->police, NOIR, GRIS_CLAIR);
+    DessinerBouton1(flecheGauche, jeu->police, NOIR, BLANC);
+    DessinerBouton1(flecheDroite, jeu->police, NOIR, BLANC);
+    DessinerBouton1(Go, jeu->police, NOIR, BLANC);
+    al_flip_display();
+
+    while (!fini) {
+        al_wait_for_event(jeu->file, &event);
+        switch (event.type) {
+            case ALLEGRO_EVENT_DISPLAY_CLOSE:
+                fini = true;
+                break;
+            case ALLEGRO_EVENT_MOUSE_AXES:
+                mouseX = event.mouse.x;
+                mouseY = event.mouse.y;
+                break;
+            case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
+                if (EstDansLeBouton(boutonRetour, mouseX, mouseY)) {
+                    *niveauChoisi = false;
+                    fini = true;
+                } else if (EstDansLeBouton(flecheGauche, event.mouse.x, event.mouse.y)) {
+                    if (niveauActuellementAffiche > 0) niveauActuellementAffiche--;
+                } else if (EstDansLeBouton(flecheDroite, event.mouse.x, event.mouse.y)) {
+                    if (niveauActuellementAffiche < nbNiveaux - 1) niveauActuellementAffiche++;
+                } else if (EstDansLeBouton(Go, event.mouse.x, event.mouse.y)) {
+                    *niveau = niveauActuellementAffiche + 1;
+                    *niveauChoisi = true;
+                    fini = true;
+                }
+                break;
+            case ALLEGRO_EVENT_KEY_DOWN:
+                if (event.keyboard.keycode == ALLEGRO_KEY_LEFT) {
+                    if (niveauActuellementAffiche > 0) niveauActuellementAffiche--;
+                } else if (event.keyboard.keycode == ALLEGRO_KEY_RIGHT) {
+                    if (niveauActuellementAffiche < nbNiveaux - 1) niveauActuellementAffiche++;
+                } else if (event.keyboard.keycode == ALLEGRO_KEY_ENTER) {
+                    *niveau = niveauActuellementAffiche + 1;
+                    *niveauChoisi = true;
+                    fini = true;
+                } else if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
+                    *niveauChoisi = false;
+                    fini = true;
+                }
+                break;
+            case ALLEGRO_EVENT_TIMER:
+                al_clear_to_color(NOIR);
+                al_draw_bitmap(jeu->ImageMenu, 0, 0, 0);
+                DessinerNiveauApercu(boutonNiveaux[niveauActuellementAffiche], jeu);
+                if (EstDansLeBouton(boutonRetour, mouseX, mouseY)) {
+                    DessinerBouton2(boutonRetour, jeu->police, NOIR, BLANC);
+                } else {
+                    DessinerBouton1(boutonRetour, jeu->police, NOIR, GRIS_CLAIR);
+                }
+                DessinerBouton1(flecheGauche, jeu->police, NOIR, BLANC);
+                DessinerBouton1(flecheDroite, jeu->police, NOIR, BLANC);
+                DessinerBouton1(Go, jeu->police, NOIR, BLANC);
+                al_flip_display();
+                break;
+        }
+    }
+}
+
+void lancerNiveau(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Niveau niveau, Scores *scores) {
+    switch (niveau) {
+        case NIVEAU_1:
+            Niveau1(jeu, joueur1, joueur2, scores);
+            break;
+        case NIVEAU_2:
+            Niveau2(jeu, joueur1, joueur2, scores);
+            break;
+        case NIVEAU_3:
+            Niveau3(jeu, joueur1, joueur2, scores);
+            break;
+        default:
+            break;
+    }
+}
+
+
+void DessinerMenu(ALLEGRO_BITMAP *ImageMenu, ALLEGRO_FONT *police, float mouseX, float mouseY, Bouton boutons[],
+                  int nbBoutons) {
+    al_clear_to_color(NOIR);
+    al_draw_bitmap(ImageMenu, 0, 0, 0);
+    for (int i = 0; i < nbBoutons; ++i) {
+        if (EstDansLeBouton(boutons[i], mouseX, mouseY)) {
+            DessinerBouton2(boutons[i], police, NOIR_TRANSPARENT, GRIS_CLAIR_TRANSPARENT);
+        } else {
+            DessinerBouton1(boutons[i], police, NOIR, BLANC);
+        }
+    }
+    al_flip_display();
+}
+
+
+void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son, Scores *scores) {
+    SonBoutonClique(son);
+    bool fini = false, lancerJeu = false, niveauChoisi = false;
+    Niveau niveau = NIVEAU_INCONNU;
+
+    Bouton boutons[] = {
+            {425, 235, 400, 70, "Play"},
+            {425, 335, 400, 70, "Options"},
+            {425, 435, 400, 70, "Scores"},
+            {425, 535, 400, 70, "Exit"}
+    };
+    int nbBoutons = sizeof(boutons) / sizeof(boutons[0]);
+    ALLEGRO_EVENT event;
+    float mouseX = 0, mouseY = 0;
+
+    PremierAffichageMenu(jeu->ImageMenu, jeu->police, nbBoutons, boutons);
+
+    al_start_timer(jeu->timer);
+    while (!fini) {
+        al_wait_for_event(jeu->file, &event);
+        switch (event.type) {
+            case ALLEGRO_EVENT_DISPLAY_CLOSE:
+                fini = true;
+                break;
+            case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
+                for (int i = 0; i < nbBoutons; ++i) {
+                    if (EstDansLeBouton(boutons[i], event.mouse.x, event.mouse.y)) {
+                        if (!(strcmp(boutons[i].texte, "Play"))) {
+                            SonBoutonClique(son);
+                            do {
+                                strcpy(joueur1->pseudo, "");
+                                strcpy(joueur2->pseudo, "");
+                                ChoisirNiveau(jeu, &niveau, &niveauChoisi);
+                                SonBoutonClique(son);
+                                if (!niveauChoisi) { break; }
+                                ChoisirPseudos(jeu, joueur1, joueur2, &lancerJeu, son);
+                            } while (!lancerJeu && niveauChoisi);
+
+                            if (lancerJeu) {
+                                ArreterMusiqueFondDeMenu(son);
+                                AfficherControls(jeu, joueur1, joueur2);
+                                JouerMusiqueFondDeMenu(son);
+                                lancerNiveau(jeu, joueur1, joueur2, niveau, scores);
+                                lancerJeu = false;
+                                niveauChoisi = false;
+                            }
+                        }
+                        if (!(strcmp(boutons[i].texte, "Options"))) {
+                            SonBoutonClique(son);
+                            MenuOptions(&jeu, &son);
+                        }
+                        if (!(strcmp(boutons[i].texte, "Scores"))) {
+                            SonBoutonClique(son);
+                            MenuScores(jeu, son, scores);
+                        }
+                        if (!(strcmp(boutons[i].texte, "Exit"))) {
+                            fini = true;
+                        }
+                    }
+                }
+                break;
+            case ALLEGRO_EVENT_MOUSE_AXES:
+                mouseX = event.mouse.x;
+                mouseY = event.mouse.y;
+                break;
+            case ALLEGRO_EVENT_TIMER:
+                DessinerMenu(jeu->ImageMenu, jeu->police, mouseX, mouseY, boutons, nbBoutons);
+                break;
+        }
+    }
+}
