@@ -66,7 +66,7 @@ typedef struct {
 
 typedef struct {
     ALLEGRO_BITMAP *imagesVerres[10];
-    ALLEGRO_BITMAP *imagesIngredients[5];
+    ALLEGRO_BITMAP *imagesIngredients[6];
     ALLEGRO_BITMAP *imageFondCommande;
 } ImagesCommandes;
 

@@ -1046,7 +1046,7 @@ void Niveau1(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *score
     al_draw_bitmap(jeu->ImageFondDeJeu, 0, 0, 0);
     ChargerFichierTxt1(jeu);
     AfficherFichierTxt(jeu);
-    InitialiserPosJoueurs(joueur1, joueur2, 300, 300, 850, 300);
+    InitialiserPosJoueurs(joueur1, joueur2, 250, 300, 950, 300);
     InitialiserComposantsJeu(jeu);
     DessinerJoueur(joueur1, jeu);
     DessinerJoueur(joueur2, jeu);
@@ -1254,7 +1254,7 @@ void Niveau3(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *score
     al_draw_bitmap(jeu->ImageFondDeJeu, 0, 0, 0);
     ChargerFichierTxt3(jeu);
     AfficherFichierTxt(jeu);
-    InitialiserPosJoueurs(joueur1, joueur2, 450, 200, 750, 200);
+    InitialiserPosJoueurs(joueur1, joueur2, 450, 450, 750, 200);
     InitialiserComposantsJeu(jeu);
     DessinerJoueur(joueur1, jeu);
     DessinerJoueur(joueur2, jeu);
