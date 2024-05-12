@@ -24,7 +24,7 @@ void ChargerImagesJeu(ComposantsJeu *jeu) {
     jeu->stationDeDecoupe = al_load_bitmap("../images/STATION DE DECOUPE (2).png");
     jeu->presseAgrume = al_load_bitmap("../images/PRESSE-AGRUME (1).png");
     jeu->poubelle = al_load_bitmap("../images/POUBELLE.png");
-    jeu->sortie = al_load_bitmap("../images/SORTIE.png");
+    jeu->sortie = al_load_bitmap("../images/SORTIE 0.png");
     jeu->ImageMenu = al_load_bitmap("../images/fondmenuV2.jpg");
     jeu->ImageFondDeJeu = al_load_bitmap("../images/ImageFondDeJeu.png");
     jeu->Z = al_load_bitmap("../images/Z.png");

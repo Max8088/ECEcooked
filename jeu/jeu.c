@@ -6,7 +6,7 @@ void InitialiserFenetreFileTimer(ComposantsJeu *jeu) {
     jeu->fenetre = al_create_display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
     jeu->file = al_create_event_queue();
     jeu->timer = al_create_timer(1.0 / 60.0);
-    jeu->DureePartie = 120;
+    jeu->DureePartie = 150;
     al_register_event_source(jeu->file, al_get_display_event_source(jeu->fenetre));
     al_register_event_source(jeu->file, al_get_keyboard_event_source());
     al_register_event_source(jeu->file, al_get_mouse_event_source());
@@ -277,7 +277,7 @@ bool EstSurPoubelle(ComposantsJeu *jeu, float x, float y) {
 
 bool EstSurSortie(ComposantsJeu *jeu, float x, float y) {
     for (int i = 0; i < jeu->nbElement; i++) {
-        if (jeu->element[i].type == TYPE_SORTIE &&
+        if ((jeu->element[i].type == TYPE_SORTIE) &&
             x >= jeu->element[i].x && x <= jeu->element[i].x + TAILLE_CASE &&
             y >= jeu->element[i].y && y <= jeu->element[i].y + TAILLE_CASE) {
             return true;
@@ -803,7 +803,7 @@ void InitialiserRecettes(Recette recettes[], ComposantsJeu *jeu) {
     recettes[CAIPIRINHA].ingredients[0] = CITRON_PRESSE;
     recettes[CAIPIRINHA].ingredients[1] = CANNE_A_SUCRE;
     recettes[CAIPIRINHA].ingredients[2] = VERRE;
-    recettes[CAIPIRINHA].ingredients[3] = INGREDIENT_NULL;
+    recettes[CAIPIRINHA].ingredients[3] = LIMONADE;
     recettes[CAIPIRINHA].ingredients[4] = INGREDIENT_NULL;
     recettes[MOJITO].ingredients[5] = INGREDIENT_NULL;
     recettes[CAIPIRINHA].image = jeu->caipirinha;
