@@ -89,11 +89,11 @@ void InitialiserSon(Sons *son) {
 }
 
 void PremierAffichageFenetre(ComposantsJeu *jeu) {
-    al_set_window_title(jeu->fenetre, "TP2");
+    al_set_window_title(jeu->fenetre, "ECEcooked");
     al_set_window_position(jeu->fenetre, 130, 30);
     al_clear_to_color(NOIR);
     al_draw_bitmap(jeu->ImageMenu, 0, 0, 0);
-    al_draw_text(jeu->policeTitre, NOIR, 624, 308, ALLEGRO_ALIGN_CENTER, "-ESCOOKED-");
+    al_draw_text(jeu->policeTitre, NOIR, 624, 308, ALLEGRO_ALIGN_CENTER, "-ECEcooked-");
     al_draw_text(jeu->police, NOIR, 624, 500, ALLEGRO_ALIGN_CENTRE, "PRESS ENTER");
     al_flip_display();
 }

@@ -6,7 +6,7 @@ void InitialiserFenetreFileTimer(ComposantsJeu *jeu) {
     jeu->fenetre = al_create_display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
     jeu->file = al_create_event_queue();
     jeu->timer = al_create_timer(1.0 / 60.0);
-    jeu->DureePartie = 45;
+    jeu->DureePartie = 120;
     al_register_event_source(jeu->file, al_get_display_event_source(jeu->fenetre));
     al_register_event_source(jeu->file, al_get_keyboard_event_source());
     al_register_event_source(jeu->file, al_get_mouse_event_source());
@@ -1186,7 +1186,7 @@ void Niveau3(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *score
     al_draw_bitmap(jeu->ImageFondDeJeu, 0, 0, 0);
     ChargerFichierTxt3(jeu);
     AfficherFichierTxt(jeu);
-    InitialiserPosJoueurs(joueur1, joueur2, 850, 300, 300, 300);
+    InitialiserPosJoueurs(joueur1, joueur2, 250, 300, 950, 300);
     InitialiserComposantsJeu(jeu);
     DessinerJoueur(joueur1, jeu);
     DessinerJoueur(joueur2, jeu);
