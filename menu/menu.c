@@ -652,10 +652,8 @@ void Menu(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Sons *son, Score
                             if (lancerJeu) {
                                 ArreterMusiqueFondDeMenu(son);
                                 AfficherControls(jeu, joueur1, joueur2);
-                                JouerMusiqueJeu(son);
-                                lancerNiveau(jeu, joueur1, joueur2, niveau, scores);
-                                ArreterMusiqueJeu(son);
                                 JouerMusiqueFondDeMenu(son);
+                                lancerNiveau(jeu, joueur1, joueur2, niveau, scores);
                                 lancerJeu = false;
                                 niveauChoisi = false;
                             }

@@ -6,7 +6,7 @@ void InitialiserFenetreFileTimer(ComposantsJeu *jeu) {
     jeu->fenetre = al_create_display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
     jeu->file = al_create_event_queue();
     jeu->timer = al_create_timer(1.0 / 60.0);
-    jeu->DureePartie = 150;
+    jeu->DureePartie = 10;
     al_register_event_source(jeu->file, al_get_display_event_source(jeu->fenetre));
     al_register_event_source(jeu->file, al_get_keyboard_event_source());
     al_register_event_source(jeu->file, al_get_mouse_event_source());
@@ -40,7 +40,6 @@ void DessinerMenuPause(ComposantsJeu *jeu, BoutonJeu *bouton) {
 void DessinerScoresFin(ComposantsJeu *jeu, int scoreJoueur1, int scoreJoueur2, Joueur *joueur1, Joueur *joueur2) {
     ALLEGRO_EVENT event;
     bool fini = false;
-    int countDown = 7, compteurTickDuTimer = 0;
     int scoreEquipe = scoreJoueur1 + scoreJoueur2;
 
     al_draw_filled_rectangle(DISPLAY_WIDTH / 4, DISPLAY_HEIGHT / 4, 3 * DISPLAY_WIDTH / 4, 3 * DISPLAY_HEIGHT / 4,
@@ -65,17 +64,8 @@ void DessinerScoresFin(ComposantsJeu *jeu, int scoreJoueur1, int scoreJoueur2, J
     while (!fini) {
         al_wait_for_event(jeu->file, &event);
         switch (event.type) {
-            case ALLEGRO_EVENT_DISPLAY_CLOSE:
+            case ALLEGRO_EVENT_KEY_UP:
                 fini = true;
-                break;
-            case ALLEGRO_EVENT_TIMER:
-                if (++compteurTickDuTimer >= 60) {
-                    countDown--;
-                    compteurTickDuTimer = 0;
-                }
-                if (countDown <= 0) {
-                    fini = true;
-                }
                 break;
         }
     }
