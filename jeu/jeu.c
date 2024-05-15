@@ -649,7 +649,7 @@ void DessinerJoueur(Joueur *joueur, ComposantsJeu *jeu) {
     float cy = al_get_bitmap_height(joueur->image) / 2;
     al_draw_rotated_bitmap(joueur->image, cx, cy, joueur->x + cx, joueur->y + cy, joueur->angle, 0);
 
-    //DessinerCurseurP(joueur);
+    DessinerCurseurP(joueur);
 
     if (joueur->element) {
         float xCurseur =
@@ -1195,6 +1195,7 @@ void Niveau2(ComposantsJeu *jeu, Joueur *joueur1, Joueur *joueur2, Scores *score
                         VerifierEtTraiterSortie(&listeDeCommandes, joueur2, jeu)) {
                         printf("Commande completee et envoye.\n");
                     }
+                    mettreAJourTapisRoulant(jeu, &maj);
                 }
                 if (maj || compteurTickDuTimer == 0) {
                     al_clear_to_color(NOIR);
